@@ -1,0 +1,75 @@
+{% extends 'layouts/base2.html' %}
+{% load static %}
+
+
+{% block titulo %}
+    Registrar
+{% endblock  %}
+    
+
+
+{% block cuerpo %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+</head>
+<body>
+    <nav>
+        <div class="nav-logo"><img src="{% static 'img/logo.png' %}" alt="Logo" height="50px" width="50px">LICORERA LOS J</div>
+        <ul class="nav-menu">
+            <li><a href="{% url 'index' %}">INICIO</a></li>
+        </ul>
+        <div class="nav-icons">
+            <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Inicio</a>
+        </div>
+    </nav>
+
+    <div class="auth-container">
+        <form class="auth-form" id="registerForm">
+            {% csrf_token %}
+            <h2>REGÍSTRATE</h2>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <input type="text" placeholder="NOMBRE" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" placeholder="APELLIDO" required>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <input type="email" placeholder="EMAIL" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" placeholder="CONTRASEÑA" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="tel" placeholder="TELÉFONO" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="date" placeholder="FECHA DE NACIMIENTO" required>
+            </div>
+            
+            <div class="form-group terms">
+                <label class="checkbox-container">
+                    <input type="checkbox" required>
+                    <span class="checkmark"></span>
+                    Es probable que las personas que usen nuestro servicio hayan subido tu información de contacto a Licorera Los J. 
+                    <a href="#">Más información</a>
+                </label>
+            </div>
+            
+            <div class="form-group captcha">
+                <div class="g-recaptcha" data-sitekey="your-site-key"></div>
+            </div>
+            
+            <button type="submit" class="auth-button">REGISTRARTE</button>
+        </form>
+    </div>
+
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+{% endblock  %}
+    

@@ -1,0 +1,110 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+
+{% block titulo %}
+    Catalogo
+{% endblock  %}
+
+
+
+{% block cuerpo %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/catalogo.css' %}">
+</head>
+
+    <div class="hero-products">
+        <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Bar con botellas iluminadas">
+        <h1>CATALOGO</h1>
+    </div>
+
+
+    <div>
+        <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked>
+            <label class="btn btn-outline-primary" for="btnradio1"></label>
+        
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio2">Radio 2</label>
+        
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+
+            <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+            <label class="btn btn-outline-primary" for="btnradio3">Radio 3</label>
+        </div>
+    </div>
+
+    <section class="products-grid">
+        <div class="product-card">
+            <span class="discount-tag">-10%</span>
+            <img src="{% static 'img/blueLabel.jpg' %}" alt="Blue Label">
+            <div class="product-info">
+                <h3>BLUE LABEL</h3>
+                <p class="price">$1.248.780</p>
+                <p class="status">AGOTADO</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <span class="discount-tag">-15%</span>
+            <img src="{% static 'img/tempranillo.jpg' %}" alt="Tempranillo">
+            <div class="product-info">
+                <h3>TEMPRANILLO</h3>
+                <p class="price">$368.000</p>
+                <button class="add-to-cart">AGREGAR AL CARRITO</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <span class="discount-tag">-20%</span>
+            <img src="{% static 'img/black_label.jpg' %}" alt="Don Julio">
+            <div class="product-info">
+                <h3>BLACK LABEL</h3>
+                <p class="price">$300.000</p>
+                <p class="status">AGOTADO</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'img/ojoDeTigre.jpg' %}" alt="Ojo de Tigre">
+            <div class="product-info">
+                <h3>OJO DE TIGRE</h3>
+                <p class="price">$70.000</p>
+                <button class="add-to-cart">AGREGAR AL CARRITO</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="{% static 'img/aguardienteAntioqueño.jpg' %}" alt="Aguardiente Antioqueño">
+            <div class="product-info">
+                <h3>AGUARDIENTE ANTIOQUEÑO</h3>
+                <p class="price">$88.000</p>
+                <p class="status">AGOTADO</p>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <span class="discount-tag">-5%</span>
+            <img src="{% static 'img/CHAMPAGNE-ALEXANDRA-ROSÉ.jpg' %}" alt="Champagne Laurent">
+            <div class="product-info">
+                <h3>CHAMPAGNE LAURENT PERRIER ALEXANDRA ROSÉ 2004</h3>
+                <p class="price">$1.573.830</p>
+                <button class="add-to-cart">AGREGAR AL CARRITO</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <span class="discount-tag">-25%</span>
+            <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza">
+            <div class="product-info">
+                <h3>PILSEN CERVEZA</h3>
+                <p class="price">$30.000</p>
+                <p class="status">AGOTADO</p>
+            </div>
+        </div>
+    </section>
+{% endblock  %}

@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Licorera Los J</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+</head>
+
+<body>
+    <main>
+        <nav>
+            <div class="nav-logo"><img src="{% static 'img/logo.png' %}" alt="Logo" height="50px" width="50px">LICORERA LOS
+                J</div>
+            <ul class="nav-menu">
+                <li><a href="{% url 'index' %}">INICIO</a></li>
+                <li><a href="{% url 'cobertura' %}">CONSULTA</a></li>
+                <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Inicio</a>
+                <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+            </div>
+        </nav>
+    
+        <div class="hero">
+            <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Licores"> 
+            <div class="slider-controls">
+                <span class="current-slide">1</span> / <span class="total-slides">30</span>
+            </div> 
+        </div>
+    
+        <section class="offers">
+            <h2>OFERTAS</h2>
+            <div class="products">
+                <div class="product-card">
+                    <img src="{% static 'img/black_label.jpg' %}" alt="Black Label">
+                    <span class="discount-tag">-20%</span>
+                    <div class="product-info">
+                        <h3>Black Label</h3>
+                        <p class="price">$89.99</p>
+                        <button class="add-to-cart">AGREGAR AL CARRITO</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza">
+                    <span class="discount-tag">-15%</span>
+                    <div class="product-info">
+                        <h3>Pilsen Cerveza</h3>
+                        <p class="price">$5.99</p>
+                        <button class="add-to-cart">AGREGAR AL CARRITO</button>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="{% static 'img/donJulio.jpg' %}" alt="Don Julio Azul">
+                    <div class="product-info">
+                        <h3>Don Julio Azul</h3>
+                        <p class="price">$102.99</p>
+                        <button class="add-to-cart">AGREGAR AL CARRITO</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    
+        <footer>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>LICORERA LOS J</h3>
+                    <p>Tu destino para las mejores bebidas y licores.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces</h4>
+                    <ul>
+                        <li><a href="#">Sobre Nosotros</a></li>
+                        <li><a href="#">Términos y Condiciones</a></li>
+                        <li><a href="#">Política de Privacidad</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contacto</h4>
+                    <p>Email: contacto@licoreralosj.com</p>
+                    <p>Teléfono: (123) 456-7890</p>
+                    <p>Dirección: Calle Principal #123</p>
+                </div>
+            </div>
+        </footer>
+    
+    </body>
+    </main>
+
+</html>

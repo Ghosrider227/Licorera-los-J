@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Licorera Los J {% block titulo %} {% endblock %}</title>
+        <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    </head>
+    <body>
+        <nav>
+            <div class="nav-logo"><img src="{% static 'img/logo.png' %}" alt="Logo" height="50px" width="50px">LICORERA LOS J</div>
+            <ul class="nav-menu">
+                <li><a href="{% url 'index' %}">INICIO</a></li>
+                <li><a href="{% url 'cobertura' %}">COBERTURA</a></li>
+                <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
+            </ul>
+            <div class="nav-icons">
+                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Inicio</a>
+                <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+            </div>
+        </nav>
+        <div>
+            {% block cuerpo %}
+                {{ HttpResponse }}
+            {% endblock %}  
+        </div>
+        <script src="script.js"></script>
+    </body>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>LICORERA LOS J</h3>
+                <p>Tu destino para las mejores bebidas y licores.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#">Sobre Nosotros</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Política de Privacidad</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contacto</h4>
+                <p>Email: contacto@licoreralosj.com</p>
+                <p>Teléfono: (123) 456-7890</p>
+                <p>Dirección: Calle Principal #123</p>
+            </div>
+        </div>
+    </footer>
+</html>

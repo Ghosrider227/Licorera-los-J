@@ -1,0 +1,49 @@
+{% extends 'layouts/base2.html' %}
+{% load static %}
+
+
+{% block titulo %}
+    Inicio De Sesión
+{% endblock  %}
+  
+
+
+{% block cuerpo %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+    <div class="auth-container">
+        <form class="auth-form" id="loginForm">
+            {% csrf_token %}
+            <h2>INICIO DE SESIÓN</h2>
+            
+            <div class="form-group">
+                <input type="text" placeholder="USUARIO" required>
+            </div>
+            
+            <div class="form-group">
+                <input type="password" placeholder="CONTRASEÑA" required>
+            </div>
+            
+            <div class="form-group text-right">
+                <a href="#" class="forgot-password">¿Olvidaste tu contraseña?</a>
+            </div>
+            
+            <button type="submit" class="auth-button">INGRESAR</button>
+            
+            <div class="auth-links">
+                <p>¿NO TIENES UNA CUENTA? <a href="{% url 'register' %}">Regístrate</a></p>
+            </div>
+            
+            <div class="social-login">
+                <button type="button" class="social-button google">
+                    Iniciar sesión con Google
+                </button>
+                <button type="button" class="social-button facebook">
+                    Iniciar sesión con Facebook
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock  %}
+    

@@ -1,0 +1,66 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block titulo %}
+    Carrito
+{% endblock %}
+    
+
+{% block cuerpo %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+</head>
+    <div class="cart-container">
+        <h2>INICIO DE COMPRA</h2>
+        
+        <div class="cart-items">
+            <div class="cart-item">
+                <img src="{% static 'img/ojoDeTigre.jpg' %}" alt="Ojo de Tigre" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>OJO DE TIGRE</h3>
+                    <p class="price">$70.000</p>
+                </div>
+            </div>
+            
+            <div class="cart-item">
+                <img src="{% static 'img/ronViejoCaldas.jpg' %}" alt="Ron Viejo de Caldas" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>RON VIEJO DE CALDAS</h3>
+                    <p class="price">$74.000</p>
+                </div>
+            </div>
+            
+            <div class="cart-item">
+                <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>PILSEN CERVEZA</h3>
+                    <p class="price">$30.000</p>
+                </div>
+            </div>
+            
+            <div class="cart-item">
+                <img src="{% static 'img/aguardienteAntioqueño.jpg' %}" alt="Aguardiente Antioqueño" class="cart-item-image">
+                <div class="cart-item-details">
+                    <h3>AGUARDIENTE ANTIOQUEÑO</h3>
+                    <p class="price">$85.000</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="cart-summary">
+            <div class="summary-row">
+                <span>SUBTOTAL</span>
+                <span>$259.000</span>
+            </div>
+            <div class="summary-row total">
+                <span>TOTAL</span>
+                <span>$259.000</span>
+            </div>
+        </div>
+        
+        <div class="cart-actions">
+            <button class="secondary-button">VER MÁS PRODUCTOS</button>
+            <button class="primary-button">INICIO DE COMPRA</button>
+        </div>
+    </div>
+{% endblock %}
