@@ -2,12 +2,12 @@ from django.contrib import admin
 from .models import *
 # Register your models here.
 
-@admin.register(Usuario)
+@admin.register(Usuarios)
 class Usuario(admin.ModelAdmin):
-    list_display = ['id', 'nombre', 'apellido', 'tipoUsuario', 'telefono', 'correo']
+    list_display = ['id', 'nombre', 'apellido', 'cuenta', 'telefono', 'correo']
     search_list = []
 
-@admin.register(Proveedor)
+@admin.register(Proveedores)
 class Provedor(admin.ModelAdmin):
     list_display = ['id', 'empresa', 'correo', 'nombre', 'apellido', 'telefono']
     list_filter=['empresa']
@@ -17,16 +17,16 @@ class Provedor(admin.ModelAdmin):
 class Inventario(admin.ModelAdmin):
     list_display = ['producto', 'tipo_de_producto', 'cantidad', 'valor_compra', 'valor_venta', 'descripcion']
 
-@admin.register(Factura)
+@admin.register(Facturas)
 class Factura(admin.ModelAdmin):
     list_display = ['id','cliente','valor_pedido',"valor_total","fecha_factura","fecha_factura"]
 
-@admin.register(DetalleFactura)
+@admin.register(DetallesFacturas)
 class DetallesFacturas(admin.ModelAdmin):
     list_display = ['id', 'producto', 'factura']
 
-@admin.register(Producto)
+@admin.register(Productos)
 class Producto(admin.ModelAdmin):
-    list_display = ['id', 'nombre_Producto', 'tipo_Producto', 'descripcion', 'precio','cantidad']
-    list_filter=["tipo_Producto"]
-    list_editable=["tipo_Producto","nombre_Producto"]
+    list_display = ['id', 'nombre_producto', 'tipo_producto', 'descripcion', 'precio','cantidad']
+    list_filter=["tipo_producto"]
+    list_editable=['precio', 'cantidad']
