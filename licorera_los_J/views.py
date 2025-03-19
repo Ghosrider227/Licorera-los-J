@@ -1,9 +1,14 @@
 from django.shortcuts import render
-
+from .models import *
 # Create your views here.
 
 def index(request):
-    return render(request, 'index.html')
+    # Traigo la informacion de la BD y se la mando al index con el contexto
+    p = Productos.objects.all()
+    contexto = {
+        'data' : p,
+    }
+    return render(request, 'index.html', contexto)
 
 def login(request):
     return render(request, 'login.html')

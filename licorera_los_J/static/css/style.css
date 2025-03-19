@@ -107,8 +107,12 @@ nav {
     background-color: #111;
     border-radius: 8px;
     overflow: hidden;
-    width: 280px;
+    width: 300px;
+    height: 500px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .product-card img {
