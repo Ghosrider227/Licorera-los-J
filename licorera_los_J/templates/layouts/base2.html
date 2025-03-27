@@ -16,12 +16,12 @@
                 <li><a href="{% url 'index' %}">INICIO</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Inicio</a>
+                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
             </div>
         </nav>
         <div>
             {% block cuerpo %}
-                {{ HttpResponse }}
+                
             {% endblock %}  
         </div>
         <script src="script.js"></script>

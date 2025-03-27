@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import *
+from django.contrib import messages
 # Create your views here.
 
 def index(request):
@@ -14,7 +15,36 @@ def login(request):
     return render(request, 'login.html')
 
 def register(request):
-    return render(request, 'register.html')
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre')
+        apellido = request.POST.get('apellido')
+        cuenta = request.POST.get('cuenta')
+        email = request.POST.get('email')
+        contrasena = request.POST.get('contrasena')
+        confirmar_contrasena = request.POST.get('confirmar_contrasena')
+        telefono = request.POST.get('telefono')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        direccion = request.POST.get('direccion')
+        if contrasena == confirmar_contrasena:
+            try:
+                u = Usuarios (
+                    nombre = nombre,
+                    apellido = apellido,
+                    cuenta = cuenta,
+                    email = email,
+                    contrasena = contrasena,
+                    telefono = telefono,
+                    fecha_nacimiento = fecha_nacimiento,
+                    direccion = direccion
+                )
+                u.save()
+            except Exception as e:
+                messages.error(request, f'Error: {e}')
+                return redirect('register')
+        else:
+            messages.warning(request, 'La contraseña no coincide')
+    else:
+        return render(request, 'register.html')
 
 def catalogo(request):
     return render(request, 'catalogo.html')
