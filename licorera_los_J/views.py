@@ -38,11 +38,13 @@ def register(request):
                     direccion = direccion
                 )
                 u.save()
+                return redirect('login')
             except Exception as e:
                 messages.error(request, f'Error: {e}')
                 return redirect('register')
         else:
             messages.warning(request, 'La contraseña no coincide')
+            return redirect('register')
     else:
         return render(request, 'register.html')
 

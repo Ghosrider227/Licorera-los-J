@@ -124,4 +124,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # se agrega para que los numero traidos de la BD tengan formato de miles
-USE_THOUSAND_SEPARATOR = True
+# USE_THOUSAND_SEPARATOR = True

@@ -74,12 +74,19 @@
                     <a href="#">Más información</a>
                 </label>
             </div>
-            <div class="form-group captcha">
+            <!-- <div class="form-group captcha">
                 <div class="g-recaptcha" data-sitekey="your-site-key"></div>
-            </div>
-            <button type="submit" class="auth-button" id="registrar">REGISTRARTE</button>
+            </div> -->
+            <button type="submit" class="auth-button"</button>>REGISTRARTE</button> <!--id="registrar"-->
         </form>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 {% endblock  %}
     
