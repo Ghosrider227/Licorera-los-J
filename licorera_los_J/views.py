@@ -15,6 +15,8 @@ def login(request):
     return render(request, 'login.html')
 
 def register(request):
+    u = Usuarios.objects.all()
+    
     if request.method == 'POST':
         nombre = request.POST.get('nombre')
         apellido = request.POST.get('apellido')
@@ -25,28 +27,36 @@ def register(request):
         telefono = request.POST.get('telefono')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
         direccion = request.POST.get('direccion')
-        if contrasena == confirmar_contrasena:
-            try:
-                u = Usuarios (
-                    nombre = nombre,
-                    apellido = apellido,
-                    cuenta = cuenta,
-                    email = email,
-                    contrasena = contrasena,
-                    telefono = telefono,
-                    fecha_nacimiento = fecha_nacimiento,
-                    direccion = direccion
-                )
-                u.save()
-                return redirect('login')
-            except Exception as e:
-                messages.error(request, f'Error: {e}')
-                return redirect('register')
-        else:
-            messages.warning(request, 'La contraseña no coincide')
+        if u.filter(email=email).exists():
+            messages.warning(request, 'El correo ya esta registrado')
             return redirect('register')
+        else:
+            if contrasena == confirmar_contrasena:
+                try:
+                    u = Usuarios (
+                        nombre = nombre,
+                        apellido = apellido,
+                        cuenta = cuenta,
+                        email = email,
+                        contrasena = contrasena,
+                        telefono = telefono,
+                        fecha_nacimiento = fecha_nacimiento,
+                        direccion = direccion
+                    )
+                    u.save()
+                    return redirect('login')
+                except Exception as e:
+                    messages.error(request, f'Error: {e}')
+                    return redirect('register')
+            else:
+                messages.warning(request, 'La contraseña no coincide')
+                return redirect('register')
     else:
-        return render(request, 'register.html')
+        q = request.session.get('sesion', None)
+        if q:
+            return redirect('index')
+        else:
+            return render(request, 'register.html')
 
 def catalogo(request):
     return render(request, 'catalogo.html')
