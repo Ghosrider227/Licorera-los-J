@@ -20,16 +20,16 @@
                 <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
             </ul>
             <div class="nav-icons">
-                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Inicio</a>
+                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
                 <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
             </div>
         </nav>
         <div>
             {% block cuerpo %}
-                {{ HttpResponse }}
+                
             {% endblock %}  
         </div>
-        <script src="script.js"></script>
+        <!-- <script src="script.js"></script> -->  
     </body>
     <footer>
         <div class="footer-content">

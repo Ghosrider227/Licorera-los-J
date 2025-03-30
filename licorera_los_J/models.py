@@ -12,9 +12,11 @@ class Usuarios(models.Model):
         ('2', 'Cliente'),
     )
     cuenta = models.CharField(max_length = 1, choices = tipo_cuenta, default = 2)
+    email = models.EmailField(max_length=50, default="")
+    contrasena = models.CharField(max_length=16, default="")
     telefono = models.IntegerField()
-    direccion = models.CharField(max_length=100)
-    correo = models.CharField(max_length=50)
+    fecha_nacimiento = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    direccion = models.CharField(max_length=100, null=True, blank=True)
     
     def __str__(self):
         return (f'{self.nombre}, {self.get_cuenta_display()}')
