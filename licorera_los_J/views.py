@@ -16,7 +16,7 @@ def login(request):
 
 def logout(request):
     try:
-        del request.session["auth"]
+        del request.session["sesion"]
         return redirect("login")
     except Exception as e:
         messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
