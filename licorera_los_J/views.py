@@ -14,6 +14,15 @@ def index(request):
 def login(request):
     return render(request, 'login.html')
 
+def logout(request):
+    try:
+        del request.session["auth"]
+        return redirect("login")
+    except Exception as e:
+        messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
+        return redirect("inicio")
+
+
 def register(request):
     u = Usuarios.objects.all()
     
