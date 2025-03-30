@@ -66,3 +66,11 @@ def cart(request):
 
 def cobertura(request):
     return render(request, 'cobertura.html')
+
+def catalogo(request):
+    query = request.GET.get('q', '')  # Obtén la consulta de búsqueda
+    if query:
+        productos = Productos.objects.filter(nombre__icontains=query)  # Filtra por nombre
+    else:
+        productos = Productos.objects.all()  # Muestra todos los productos si no hay búsqueda
+    return render(request, 'catalogo.html', {'productos': productos})

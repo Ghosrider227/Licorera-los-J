@@ -38,80 +38,33 @@
             <li class="nav-item">
                 <a class="nav-link" href="#">RECOMENDADOS</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-            </li>
+
+            <div class="search-bar">
+                <form method="GET" action="{% url 'catalogo' %}">
+                    <input type="text" name="q" placeholder="Buscar productos..." class="form-control">
+                    <button type="submit" class="btn btn-primary">Buscar</button>
+                </form>
+            </div>
         </ul>
         
     </div>
 
     <section class="products-grid">
+        {% for producto in productos %}
         <div class="product-card">
-            <span class="discount-tag">-10%</span>
-            <img src="{% static 'img/blueLabel.jpg' %}" alt="Blue Label">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
             <div class="product-info">
-                <h3>BLUE LABEL</h3>
-                <p class="price">$1.248.780</p>
-                <p class="status">AGOTADO</p>
+                <h3>{{ producto.nombre }}</h3>
+                <p class="price">${{ producto.precio }}</p>
+                {% if producto.disponible %}
+                    <button class="add-to-cart">AGREGAR AL CARRITO</button>
+                {% else %}
+                    <p class="status">AGOTADO</p>
+                {% endif %}
             </div>
         </div>
-
-        <div class="product-card">
-            <span class="discount-tag">-15%</span>
-            <img src="{% static 'img/tempranillo.jpg' %}" alt="Tempranillo">
-            <div class="product-info">
-                <h3>TEMPRANILLO</h3>
-                <p class="price">$368.000</p>
-                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <span class="discount-tag">-20%</span>
-            <img src="{% static 'img/black_label.jpg' %}" alt="Don Julio">
-            <div class="product-info">
-                <h3>BLACK LABEL</h3>
-                <p class="price">$300.000</p>
-                <p class="status">AGOTADO</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'img/ojoDeTigre.jpg' %}" alt="Ojo de Tigre">
-            <div class="product-info">
-                <h3>OJO DE TIGRE</h3>
-                <p class="price">$70.000</p>
-                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <img src="{% static 'img/aguardienteAntioqueño.jpg' %}" alt="Aguardiente Antioqueño">
-            <div class="product-info">
-                <h3>AGUARDIENTE ANTIOQUEÑO</h3>
-                <p class="price">$88.000</p>
-                <p class="status">AGOTADO</p>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <span class="discount-tag">-5%</span>
-            <img src="{% static 'img/CHAMPAGNE-ALEXANDRA-ROSÉ.jpg' %}" alt="Champagne Laurent">
-            <div class="product-info">
-                <h3>CHAMPAGNE LAURENT PERRIER ALEXANDRA ROSÉ 2004</h3>
-                <p class="price">$1.573.830</p>
-                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-            </div>
-        </div>
-
-        <div class="product-card">
-            <span class="discount-tag">-25%</span>
-            <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza">
-            <div class="product-info">
-                <h3>PILSEN CERVEZA</h3>
-                <p class="price">$30.000</p>
-                <p class="status">AGOTADO</p>
-            </div>
-        </div>
+        {% empty %}
+        <p>No se encontraron productos.</p>
+        {% endfor %}
     </section>
 {% endblock  %}
