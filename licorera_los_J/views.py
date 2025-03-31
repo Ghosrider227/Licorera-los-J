@@ -1,6 +1,18 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
+
+
+from django.db.utils import IntegrityError
+from django.contrib import messages
+
+from django.core.mail import send_mail
+from django.conf import settings
+
+from .utils import *
+
+
+
 # Create your views here.
 
 def index(request):
@@ -21,6 +33,30 @@ def logout(request):
     except Exception as e:
         messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
         return redirect("inicio")
+
+
+def cambiar_clave(request):
+    if request.method == "POST":
+        clave_actual = request.POST.get("clave_actual")
+        nueva = request.POST.get("nueva")
+        repite_nueva = request.POST.get("repite_nueva")
+        logueado = request.session.get("auth", False)
+
+        q = Usuarios.objects.get(pk=logueado["id"])
+        if clave_actual == q.password:      # cambiar esto por decrypt..
+            if nueva == repite_nueva:
+                q.password = hash_password(nueva)       # utils.py
+                q.save()
+                messages.success(request, "Contraseña cambiada con éxito!!")
+            else:
+                messages.info(request, "Contraseñas nuevas no coinciden...")
+        else:
+            messages.warning(request, "Contraseña no concuerda...")
+
+        return redirect("cambiar_clave")
+    else:
+        return render(request, "usuarios/cambiar_clave.html")
+
 
 
 def register(request):

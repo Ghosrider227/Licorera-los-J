@@ -125,3 +125,11 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # se agrega para que los numero traidos de la BD tengan formato de miles
 # USE_THOUSAND_SEPARATOR = True
+
+# Email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Replace with your SMTP host
+EMAIL_HOST_USER = "licoreralosj@gmail.com"  # Your email address
+EMAIL_HOST_PASSWORD = "xmnrqdkkstcf xknv"  # Your email password
+EMAIL_PORT = 465  # SMTP port
+EMAIL_USE_SSL = True  # Use SSL for secure connection
