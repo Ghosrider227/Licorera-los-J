@@ -173,3 +173,15 @@
     background-color: #ffcc00; /* Amarillo dorado al pasar el mouse */
 }
 
+.buscar{
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+
+}
+
+.catalogo{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}

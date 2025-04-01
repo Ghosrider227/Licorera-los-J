@@ -1,61 +1,67 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 
-
 {% block titulo %}
-    Catalogo
-{% endblock  %}
-
-
+    Catálogo
+{% endblock %}
 
 {% block cuerpo %}
 <head>
     <link rel="stylesheet" href="{% static 'css/catalogo.css' %}">
 </head>
 
-    <div class="hero-products">
-        <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Bar con botellas iluminadas">
-        <h1>CATALOGO</h1>
-    </div>
+<div class="hero-products">
+    <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Bar con botellas iluminadas">
+    <h1>CATÁLOGO</h1>
+</div>
 
+<div class="catalogo">
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="#">MÁS POPULARES</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">PROMOCIONES</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">BARATOS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">CAROS</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="#">RECOMENDADOS</a>
+        </li>
 
-    <div>
-        <ul class="nav justify-content-center">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">MAS POPULARES</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">PROMOCIONES</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">BARATOS</a>
-            </li>
+        <!-- Barra de búsqueda con select -->
+        <div class="search-bar">
+            <form method="GET" action="{% url 'catalogo' %}" class="buscar">
+                <select name="tipo_producto" class="form-control">
+                    <option value="">Todos los productos</option>
+                    <option value='1' {% if tipo_producto == "Vino" %}selected{% endif %}>Vino</option>
+                    <option value='2' {% if tipo_producto == "Ron" %}selected{% endif %}>Ron</option>
+                    <option value='3' {% if tipo_producto == "Cerveza" %}selected{% endif %}>Cerveza</option>
+                    <option value='4' {% if tipo_producto == "Vodka" %}selected{% endif %}>Vodka</option>
+                    <option value='5' {% if tipo_producto == "Whisky" %}selected{% endif %}>Whisky</option>
+                    <option value='6' {% if tipo_producto == "Tequila" %}selected{% endif %}>Tequila</option>
+                    <option value='7' {% if tipo_producto == "Guaro" %}selected{% endif %}>Guaro</option>
+                    <option value='8' {% if tipo_producto == "Champan" %}selected{% endif %}>Champán</option>
+                </select>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </ul>
+</div>
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">CAROS</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">RECOMENDADOS</a>
-            </li>
-
-            <div class="search-bar">
-                <form method="GET" action="{% url 'catalogo' %}">
-                    <input type="text" name="q" placeholder="Buscar productos..." class="form-control">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
-                </form>
-            </div>
-        </ul>
-        
-    </div>
-
-    <section class="products-grid">
+<section class="products-grid">
+    {% if productos %}
         {% for producto in productos %}
         <div class="product-card">
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}">
             <div class="product-info">
-                <h3>{{ producto.nombre }}</h3>
+                <h3>{{ producto.nombre_producto }}</h3>
                 <p class="price">${{ producto.precio }}</p>
+                <p>{{ producto.descripcion }}</p>
                 {% if producto.disponible %}
                     <button class="add-to-cart">AGREGAR AL CARRITO</button>
                 {% else %}
@@ -63,8 +69,9 @@
                 {% endif %}
             </div>
         </div>
-        {% empty %}
-        <p>No se encontraron productos.</p>
         {% endfor %}
-    </section>
-{% endblock  %}
+    {% else %}
+        <p>No se encontraron productos para esta categoría.</p>
+    {% endif %}
+</section>
+{% endblock %}

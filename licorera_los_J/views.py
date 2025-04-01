@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.contrib import messages
+from django.http import HttpResponse
 
 
 from django.db.utils import IntegrityError
@@ -8,6 +9,10 @@ from django.contrib import messages
 
 from django.core.mail import send_mail
 from django.conf import settings
+from django.db.models import Q
+from django.template import loader
+
+
 
 from .utils import *
 
@@ -104,18 +109,24 @@ def register(request):
             return render(request, 'register.html')
 
 def catalogo(request):
-    return render(request, 'catalogo.html')
+    # Obtiene el valor seleccionado en el <select>
+    tipo_producto = request.GET.get('tipo_producto', '')  # Por defecto, vacío si no se selecciona nada
+    
+    # Filtra los productos según el tipo seleccionado
+    if tipo_producto:
+        productos = Productos.objects.filter(tipo_producto=tipo_producto)
+    else:
+        # Si no se selecciona nada, muestra todos los productos
+        productos = Productos.objects.all()
+    
+    contexto = {
+        'productos': productos,
+        'tipo_producto': tipo_producto,  # Pasamos el valor seleccionado al template
+    }
+    return render(request, 'catalogo.html', contexto)
 
 def cart(request):
     return render(request, 'cart.html')
 
 def cobertura(request):
     return render(request, 'cobertura.html')
-
-def catalogo(request):
-    query = request.GET.get('q', '')  # Obtén la consulta de búsqueda
-    if query:
-        productos = Productos.objects.filter(nombre__icontains=query)  # Filtra por nombre
-    else:
-        productos = Productos.objects.all()  # Muestra todos los productos si no hay búsqueda
-    return render(request, 'catalogo.html', {'productos': productos})
