@@ -12,13 +12,15 @@
     <body>
         <nav>
             <div class="nav-logo"><img src="{% static 'img/logo.png' %}" alt="Logo" height="50px" width="50px">LICORERA LOS J</div>
-            <ul class="nav-menu">
-                <li><a href="{% url 'index' %}">INICIO</a></li>
-            </ul>
-            <div class="nav-icons">
-                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
-            </div>
         </nav>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if {{ message.tags }}}">
+                <p>{{ message }}</p>
+            </div>
+        {% endfor %}
+    {% endif %}
         <div>
             {% block cuerpo %}
                 

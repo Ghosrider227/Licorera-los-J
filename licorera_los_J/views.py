@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import *
+from django.db.utils import IntegrityError
 from django.contrib import messages
 from django.conf import settings
 
@@ -32,9 +33,9 @@ def login(request):
                         "nombre" : u.nombre,
                         "cuenta" : u.cuenta,
                         "email" : u.email,
-                        "fecha_nacimiento" : u.fecha_nacimiento
+                       
                     }
-                # messages.success(request, "Bienvenido")
+                messages.success(request, "Bienvenido")
                 return redirect("index")
             else:
                 raise Usuarios.DoesNotExist()
@@ -43,7 +44,7 @@ def login(request):
             messages.warning(request, "Contrasena incorrecta")
             request.session["sesion"] = None
         except Exception as e:
-            messages.warning(request, "No se pudo iniciar sesión, intente de nuevo")
+            messages.warning(request, f"No se pudo iniciar sesión, intente de nuevo",{e})
             request.session["sesion"] = None
         return redirect("login")
     else:
