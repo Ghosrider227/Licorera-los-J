@@ -13,16 +13,16 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
     <div class="auth-container">
-        <form class="auth-form" id="loginForm">
+        <form class="auth-form" id="loginForm" method="post">
             {% csrf_token %}
             <h2>INICIO DE SESIÓN</h2>
             
             <div class="form-group">
-                <input type="text" placeholder="USUARIO" required>
+                <input name="cuenta" type="text" placeholder="USUARIO" required>
             </div>
             
             <div class="form-group">
-                <input type="password" placeholder="CONTRASEÑA" required>
+                <input name="contrasena" type="password" placeholder="CONTRASEÑA" required>
             </div>
             
             <div class="form-group text-right">
