@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import *
+from django.db.utils import IntegrityError
 from django.contrib import messages
-# Create your views here.
+from django.conf import settings
 
+from .utils import *
 def index(request):
     # Traigo la informacion de la BD y se la mando al index con el contexto
     p = Productos.objects.all()
@@ -12,7 +14,46 @@ def index(request):
     return render(request, 'index.html', contexto)
 
 def login(request):
-    return render(request, 'login.html')
+    if request.method == 'POST':
+        cuenta = request.POST.get('cuenta')
+        contrasena = request.POST.get('contrasena')
+        try:
+            u = Usuarios.objects.get(email=cuenta)
+            if verify_password(contrasena, u.contrasena):
+                if u.fecha_nacimiento == None:
+                    request.session["sesion"] = {
+                        "id" : u.id,
+                        "nombre" : u.nombre,
+                        "cuenta" : u.cuenta,
+                        "email" : u.email,
+                     }
+                else:
+                    request.session["sesion"] = {
+                        "id" : u.id,
+                        "nombre" : u.nombre,
+                        "cuenta" : u.cuenta,
+                        "email" : u.email,
+                       
+                    }
+                messages.success(request, "Bienvenido")
+                return redirect("index")
+            else:
+                raise Usuarios.DoesNotExist()
+            
+        except Usuarios.DoesNotExist:
+            messages.warning(request, "Contrasena incorrecta")
+            request.session["sesion"] = None
+        except Exception as e:
+            messages.warning(request, f"No se pudo iniciar sesión, intente de nuevo",{e})
+            request.session["sesion"] = None
+        return redirect("login")
+    else:
+        verificar = request.session.get('sesion', False)
+
+        if verificar:
+            return redirect('index')
+        else:
+            return render(request, 'login.html')
 
 def logout(request):
     try:
@@ -47,7 +88,7 @@ def register(request):
                         apellido = apellido,
                         cuenta = cuenta,
                         email = email,
-                        contrasena = contrasena,
+                        contrasena = hash_password(contrasena),
                         telefono = telefono,
                         fecha_nacimiento = fecha_nacimiento,
                         direccion = direccion

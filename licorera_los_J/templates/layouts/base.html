@@ -19,12 +19,37 @@
                 <li><a href="{% url 'cobertura' %}">COBERTURA</a></li>
                 <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
             </ul>
-            <div class="nav-icons">
-                <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
-                <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
-            </div>
+            {% if request.session.sesion %}
+                Bienvenido: {{ request.session.sesion.nombre }}
+                <div class="nav-icons">
+                    <div class="dropdown">
+                        <button class="dropdown-button" class="fa-solid fa-user">Perfil</button>
+                        <div class="dropdown-content">
+                            <a href="">Configuración</a>
+                            <a href="{% url 'logout' %}">Cerrar sesión</a>
+                            <!-- Agrega más opciones aquí -->
+                        </div>
+                    </div>
+                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                </div>
+            {% else %}
+                <div class="nav-icons">
+                    <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
+                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                </div>
+            {% endif %}
         </nav>
         <div>
+
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
             {% block cuerpo %}
                 
             {% endblock %}  
