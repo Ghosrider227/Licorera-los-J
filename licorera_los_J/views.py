@@ -35,30 +35,30 @@ def login(request):
                         "email" : u.email,
                        
                     }
-                messages.success(request, "Bienvenido")
+                
                 return redirect("index")
             else:
                 raise Usuarios.DoesNotExist()
             
         except Usuarios.DoesNotExist:
-            messages.warning(request, "Contrasena incorrecta")
+            messages.warning(request, "Correo incorrecto o Contrasena incorrecta")
             request.session["sesion"] = None
         except Exception as e:
             messages.warning(request, f"No se pudo iniciar sesión, intente de nuevo",{e})
             request.session["sesion"] = None
-        return redirect("login")
+        return redirect("index")
     else:
         verificar = request.session.get('sesion', False)
 
         if verificar:
             return redirect('index')
         else:
-            return render(request, 'login.html')
-
+            messages.warning(request, "No se pudo iniciar sesión, intente de nuevo")
+            return render(request, 'index.html')
 def logout(request):
     try:
         del request.session["sesion"]
-        return redirect("login")
+        return redirect("index")
     except Exception as e:
         messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
         return redirect("inicio")
