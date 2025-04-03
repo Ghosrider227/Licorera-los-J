@@ -17,7 +17,7 @@ class Usuarios(models.Model):
     telefono = models.IntegerField()
     fecha_nacimiento = models.DateField(help_text='AAAA-MM-DD', null=True, blank=True)
     direccion = models.CharField(max_length=100, null=True, blank=True)
-    foto = models.ImageField(upload_to='usuario/', null=True, blank=True)
+    foto = models.ImageField(upload_to='usuario/', default='usuario/default.svg', null=True, blank=True)
     
     def __str__(self):
         return (f'{self.nombre}, {self.get_cuenta_display()}')
@@ -90,7 +90,7 @@ class Productos(models.Model):
     precio = models.FloatField()
     descripcion = models.TextField(max_length=200)
     cantidad = models.IntegerField()
-    foto = models.ImageField(upload_to='producto/', null=True, blank=True)
+    foto = models.ImageField(upload_to='producto/', default='producto/default.svg', null=True, blank=True)
     
     def __str__(self):
         return f'{self.nombre_producto}, {self.get_tipo_producto_display()}'
