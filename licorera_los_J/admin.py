@@ -4,7 +4,7 @@ from .models import *
 
 @admin.register(Usuarios)
 class Usuario(admin.ModelAdmin):
-    list_display = ['id','contrasena', 'nombre', 'apellido', 'cuenta', 'telefono', 'email', 'fecha_nacimiento', 'direccion']
+    list_display = ['id','foto', 'nombre', 'apellido', 'cuenta', 'telefono', 'email', 'fecha_nacimiento', 'direccion']
     search_list = []
 
 @admin.register(Proveedores)
