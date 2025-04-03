@@ -123,7 +123,7 @@ def catalogo(request):
     
     # Filtra los productos según el tipo seleccionado
     if tipo_producto:
-        productos = Productos.objects.filter(tipo_de_producto__icontains=tipo_producto)
+        productos = Productos.objects.filter(tipo_producto=tipo_producto)
     else:
         # Si no se selecciona nada, muestra todos los productos
         productos = Productos.objects.all()
