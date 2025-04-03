@@ -41,21 +41,34 @@
 
             <div class="search-bar">
                 <form method="GET" action="{% url 'catalogo' %}">
-                    <input type="text" name="q" placeholder="Buscar productos..." class="form-control">
-                    <button type="submit" class="btn btn-primary">Buscar</button>
+                    <select name="tipo_producto" class="form-control">
+                        <option value="">Todos los productos</option>
+                        <option value="Vino" {% if tipo_producto == "Vino" %}selected{% endif %}>Vino</option>
+                        <option value="Ron" {% if tipo_producto == "Ron" %}selected{% endif %}>Ron</option>
+                        <option value="Cerveza" {% if tipo_producto == "Cerveza" %}selected{% endif %}>Cerveza</option>
+                        <option value="Vodka" {% if tipo_producto == "Vodka" %}selected{% endif %}>Vodka</option>
+                        <option value="Whisky" {% if tipo_producto == "Whisky" %}selected{% endif %}>Whisky</option>
+                        <option value="Tequila" {% if tipo_producto == "Tequila" %}selected{% endif %}>Tequila</option>
+                        <option value="Guaro" {% if tipo_producto == "Guaro" %}selected{% endif %}>Guaro</option>
+                        <option value="Champan" {% if tipo_producto == "Champan" %}selected{% endif %}>Champán</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
                 </form>
             </div>
         </ul>
         
     </div>
 
-    <section class="products-grid">
+    
+<section class="products-grid">
+    {% if productos %}
         {% for producto in productos %}
         <div class="product-card">
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}">
             <div class="product-info">
-                <h3>{{ producto.nombre }}</h3>
+                <h3>{{ producto.nombre_producto }}</h3>
                 <p class="price">${{ producto.precio }}</p>
+                <p>{{ producto.descripcion }}</p>
                 {% if producto.disponible %}
                     <button class="add-to-cart">AGREGAR AL CARRITO</button>
                 {% else %}
@@ -63,8 +76,9 @@
                 {% endif %}
             </div>
         </div>
-        {% empty %}
-        <p>No se encontraron productos.</p>
         {% endfor %}
-    </section>
-{% endblock  %}
+    {% else %}
+        <p>No se encontraron productos para esta categoría.</p>
+    {% endif %}
+</section>
+{% endblock %}

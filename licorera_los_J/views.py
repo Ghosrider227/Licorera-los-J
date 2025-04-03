@@ -118,9 +118,18 @@ def cobertura(request):
     return render(request, 'cobertura.html')
 
 def catalogo(request):
-    query = request.GET.get('q', '')  # Obtén la consulta de búsqueda
-    if query:
-        productos = Productos.objects.filter(nombre__icontains=query)  # Filtra por nombre
+  # Obtiene el valor seleccionado en el <select>
+    tipo_producto = request.GET.get('tipo_producto', '')  # Por defecto, vacío si no se selecciona nada
+    
+    # Filtra los productos según el tipo seleccionado
+    if tipo_producto:
+        productos = Productos.objects.filter(tipo_de_producto__icontains=tipo_producto)
     else:
-        productos = Productos.objects.all()  # Muestra todos los productos si no hay búsqueda
-    return render(request, 'catalogo.html', {'productos': productos})
+        # Si no se selecciona nada, muestra todos los productos
+        productos = Productos.objects.all()
+    
+    contexto = {
+        'productos': productos,
+        'tipo_producto': tipo_producto,  # Pasamos el valor seleccionado al template
+    }
+    return render(request, 'catalogo.html', contexto)
