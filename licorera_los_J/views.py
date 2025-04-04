@@ -133,3 +133,80 @@ def catalogo(request):
         'tipo_producto': tipo_producto,  # Pasamos el valor seleccionado al template
     }
     return render(request, 'catalogo.html', contexto)
+
+
+
+#ADMINISTRADOR
+def productos(request):
+    # all() -> todos      filter() -> algunos      get() -> 1 único
+    q = Productos.objects.all()
+    contexto = {
+        "data": q
+    }
+    return render(request, "administrador/listar_productos.html",contexto)
+
+def eliminar_productos(request, id_productos):
+    # Obtener la instancia
+    try:
+        q = Productos.objects.get(pk = id_productos)
+        q.delete()
+        messages.success(request, "Productos eliminado exitosamente!")
+    
+    except Exception as e:
+        messages.error(request, f"Error: {e}")
+
+    return redirect("productos")
+
+def agregar_productos(request):
+    if request.method == "POST":
+        nombre_producto = request.POST.get("nombre_producto")
+        tipo_producto = request.POST.get("tipo_producto")
+        precio = request.POST.get("precio")
+        descripcion = request.POST.get("descripcion")
+        cantidad = request.POST.get("cantidad")
+        try:
+            q = Productos(
+                nombre_producto=nombre_producto,
+                tipo_producto=tipo_producto,
+                precio=precio,
+                descripcion=descripcion,
+                cantidad=cantidad
+            )
+            q.save()
+            messages.success(request, "Producto agregado exitosamente!")
+            return redirect("administrador/productos")
+        except Exception as e:
+            messages.error(request, f"Error: {e}")
+            return redirect("agregar_productos")
+    else:
+        return render(request, "administrador/formulario_productos.html")
+    
+    
+def editar_productos(request, id_productos):
+    if request.method == "POST":
+        try:
+            q = Productos.objects.get(pk=id_productos)
+
+            q.nombre_producto=request.POST.get("nombre_producto")
+            q.tipo_producto=request.POST.get("tipo_producto")
+            q.precio=float(request.POST.get("precio"))
+            q.descripcion=request.POST.get("descripcion")
+            q.cantidad=request.POST.get("cantidad")
+            q.save()
+            messages.success(request, "Producto actualizado correctamente!")
+            return redirect("productos")
+        except Exception as e:
+            print (f"Error: {e}")
+            messages.error(request, f"Error: {e}")
+            return redirect("editar_producto", id_productos=id_productos)
+    else:
+        q = Productos.objects.get(pk=id_productos)
+        contexto = {"datos": q}
+        print(q)
+        
+        print (q.precio)
+        return render(request, "administrador/formulario_productos.html", contexto)
+    
+
+
+
