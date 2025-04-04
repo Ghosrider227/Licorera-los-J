@@ -27,6 +27,6 @@ class DetallesFacturas(admin.ModelAdmin):
 
 @admin.register(Productos)
 class Producto(admin.ModelAdmin):
-    list_display = ['id', 'nombre_producto', 'tipo_producto', 'descripcion', 'precio','cantidad']
+    list_display = ['id', 'foto', 'nombre_producto', 'tipo_producto', 'descripcion', 'precio','cantidad']
     list_filter=["tipo_producto"]
     list_editable=['precio', 'cantidad']
