@@ -125,3 +125,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # se agrega para que los numero traidos de la BD tengan formato de miles
 # USE_THOUSAND_SEPARATOR = True
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'

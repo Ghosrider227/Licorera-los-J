@@ -1,8 +1,11 @@
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.shortcuts import render, redirect
 from .models import *
 from django.db.utils import IntegrityError
 from django.contrib import messages
 from django.conf import settings
+from django.http import JsonResponse
 
 from .utils import *
 def index(request):
@@ -117,10 +120,23 @@ def cart(request):
 def cobertura(request):
     return render(request, 'cobertura.html')
 
-def catalogo(request):
-    query = request.GET.get('q', '')  # Obtén la consulta de búsqueda
-    if query:
-        productos = Productos.objects.filter(nombre__icontains=query)  # Filtra por nombre
-    else:
-        productos = Productos.objects.all()  # Muestra todos los productos si no hay búsqueda
-    return render(request, 'catalogo.html', {'productos': productos})
+
+def obtener_carrito(request):
+    carrito = request.session.get('carrito', [])
+    total = sum(item['precio'] * item['cantidad'] for item in carrito)
+    return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
+
+
+@csrf_exempt
+def agregar_carrito(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        product_id = data.get('id')
+
+        # Simulación de agregar producto al carrito (puedes usar la sesión o base de datos)
+        carrito = request.session.get('carrito', [])
+        carrito.append({'id': product_id, 'nombre': f'Producto {product_id}', 'cantidad': 1, 'precio': 100})
+        request.session['carrito'] = carrito
+
+        return JsonResponse({'success': True, 'mensaje': 'Producto agregado al carrito'})
+    return JsonResponse({'success': False, 'mensaje': 'Método no permitido'})

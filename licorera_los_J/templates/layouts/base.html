@@ -8,6 +8,8 @@
         <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
@@ -70,10 +72,27 @@
                           <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
                         </form>
                       </div>
-                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                    <a href="#" class="icon-cart" id="cartButton">
+                        <i class="fa-solid fa-cart-shopping"></i> Carrito
+                        <span id="cartCount">0</span>
+                    </a>
+                      <div id="cartMenu" class="cart-menu">
+                          <div class="cart-header">
+                              <h4>Tu Carrito</h4>
+                              <button id="closeCartMenu" class="close-cart">&times;</button>
+                          </div>
+                          <div class="cart-content">
+                              <!-- Aquí se cargarán los productos dinámicamente -->
+                          </div>
+                          <div class="cart-footer">
+                              <p class="total-price">Total: $0</p>
+                              <button class="btn btn-primary">Ir al carrito</button>
+                          </div>
+                      </div>
                 </div>
             {% endif %}
         </nav>
+
         <div>
             {% block cuerpo %}
                 
@@ -105,4 +124,5 @@
     </footer>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
+    <script src="{% static 'js/carrito.js' %}"></script>
 </html>
