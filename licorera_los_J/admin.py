@@ -4,7 +4,7 @@ from .models import *
 
 @admin.register(Usuarios)
 class Usuario(admin.ModelAdmin):
-    list_display = ['id','contrasena', 'nombre', 'apellido', 'cuenta', 'telefono', 'email', 'fecha_nacimiento', 'direccion']
+    list_display = ['id','foto', 'nombre', 'apellido', 'cuenta', 'telefono', 'email', 'fecha_nacimiento', 'direccion']
     search_list = []
 
 @admin.register(Proveedores)
@@ -27,6 +27,6 @@ class DetallesFacturas(admin.ModelAdmin):
 
 @admin.register(Productos)
 class Producto(admin.ModelAdmin):
-    list_display = ['id', 'nombre_producto', 'tipo_producto', 'descripcion', 'precio','cantidad']
+    list_display = ['id', 'foto', 'nombre_producto', 'tipo_producto', 'descripcion', 'precio','cantidad']
     list_filter=["tipo_producto"]
     list_editable=['precio', 'cantidad']

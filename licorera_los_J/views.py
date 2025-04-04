@@ -3,6 +3,7 @@ from .models import *
 from django.db.utils import IntegrityError
 from django.contrib import messages
 from django.conf import settings
+import re
 
 from .utils import *
 def index(request):
@@ -26,14 +27,13 @@ def login(request):
                         "nombre" : u.nombre,
                         "cuenta" : u.cuenta,
                         "email" : u.email,
-                     }
+                    }
                 else:
                     request.session["sesion"] = {
                         "id" : u.id,
                         "nombre" : u.nombre,
                         "cuenta" : u.cuenta,
                         "email" : u.email,
-                       
                     }
                 messages.success(request, "Bienvenido")
                 return redirect("index")
@@ -75,8 +75,19 @@ def register(request):
         contrasena = request.POST.get('contrasena')
         confirmar_contrasena = request.POST.get('confirmar_contrasena')
         telefono = request.POST.get('telefono')
-        fecha_nacimiento = request.POST.get('fecha_nacimiento')
-        direccion = request.POST.get('direccion')
+        
+        if not re.match(r'^[A-Za-z\s]+$', nombre):
+            messages.warning(request, 'El nombre solo debe contener letras')
+            return redirect('register')
+        
+        if not re.match(r'^[A-Za-z\s]+$', apellido):
+            messages.warning(request, 'El apellido solo debe contener letras')
+            return redirect('register')
+        
+        if not telefono.isdigit():
+            messages.warning(request, 'El telefono debe contener solo numeros')
+            return redirect('register')
+        
         if u.filter(email=email).exists():
             messages.warning(request, 'El correo ya esta registrado')
             return redirect('register')
@@ -90,8 +101,8 @@ def register(request):
                         email = email,
                         contrasena = hash_password(contrasena),
                         telefono = telefono,
-                        fecha_nacimiento = fecha_nacimiento,
-                        direccion = direccion
+                        fecha_nacimiento = None,
+                        direccion = None
                     )
                     u.save()
                     return redirect('login')
