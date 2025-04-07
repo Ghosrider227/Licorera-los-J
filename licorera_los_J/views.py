@@ -1,11 +1,14 @@
+from django.views.decorators.csrf import csrf_exempt
+import json
 from django.shortcuts import render, redirect
 from .models import *
 from django.db.utils import IntegrityError
 from django.contrib import messages
 from django.conf import settings
+from django.http import JsonResponse
 import re
-
 from .utils import *
+
 def index(request):
     # Traigo la informacion de la BD y se la mando al index con el contexto
     p = Productos.objects.all()
@@ -35,30 +38,30 @@ def login(request):
                         "cuenta" : u.cuenta,
                         "email" : u.email,
                     }
-                messages.success(request, "Bienvenido")
+                
                 return redirect("index")
             else:
                 raise Usuarios.DoesNotExist()
             
         except Usuarios.DoesNotExist:
-            messages.warning(request, "Contrasena incorrecta")
+            messages.warning(request, "Correo incorrecto o Contrasena incorrecta")
             request.session["sesion"] = None
         except Exception as e:
             messages.warning(request, f"No se pudo iniciar sesión, intente de nuevo",{e})
             request.session["sesion"] = None
-        return redirect("login")
+        return redirect("index")
     else:
         verificar = request.session.get('sesion', False)
 
         if verificar:
             return redirect('index')
         else:
-            return render(request, 'login.html')
-
+            messages.warning(request, "No se pudo iniciar sesión, intente de nuevo")
+            return render(request, 'index.html')
 def logout(request):
     try:
         del request.session["sesion"]
-        return redirect("login")
+        return redirect("index")
     except Exception as e:
         messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
         return redirect("inicio")
@@ -128,6 +131,26 @@ def cart(request):
 def cobertura(request):
     return render(request, 'cobertura.html')
 
+def obtener_carrito(request):
+    carrito = request.session.get('carrito', [])
+    total = sum(item['precio'] * item['cantidad'] for item in carrito)
+    return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
+
+
+@csrf_exempt
+def agregar_carrito(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        product_id = data.get('id')
+
+        # Simulación de agregar producto al carrito (puedes usar la sesión o base de datos)
+        carrito = request.session.get('carrito', [])
+        carrito.append({'id': product_id, 'nombre': f'Producto {product_id}', 'cantidad': 1, 'precio': 100})
+        request.session['carrito'] = carrito
+
+        return JsonResponse({'success': True, 'mensaje': 'Producto agregado al carrito'})
+    return JsonResponse({'success': False, 'mensaje': 'Método no permitido'})
+  
 def catalogo(request):
   # Obtiene el valor seleccionado en el <select>
     tipo_producto = request.GET.get('tipo_producto', '')  # Por defecto, vacío si no se selecciona nada
@@ -217,7 +240,3 @@ def editar_productos(request, id_productos):
         
         print (q.precio)
         return render(request, "administrador/formulario_productos.html", contexto)
-    
-
-
-

@@ -5,51 +5,31 @@
 {% block titulo %}
     Cobertura
 {% endblock  %}
-    
 {% block cuerpo %}
     {% if data %}
         <div class="hero">
-            <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Licores"> 
+            <img src="{% static 'img/bar_licores_iluminado.jpg' %}" alt="Licores">
             <div class="slider-controls">
                 <span class="current-slide">1</span> / <span class="total-slides">30</span>
-            </div> 
+            </div>
         </div>
         <section class="offers">
             <h2>OFERTAS</h2>
             <div class="products">
                 {% for p in data %}
-                    {% if p.nombre_producto == 'Johnnie Walker - Black Label' %}
-                        <div class="product-card">
-                            <img src="{% static 'img/black_label.jpg' %}" alt="Black Label">
-                            <span class="discount-tag">-20%</span>
-                            <div class="product-info">
-                                <h3>{{ p.nombre_producto }}</h3>
-                                <p class="price">${{ p.precio }}</p>
-                                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-                            </div>
-                        </div>
-                    {% elif p.nombre_producto == 'Cerveza Pilsen' %}
-                        <div class="product-card">
-                            <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza">
-                            <span class="discount-tag">-15%</span>
-                            <div class="product-info">
-                                <h3>{{ p.nombre_producto }}</h3>
-                                <p class="price">${{ p.precio }}</p>
-                                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-                            </div>
-                        </div>
-                    {% elif p.nombre_producto == 'Don Julio Blanco' %}
-                        <div class="product-card">
-                            <img src="{% static 'img/donJulio.jpg' %}" alt="Don Julio Azul">
-                            <div class="product-info">
-                                <h3>{{ p.nombre_producto }}</h3>
-                                <p class="price">${{ p.precio }}</p>
-                                <button class="add-to-cart">AGREGAR AL CARRITO</button>
-                            </div>
-                        </div>
+                <div class="product-card">
+                    <img src="{% static 'img/' %}{{ p.imagen }}" alt="{{ p.nombre_producto }}">
+                    {% if p.descuento %}
+                    <span class="discount-tag">-{{ p.descuento }}%</span>
                     {% endif %}
+                    <div class="product-info">
+                        <h3>{{ p.nombre_producto }}</h3>
+                        <p class="price">${{ p.precio }}</p>
+                        <button class="add-to-cart" data-id="{{ p.id }}" data-nombre="{{ p.nombre_producto }}" data-precio="{{ p.precio }}" data-imagen="{% static 'img/' %}{{ p.imagen }}">AGREGAR AL CARRITO</button>
+                    </div>
+                </div>
                 {% endfor %}
             </div>
         </section>
     {% endif %}
-{% endblock  %}
+{% endblock %}

@@ -8,6 +8,8 @@
         <link rel="shortcut icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+        <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
@@ -19,6 +21,7 @@
                 <li><a href="{% url 'cobertura' %}">COBERTURA</a></li>
                 <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
             </ul>
+            
             {% if request.session.sesion %}
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
@@ -34,22 +37,63 @@
                 </div>
             {% else %}
                 <div class="nav-icons">
-                    <a href="{% url 'login' %}" class="icon-user"><i class="fa-solid fa-user"></i> Sing in</a>
-                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                    {% if messages %}
+                      {% for message in messages %}
+                          <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                              {{ message }}
+                              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                          </div>
+                      {% endfor %}
+                    {% endif %}
+                    <div class="dropdown">
+                        <button type="button" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                          Iniciar sesión
+                        </button>
+                        <form class="dropdown-menu p-4" id="loginForm" method="post" action="{% url 'login' %}">
+                          {% csrf_token %}
+                          <div class="mb-3">
+                            <label for="cuenta" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="cuenta" name="cuenta"  placeholder="email@example.com" required>
+                          </div>
+                          <div class="mb-3">
+                            <label for="password" class="form-label">Contraseña</label>
+                            <input type="password" class="form-control" id="password" name="contrasena" placeholder="Password" required>
+                          </div>
+                          <div class="mb-3">
+                            <div class="form-check">
+                              <input type="checkbox" class="form-check-input" id="dropdownCheck2">
+                              <label class="form-check-label" for="dropdownCheck2">
+                                Acordarse de mí
+                              </label>
+                            </div>
+                          </div>
+                          <button type="submit" class="btn btn-primary">Sign in</button>
+                          <a class="btn btn-secondary" href="{% url 'register' %}">Registrar</a>
+                          <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
+                        </form>
+                      </div>
+                    <a href="#" class="icon-cart" id="cartButton">
+                        <i class="fa-solid fa-cart-shopping"></i> Carrito
+                        <span id="cartCount">0</span>
+                    </a>
+                      <div id="cartMenu" class="cart-menu">
+                          <div class="cart-header">
+                              <h4>Tu Carrito</h4>
+                              <button id="closeCartMenu" class="close-cart">&times;</button>
+                          </div>
+                          <div class="cart-content">
+                              <!-- Aquí se cargarán los productos dinámicamente -->
+                          </div>
+                          <div class="cart-footer">
+                              <p class="total-price">Total: $0</p>
+                              <button class="btn btn-primary">Ir al carrito</button>
+                          </div>
+                      </div>
                 </div>
             {% endif %}
         </nav>
+
         <div>
-
-
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
             {% block cuerpo %}
                 
             {% endblock %}  
@@ -78,4 +122,7 @@
             </div>
         </div>
     </footer>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
+    <script src="{% static 'js/carrito.js' %}"></script>
 </html>

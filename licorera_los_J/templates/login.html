@@ -9,6 +9,7 @@
 
 
 {% block cuerpo %}
+
 <head>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
@@ -34,7 +35,13 @@
             <div class="auth-links">
                 <p>¿NO TIENES UNA CUENTA? <a href="{% url 'register' %}">Regístrate</a></p>
             </div>
-            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{% if {{ message.tags }}}">
+                        <p>{{ message }}</p>
+                    </div>
+                {% endfor %}
+            {% endif %}
             <div class="social-login">
                 <button type="button" class="social-button google">
                     Iniciar sesión con Google
