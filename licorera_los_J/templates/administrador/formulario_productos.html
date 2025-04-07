@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block titulo %}Agregar Servicio{% endblock %}
+{% block miga %}
+    <li class="breadcrumb-item"><a href="{% url 'productos' %}">Productos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Agregar Productos</li>
+
+{% endblock %}
+
+{% block cuerpo %}
+    <form action="" method="post" class="col-4 mt-2 p-2 m-auto">
+        {% csrf_token %}
+        {% if datos %}
+            <h1>Editar Productos {{datos.id}} </h1>
+        {% else %}
+            <h1>Agregar Productos</h1>
+        {% endif %}
+        <label>Nombre:</label>
+        <input value="{{datos.nombre_producto}}" type="text" name="nombre_producto" class="form-control"><br>
+        <label>Categoria:</label>
+        <input value="{{datos.get_tipo_producto_display}}" type="tetxt" name="tipo_producto" class="form-control"><br>
+        <label>Precio:</label>
+        <input value="{{datos.precio|floatformat:0}}" type="number" name="precio" class="form-control"><br>
+        <label>Descripcion:</label>
+        <textarea value="{{datos.descripcion}}" type="text" name="descripcion" class="form-control">{{datos.descripcion}}</textarea><br>
+        <label>Cantidad:</label>
+        <input value="{{datos.cantidad}}" type="number" name="cantidad" class="form-control">
+
+        <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
+    </form>
+{% endblock %}

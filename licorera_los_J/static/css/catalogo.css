@@ -141,6 +141,7 @@
 .search-bar {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     margin-left: 20px; /* Separación del buscador */
 }
 
@@ -173,3 +174,17 @@
     background-color: #ffcc00; /* Amarillo dorado al pasar el mouse */
 }
 
+.buscador {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+#formulario-busqueda{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}

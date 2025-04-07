@@ -125,5 +125,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # se agrega para que los numero traidos de la BD tengan formato de miles
 # USE_THOUSAND_SEPARATOR = True
-
+MEDIA_URL = "media/"
+MEDIA_ROOT = BASE_DIR / "licorera_los_J/media"
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
