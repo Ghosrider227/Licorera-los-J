@@ -18,7 +18,7 @@
             <div class="products">
                 {% for p in data %}
                 <div class="product-card">
-                    <img src="{% static 'img/' %}{{ p.imagen }}" alt="{{ p.nombre_producto }}">
+                    <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
                     {% if p.descuento %}
                     <span class="discount-tag">-{{ p.descuento }}%</span>
                     {% endif %}
