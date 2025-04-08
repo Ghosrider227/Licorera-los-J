@@ -1,0 +1,23 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block titulo %}Editar Usuario{% endblock %}
+{% block miga %}
+    <li class="breadcrumb-item"><a href="{% url 'productos' %}">Productos</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Agregar Productos</li>
+
+{% endblock %}
+
+{% block cuerpo %}
+    <form action="" method="post" class="col-4 mt-2 p-2 m-auto">
+        {% csrf_token %}
+        {% if usuarios %}
+            <h1>Editar Usuario{{usuarios.id}} </h1>
+        {% else %}
+            <h1>Editar Usuario</h1>
+        {% endif %}
+        <label>Cuenta:</label>
+        <input value="{{usuarios.get_cuenta_display}}" type="text" name="cuenta" class="form-control"><br> 
+
+        <button type="submit" class="btn btn-{% if usuarios %}info{% else %}success{% endif %}">{% if usuarios %}Actualizar{% else %}Guardar{% endif %}</button>
+    </form>
+{% endblock %}

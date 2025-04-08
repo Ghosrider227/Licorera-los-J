@@ -240,3 +240,33 @@ def editar_productos(request, id_productos):
         
         print (q.precio)
         return render(request, "administrador/formulario_productos.html", contexto)
+
+
+#ADMINISTRADOR/USUARIOS
+
+def usuarios(request):
+    u = Usuarios.objects.all()
+    contexto = {
+        "dato": u
+    }
+    return render(request, "administrador/listar_usuarios.html",contexto)
+
+def editar_usuario(request, id_usuario):
+    if request.method == "POST":
+        try:
+            q = Usuarios.objects.get(pk=id_usuario)
+            q.cuenta=request.POST.get("cuenta")
+            q.save()
+            messages.success(request, "Usuario actualizado correctamente!")
+            return redirect("usuarios")
+        except Exception as e:
+            print (f"Error: {e}")
+            messages.error(request, f"Error: {e}")
+            return redirect("editar_usuario", id_usuario=id_usuario)
+    else:
+        q = Usuarios.objects.get(pk=id_usuario)
+        contexto = {"usuarios": q}
+        print(q)
+        
+        print (q.contrasena)
+        return render(request, "administrador/formulario_usuario.html", contexto)
