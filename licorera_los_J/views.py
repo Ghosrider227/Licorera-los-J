@@ -37,17 +37,16 @@ def login(request):
                         "nombre" : u.nombre,
                         "cuenta" : u.cuenta,
                         "email" : u.email,
+                        "fecha_nacimiento" : u.fecha_nacimiento,
                     }
-                
                 return redirect("index")
             else:
                 raise Usuarios.DoesNotExist()
-            
         except Usuarios.DoesNotExist:
             messages.warning(request, "Correo incorrecto o Contrasena incorrecta")
             request.session["sesion"] = None
         except Exception as e:
-            messages.warning(request, f"No se pudo iniciar sesión, intente de nuevo",{e})
+            messages.warning(request, f"Error: ",{e})
             request.session["sesion"] = None
         return redirect("index")
     else:
@@ -56,7 +55,6 @@ def login(request):
         if verificar:
             return redirect('index')
         else:
-            messages.warning(request, "No se pudo iniciar sesión, intente de nuevo")
             return render(request, 'index.html')
 def logout(request):
     try:
@@ -87,8 +85,8 @@ def register(request):
             messages.warning(request, 'El apellido solo debe contener letras')
             return redirect('register')
         
-        if not telefono.isdigit():
-            messages.warning(request, 'El telefono debe contener solo numeros')
+        if not telefono.isdigit() and len(telefono) != 10:
+            messages.warning(request, 'El telefono debe contener solo numeros y tener 10 digitos')
             return redirect('register')
         
         if u.filter(email=email).exists():
@@ -108,7 +106,7 @@ def register(request):
                         direccion = None
                     )
                     u.save()
-                    return redirect('login')
+                    return redirect('index')
                 except Exception as e:
                     messages.error(request, f'Error: {e}')
                     return redirect('register')

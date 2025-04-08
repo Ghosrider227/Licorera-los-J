@@ -65,7 +65,7 @@
     {% if productos %}
         {% for producto in productos %}
         <div class="product-card">
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}">
+            <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}">
             <div class="product-info">
                 <h3>{{ producto.nombre_producto }}</h3>
                 <p class="price">${{ producto.precio }}</p>
