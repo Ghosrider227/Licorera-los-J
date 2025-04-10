@@ -30,10 +30,26 @@
                         <div class="dropdown-content">
                             <a href="">Configuración</a>
                             <a href="{% url 'logout' %}">Cerrar sesión</a>
-                            <!-- Agrega más opciones aquí -->
                         </div>
                     </div>
                     <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                    <a href="#" class="icon-cart" id="cartButton">
+                        <i class="fa-solid fa-cart-shopping"></i> Carrito
+                        <span id="cartCount">0</span>
+                    </a>
+                    <div id="cartMenu" class="cart-menu">
+                        <div class="cart-header">
+                            <h4>Tu Carrito</h4>
+                            <button id="closeCartMenu" class="close-cart">&times;</button>
+                        </div>
+                        <div class="cart-content">
+                            <!-- Aquí se cargarán los productos dinámicamente -->
+                        </div>
+                        <div class="cart-footer">
+                            <p class="total-price">Total: $0</p>
+                            <button class="btn btn-primary">Ir al carrito</button>
+                        </div>
+                    </div>
                 </div>
             {% else %}
                 <div class="nav-icons">
@@ -50,46 +66,45 @@
                             Iniciar sesión
                         </button>
                         <form class="dropdown-menu p-4" id="loginForm" method="post" action="{% url 'login' %}">
-                          {% csrf_token %}
-                          <div class="mb-3">
-                            <label for="cuenta" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="cuenta" name="cuenta"  placeholder="email@example.com" required>
-                          </div>
-                          <div class="mb-3">
-                            <label for="password" class="form-label">Contraseña</label>
-                            <input type="password" class="form-control" id="password" name="contrasena" placeholder="Password" required>
-                          </div>
-                          <div class="mb-3">
-                            <div class="form-check">
-                              <input type="checkbox" class="form-check-input" id="dropdownCheck2">
-                              <label class="form-check-label" for="dropdownCheck2">
-                                Acordarse de mí
-                              </label>
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label for="cuenta" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="cuenta" name="cuenta" placeholder="email@example.com" required>
                             </div>
-                          </div>
-                          <button type="submit" class="btn btn-primary">Sign in</button>
-                          <a class="btn btn-secondary" href="{% url 'register' %}">Registrar</a>
-                          <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="password" name="contrasena" placeholder="Password" required>
+                            </div>
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="dropdownCheck2">
+                                    <label class="form-check-label" for="dropdownCheck2">
+                                        Acordarse de mí
+                                    </label>
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Sign in</button>
+                            <a class="btn btn-secondary" href="{% url 'register' %}">Registrar</a>
+                            <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
                         </form>
-                      </div>
+                    </div>
                     <a href="#" class="icon-cart" id="cartButton">
                         <i class="fa-solid fa-cart-shopping"></i> Carrito
                         <span id="cartCount">0</span>
                     </a>
-                      <div id="cartMenu" class="cart-menu">
-                          <div class="cart-header">
-                              <h4>Tu Carrito</h4>
-                              <button id="closeCartMenu" class="close-cart">&times;</button>
-                          </div>
-                          <div class="cart-content">
-                              <!-- Aquí se cargarán los productos dinámicamente -->
-                          </div>
-                          <div class="cart-footer">
-                              <p class="total-price">Total: $0</p>
-                              <button class="btn btn-primary">Ir al carrito</button>
-                          </div>
-                      </div>
-                </div>
+                    <div id="cartMenu" class="cart-menu">
+                        <div class="cart-header">
+                            <h4>Tu Carrito</h4>
+                            <button id="closeCartMenu" class="close-cart">&times;</button>
+                        </div>
+                        <div class="cart-content">
+                            <!-- Aquí se cargarán los productos dinámicamente -->
+                        </div>
+                        <div class="cart-footer">
+                            <p class="total-price">Total: $0</p>
+                            <button class="btn btn-primary">Ir al carrito</button>
+                        </div>
+                    </div>
             {% endif %}
         </nav>
 
@@ -98,7 +113,6 @@
                 
             {% endblock %}  
         </div>
-        <!-- <script src="script.js"></script> -->  
     </body>
     <footer>
         <div class="footer-content">
