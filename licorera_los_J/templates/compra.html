@@ -2,65 +2,67 @@
 {% load static %}
 
 {% block titulo %}
-    Carrito
+    Canasta de compra
 {% endblock %}
     
 
 {% block cuerpo %}
 <head>
-    <link rel="stylesheet" href="{% static 'css/cart.css' %}">
+    <link rel="stylesheet" href="{% static 'css/canasta.css' %}">
 </head>
-    <div class="cart-container">
-        <h2>INICIO DE COMPRA</h2>
-        
-        <div class="cart-items">
-            <div class="cart-item">
-                <img src="{% static 'img/ojoDeTigre.jpg' %}" alt="Ojo de Tigre" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>OJO DE TIGRE</h3>
-                    <p class="price">$70.000</p>
-                </div>
-            </div>
-            
-            <div class="cart-item">
-                <img src="{% static 'img/ronViejoCaldas.jpg' %}" alt="Ron Viejo de Caldas" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>RON VIEJO DE CALDAS</h3>
-                    <p class="price">$74.000</p>
-                </div>
-            </div>
-            
-            <div class="cart-item">
-                <img src="{% static 'img/cerveza_pilsen.jpg' %}" alt="Pilsen Cerveza" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>PILSEN CERVEZA</h3>
-                    <p class="price">$30.000</p>
-                </div>
-            </div>
-            
-            <div class="cart-item">
-                <img src="{% static 'img/aguardienteAntioqueño.jpg' %}" alt="Aguardiente Antioqueño" class="cart-item-image">
-                <div class="cart-item-details">
-                    <h3>AGUARDIENTE ANTIOQUEÑO</h3>
-                    <p class="price">$85.000</p>
-                </div>
-            </div>
+<div class="carrito-container">
+    <div class="carrito-icono">
+        <i class="fas fa-shopping-cart" style="font-size: 48px; color: #333;"></i>
+    </div>
+    {% if request.session.sesion %}
+        <h1 class="carrito-titulo">
+            TU BOLSA
+        </h1>
+        <div class="productos-carrito">
+            <h2 class="carrito-subtitulo">Tus productos</h2>
+            <ul>
+                {% for item in productos_carrito %}
+                <li class="producto-item">
+                    <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre }}" class="producto-imagen">
+                    <div class="producto-detalle">
+                        <h3>{{ item.producto.nombre }}</h3>
+                        <p>Precio: ${{ item.producto.precio }}</p>
+                        <p>Cantidad: {{ item.cantidad }}</p>
+                        <p>Subtotal: ${{ item.subtotal }}</p>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
         </div>
-        
-        <div class="cart-summary">
-            <div class="summary-row">
-                <span>SUBTOTAL</span>
-                <span>$259.000</span>
-            </div>
-            <div class="summary-row total">
-                <span>TOTAL</span>
-                <span>$259.000</span>
-            </div>
+    {% else %}
+        <h1 class="carrito-titulo">
+            TU BOLSA ESTÁ VACÍA
+        </h1>
+        <p class="carrito-descripcion">
+            Ingresa para ver tu cesta y comenzar a comprar
+        </p>
+        <div class="carrito-botones">
+            <a href="{% url 'index' %}" class="carrito-boton carrito-boton-primario">
+                REGISTRARSE/INICIAR SESIÓN
+            </a>
+            <a href="{% url 'catalogo' %}" class="carrito-boton carrito-boton-secundario">
+                COMPRAR AHORA
+            </a>
         </div>
-        
-        <div class="cart-actions">
-            <button class="secondary-button">VER MÁS PRODUCTOS</button>
-            <button class="primary-button">INICIO DE COMPRA</button>
+    {% endif %}
+    
+    <div class="sugerencias-container">
+        <h2 class="sugerencias-titulo">Sugerencias para ti</h2>
+        <div class="sugerencias-grid">
+            {% for producto in productos_sugeridos %}
+            <div class="sugerencia-card">
+                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre }}" class="sugerencia-imagen">
+                <h3 class="sugerencia-nombre">{{ producto.nombre }}</h3>
+                <p class="sugerencia-precio">${{ producto.precio }}</p>
+                <a href="{% url 'detalle_producto' producto.id %}" class="sugerencia-boton">Ver más</a>
+            </div>
+            {% endfor %}
         </div>
     </div>
+</div>
 {% endblock %}

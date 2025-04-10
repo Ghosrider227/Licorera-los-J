@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 import json
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.db.utils import IntegrityError
 from django.contrib import messages
@@ -125,8 +126,33 @@ def register(request):
 def catalogo(request):
     return render(request, 'catalogo.html')
 
-def cart(request):
-    return render(request, 'cart.html')
+
+@login_required
+def compra(request):
+   # Obtén el carrito de la sesión
+    carrito = request.session.get('carrito', {})
+    productos_carrito = []
+
+    # Carga los productos del carrito desde la base de datos
+    for producto_id, cantidad in carrito.items():
+        producto = get_object_or_404(Productos, id=producto_id)
+        productos_carrito.append({
+            'producto': producto,
+            'cantidad': cantidad,
+            'subtotal': producto.precio * cantidad
+        })
+
+    # Productos sugeridos (puedes personalizar esta lógica)
+    productos_sugeridos = Productos.objects.all()[:4]
+
+    return render(request, 'compra.html', {
+        'productos_carrito': productos_carrito,
+        'productos_sugeridos': productos_sugeridos
+    })
+
+def detalle_producto(request, id):
+    producto = get_object_or_404(Productos, id=id)
+    return render(request, 'detalle_producto.html', {'producto': producto})
 
 def cobertura(request):
     return render(request, 'cobertura.html')

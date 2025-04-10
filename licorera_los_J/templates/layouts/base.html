@@ -33,7 +33,7 @@
                             <!-- Agrega más opciones aquí -->
                         </div>
                     </div>
-                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
+                    <a href="{% url 'compra' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
                 </div>
             {% else %}
                 <div class="nav-icons">
@@ -86,14 +86,14 @@
                           </div>
                           <div class="cart-footer">
                               <p class="total-price">Total: $0</p>
-                              <button class="btn btn-primary">Ir al carrito</button>
+                              <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
                           </div>
                       </div>
                 </div>
             {% endif %}
         </nav>
 
-        <div>
+        <div class="main-content">
             {% block cuerpo %}
                 
             {% endblock %}  

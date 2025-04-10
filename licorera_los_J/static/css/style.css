@@ -5,9 +5,19 @@
     font-family: Arial, sans-serif;
 }
 
+/* Contenedor principal del contenido */
+.main-content {
+    flex: 1; /* Hace que este contenedor ocupe el espacio restante entre el header y el footer */
+}
+
+
 body {
     background-color: #000;
     color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Altura mínima igual a la altura de la ventana */
+    margin: 0; /* Elimina márgenes predeterminados */
 }
 
 nav {
@@ -162,7 +172,9 @@ nav {
 footer {
     background-color: #111;
     padding: 2rem;
-    margin-top: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+    border-top: 1px solid #ddd; /* Línea superior para separar el footer */
 }
 
 .footer-content {

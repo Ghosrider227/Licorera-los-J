@@ -1,0 +1,179 @@
+/* Contenedor principal del carrito */
+.carrito-container {
+    max-width: 600px; /* Limita el ancho máximo del contenedor */
+    margin: 200px auto 0; /* Añade un margen superior para evitar que toque el menú */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow: hidden; /* Evita que el contenido se desborde */
+}
+
+.carrito-icono {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.carrito-icono svg, .carrito-icono i {
+    font-size: 48px; /* Tamaño del ícono */
+    color: #333; /* Color del ícono */
+}
+
+/* Título del carrito */
+.carrito-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 10px;
+}
+/* Subtítulo del carrito */
+.carrito-subtitulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #cfcbcb;
+    margin-bottom: 15px;
+}
+
+/* Productos en el carrito */
+.productos-carrito ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Descripción del carrito */
+.carrito-descripcion {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+/* Contenedor de botones */
+.carrito-botones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaciado entre los botones */
+    width: 100%; /* Asegura que los botones ocupen todo el ancho del contenedor */
+    max-width: 300px; /* Limita el ancho máximo de los botones */
+    margin: 0 auto; /* Centra los botones dentro del contenedor */
+}
+
+/* Botones del carrito */
+.carrito-boton {
+    display: block;
+    text-align: center;
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+/* Botón primario (registrarse/iniciar sesión) */
+.carrito-boton-primario {
+    background-color: #000;
+    color: #fff;
+}
+
+.carrito-boton-primario:hover {
+    background-color: #333;
+}
+
+/* Botón secundario (comprar ahora) */
+.carrito-boton-secundario {
+    border: 1px solid #000;
+    color: #000;
+    background-color: transparent;
+}
+
+.carrito-boton-secundario:hover {
+    background-color: #000;
+    color: #fff;
+}
+/* Contenedor de sugerencias */
+.sugerencias-container {
+    margin-top: 40px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sugerencias-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Grid de sugerencias */
+.sugerencias-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+/* Carta de sugerencia */
+.sugerencia-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.sugerencia-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+.sugerencia-imagen {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.sugerencia-nombre {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.sugerencia-precio {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Botón de sugerencias */
+.sugerencia-boton {
+    display: inline-block;
+    padding: 10px 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: #007bff; /* Color azul predeterminado */
+    border: none;
+    border-radius: 4px;
+    text-decoration: none; /* Elimina el subrayado */
+    transition: background-color 0.3s, transform 0.2s; /* Transiciones suaves */
+    cursor: pointer;
+}
+
+.sugerencia-boton:hover {
+    background-color: #0056b3; /* Azul más oscuro al pasar el cursor */
+    transform: translateY(-3px); /* Efecto de elevación */
+}
+
+.sugerencia-boton:active {
+    background-color: #003f7f; /* Azul más oscuro al hacer clic */
+    transform: translateY(0); /* Elimina la elevación */
+}
