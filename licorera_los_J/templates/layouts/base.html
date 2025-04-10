@@ -20,7 +20,11 @@
                 <li><a href="{% url 'index' %}">INICIO</a></li>
                 <li><a href="{% url 'cobertura' %}">COBERTURA</a></li>
                 <li><a href="{% url 'catalogo' %}">CATALOGO</a></li>
-            </ul>
+                {% if request.session.sesion and request.session.sesion == '1' %}|
+                    <li><a href="{% url 'listar_productos' %}">PRODUCTOS</a></li>
+                    <li><a href="{% url 'listar_usuarios' %}">USUARIOS</a></li>
+                {% endif %}
+           </ul>
             
             {% if request.session.sesion %}
                 Bienvenido: {{ request.session.sesion.nombre }}

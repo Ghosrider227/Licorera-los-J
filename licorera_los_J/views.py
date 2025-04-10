@@ -195,6 +195,16 @@ def catalogo(request):
 
 
 
+def validar_administrador(request):
+    sesion= request.session.get("sesion", None)
+    if not sesion or sesion.get("cuenta") != "1":
+        messages.error(request, "No tienes permisos para acceder")
+        return False
+    return True
+
+
+
+
 #ADMINISTRADOR
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
