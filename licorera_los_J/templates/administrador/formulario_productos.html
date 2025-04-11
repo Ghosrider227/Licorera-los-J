@@ -7,46 +7,43 @@
 {% endblock %}
 
 {% block cuerpo %}
-    <form method="POST" action="{% url 'agregar_productos' %}">
+<div class="form-container">
+    <form action="" method="post" class="form-content">
         {% csrf_token %}
-        
-        <!-- Campo para el nombre del producto -->
-        <div class="form-group">
-            <label for="nombre_producto">Nombre del Producto</label>
-            <input type="text" id="nombre_producto" name="nombre_producto" class="form-control" placeholder="Nombre del producto" required>
-        </div>
-        
-        <!-- Campo para el tipo de producto -->
-        <div class="form-group">
-            <label for="tipo_producto">Tipo de Producto</label>
-            <input type="text" id="tipo_producto" name="tipo_producto" class="form-control" placeholder="Tipo de producto" required>
-        </div>
-        
-        <!-- Campo para las medidas -->
-        <div class="form-group">
-            <label for="medidas">Medidas</label>
-            <input type="text" id="medidas" name="medidas" class="form-control" placeholder="Medidas del producto" required>
-        </div>
-        
-        <!-- Campo para el precio -->
-        <div class="form-group">
-            <label for="precio">Precio</label>
-            <input type="number" id="precio" name="precio" class="form-control" placeholder="Precio del producto" required>
-        </div>
-        
-        <!-- Campo para la descripción -->
-        <div class="form-group">
-            <label for="descripcion">Descripción</label>
-            <textarea id="descripcion" name="descripcion" class="form-control" placeholder="Descripción del producto"></textarea>
-        </div>
-        
-        <!-- Campo para la cantidad -->
-        <div class="form-group">
-            <label for="cantidad">Cantidad</label>
-            <input type="number" id="cantidad" name="cantidad" class="form-control" placeholder="Cantidad disponible" required>
-        </div>
-        
-        <!-- Botón para guardar -->
-        <button type="submit" class="btn btn-success">Guardar</button>
+        {% if datos %}
+            <h1 class="form-title">Editar Producto {{datos.id}}</h1>
+        {% else %}
+            <h1 class="form-title">Agregar Producto</h1>
+        {% endif %}
+        <label>Nombre:</label>
+        <input value="{{datos.nombre_producto}}" type="text" name="nombre_producto" class="form-control"><br>
+        <label>Categoria:</label>
+        <select name="tipo_producto" class="form-select">
+            <option selected disabled value="{{datos.tipo_producto}}">{{datos.get_tipo_producto_display}}</option>
+            <option value="1" {% if datos.tipo_producto == "1" %}selected=""{% endif %}>Vino</option>
+            <option value="2" {% if datos.tipo_producto == "2" %}selected=""{% endif %}>Ron</option>
+            <option value="3" {% if datos.tipo_producto == "3" %}selected=""{% endif %}>Cerveza</option>
+            <option value="4" {% if datos.tipo_producto == "4" %}selected=""{% endif %}>Vodka</option>
+            <option value="5" {% if datos.tipo_producto == "5" %}selected=""{% endif %}>Wisky</option>
+            <option value="6" {% if datos.tipo_producto == "6" %}selected=""{% endif %}>Tequila</option>
+            <option value="7" {% if datos.tipo_producto == "7" %}selected=""{% endif %}>Guaro</option>
+            <option value="8" {% if datos.tipo_producto == "8" %}selected=""{% endif %}>Champan</option>
+        </select>
+
+        <label>Medidas:</label>
+        <textarea name="medidas" class="form-control">{{datos.medidas}}</textarea><br>
+
+        <label>Precio:</label>
+        <input value="{{datos.precio}}" type="number" name="precio" class="form-control"><br>
+
+        <label>Descripcion:</label>
+        <textarea name="descripcion" class="form-control">{{datos.descripcion}}</textarea><br>
+
+        <label>Cantidad:</label>
+        <input value="{{datos.cantidad}}" type="number" name="cantidad" class="form-control"><br>
+
+        <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
+        <a href="{% url 'productos' %}" class="btn btn-secondary">Cancelar</a>
     </form>
+</div>
 {% endblock %}

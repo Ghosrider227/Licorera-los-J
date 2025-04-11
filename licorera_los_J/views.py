@@ -214,15 +214,19 @@ def productos(request):
     }
     return render(request, "administrador/listar_productos.html",contexto)
 
-def eliminar_productos(request, id_productos):
+def eliminar_productos(request, id_producto):
     # Obtener la instancia
     try:
-        q = Productos.objects.get(pk = id_productos)
+        q = Productos.objects.get(pk = id_producto)
         q.delete()
         messages.success(request, "Productos eliminado exitosamente!")
     
+    except IntegrityError:
+        messages.error(request, "Error: No se puede eliminar el producto porque está en uso.")
     except Exception as e:
         messages.error(request, f"Error: {e}")
+        
+        print(f"Error: {e}")
 
     return redirect("productos")
 
@@ -230,6 +234,7 @@ def agregar_productos(request):
     if request.method == "POST":
         nombre_producto = request.POST.get("nombre_producto")
         tipo_producto = request.POST.get("tipo_producto")
+        medidas=request.POST.get("medidas"),
         precio = request.POST.get("precio")
         descripcion = request.POST.get("descripcion")
         cantidad = request.POST.get("cantidad")
@@ -237,13 +242,14 @@ def agregar_productos(request):
             q = Productos(
                 nombre_producto=nombre_producto,
                 tipo_producto=tipo_producto,
+                medidas=medidas,
                 precio=precio,
                 descripcion=descripcion,
                 cantidad=cantidad
             )
             q.save()
             messages.success(request, "Producto agregado exitosamente!")
-            return redirect("administrador/productos")
+            return redirect("productos")
         except Exception as e:
             messages.error(request, f"Error: {e}")
             return redirect("agregar_productos")

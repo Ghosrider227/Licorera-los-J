@@ -3,21 +3,28 @@
 {% block titulo %}Editar Usuario{% endblock %}
 {% block miga %}
     <li class="breadcrumb-item"><a href="{% url 'productos' %}">Productos</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Agregar Productos</li>
-
+    <li class="breadcrumb-item active" aria-current="page">Editar Usuario</li>
 {% endblock %}
 
 {% block cuerpo %}
-    <form action="" method="post" class="col-4 mt-2 p-2 m-auto">
+<div class="form-container">
+    <form action="" method="post" class="form-content">
         {% csrf_token %}
         {% if usuarios %}
-            <h1>Editar Usuario{{usuarios.id}} </h1>
+            <h1 class="form-title">Editar Usuario {{usuarios.id}}</h1>
         {% else %}
-            <h1>Editar Usuario</h1>
+            <h1 class="form-title">Editar Usuario</h1>
         {% endif %}
+
         <label>Cuenta:</label>
-        <input value="{{usuarios.get_cuenta_display}}" type="text" name="cuenta" class="form-control"><br> 
+        <select name="cuenta" class="form-select">
+            <option selected disabled value="{{usuarios.cuenta}}">{{usuarios.get_cuenta_display}}</option>
+            <option value="1" {% if usuarios.cuenta == "1" %}selected=""{% endif %}>Administrador</option>
+            <option value="2" {% if usuarios.cuenta == "2" %}selected=""{% endif %}>Cliente</option>
+        </select>
 
         <button type="submit" class="btn btn-{% if usuarios %}info{% else %}success{% endif %}">{% if usuarios %}Actualizar{% else %}Guardar{% endif %}</button>
+        <a href="{% url 'usuarios' %}" class="btn btn-secondary">Cancelar</a>
     </form>
+</div>
 {% endblock %}
