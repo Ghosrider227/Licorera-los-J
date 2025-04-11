@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load humanize %}
+{{ my_num|intcomma }}
 
 {% block titulo %}
     Catalogo
@@ -67,14 +68,10 @@
         <div class="product-card">
             <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}">
             <div class="product-info">
-                <h3>{{ producto.nombre_producto }}</h3>
-                <p class="price">${{ producto.precio }}</p>
-                <p>{{ producto.descripcion }}</p>
-                {% if producto.disponible %}
-                    <button class="add-to-cart">AGREGAR AL CARRITO</button>
-                {% else %}
-                    <p class="status">AGOTADO</p>
-                {% endif %}
+                <h3 class="nombre">{{ producto.nombre_producto }}</h3>
+                <p class="price">${{ producto.precio|intcomma }}</p>
+                <p class="descripcion">{{ producto.descripcion }}</p>
+                <button class="add-to-cart">AGREGAR AL CARRITO</button>
             </div>
         </div>
         {% endfor %}

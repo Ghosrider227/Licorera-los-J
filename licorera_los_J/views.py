@@ -30,6 +30,7 @@ def login(request):
                         "nombre" : u.nombre,
                         "cuenta" : u.cuenta,
                         "email" : u.email,
+                        "carrito" : [],
                     }
                 else:
                     request.session["sesion"] = {
@@ -38,6 +39,7 @@ def login(request):
                         "cuenta" : u.cuenta,
                         "email" : u.email,
                         "fecha_nacimiento" : u.fecha_nacimiento,
+                        "carrito" : [],
                     }
                 return redirect("index")
             else:
@@ -56,6 +58,7 @@ def login(request):
             return redirect('index')
         else:
             return render(request, 'index.html')
+
 def logout(request):
     try:
         del request.session["sesion"]
@@ -134,23 +137,14 @@ def obtener_carrito(request):
     total = sum(item['precio'] * item['cantidad'] for item in carrito)
     return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
 
-
-@csrf_exempt
 def agregar_carrito(request):
     if request.method == 'POST':
-        data = json.loads(request.body)
-        product_id = data.get('id')
+        id_producto = request.POST.get('id_producto')
+        cantidad = int(request.POST.get('cantidad', 1))
+        return render(request, 'index.html')
 
-        # Simulación de agregar producto al carrito (puedes usar la sesión o base de datos)
-        carrito = request.session.get('carrito', [])
-        carrito.append({'id': product_id, 'nombre': f'Producto {product_id}', 'cantidad': 1, 'precio': 100})
-        request.session['carrito'] = carrito
-
-        return JsonResponse({'success': True, 'mensaje': 'Producto agregado al carrito'})
-    return JsonResponse({'success': False, 'mensaje': 'Método no permitido'})
-  
 def catalogo(request):
-  # Obtiene el valor seleccionado en el <select>
+    # Obtiene el valor seleccionado en el <select>
     tipo_producto = request.GET.get('tipo_producto', '')  # Por defecto, vacío si no se selecciona nada
     
     # Filtra los productos según el tipo seleccionado

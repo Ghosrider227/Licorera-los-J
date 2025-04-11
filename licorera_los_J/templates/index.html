@@ -3,7 +3,7 @@
 
 
 {% block titulo %}
-    Cobertura
+    Inicio
 {% endblock  %}
 {% block cuerpo %}
     {% if data %}
@@ -17,17 +17,20 @@
             <h2>OFERTAS</h2>
             <div class="products">
                 {% for p in data %}
-                <div class="product-card">
-                    <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
-                    {% if p.descuento %}
-                    <span class="discount-tag">-{{ p.descuento }}%</span>
-                    {% endif %}
-                    <div class="product-info">
-                        <h3>{{ p.nombre_producto }}</h3>
-                        <p class="price">${{ p.precio }}</p>
-                        <button class="add-to-cart" data-id="{{ p.id }}" data-nombre="{{ p.nombre_producto }}" data-precio="{{ p.precio }}" data-imagen="{% static 'img/' %}{{ p.imagen }}">AGREGAR AL CARRITO</button>
+                <form method="post">
+                    <input type="hidden" name="id_producto" value="{{ p.id }}">
+                    <input type="hidden" name="foto" value="{{ p.foto.url }}">
+                    <input type="hidden" name="nombre_producto" value="{{ p.nombre_producto }}">
+                    <input type="hidden" name="precio" value="{{ p.precio }}">
+                    <div class="product-card">
+                        <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
+                        <div class="product-info">
+                            <h3>{{ p.nombre_producto }}</h3>
+                            <p class="price">${{ p.precio }}</p>
+                            <button class="add-to-cart" type="submit">AGREGAR AL CARRITO</button>
+                        </div>
                     </div>
-                </div>
+                </form>
                 {% endfor %}
             </div>
         </section>
