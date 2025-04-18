@@ -1,31 +1,49 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-{% block titulo %}Agregar Servicio{% endblock %}
+{% block titulo %}Agregar Producto{% endblock %}
 {% block miga %}
     <li class="breadcrumb-item"><a href="{% url 'productos' %}">Productos</a></li>
     <li class="breadcrumb-item active" aria-current="page">Agregar Productos</li>
-
 {% endblock %}
 
 {% block cuerpo %}
-    <form action="" method="post" class="col-4 mt-2 p-2 m-auto">
+<div class="form-container">
+    <form action="" method="post" class="form-content">
         {% csrf_token %}
         {% if datos %}
-            <h1>Editar Productos {{datos.id}} </h1>
+            <h1 class="form-title">Editar Producto {{datos.id}}</h1>
         {% else %}
-            <h1>Agregar Productos</h1>
+            <h1 class="form-title">Agregar Producto</h1>
         {% endif %}
         <label>Nombre:</label>
         <input value="{{datos.nombre_producto}}" type="text" name="nombre_producto" class="form-control"><br>
         <label>Categoria:</label>
-        <input value="{{datos.get_tipo_producto_display}}" type="tetxt" name="tipo_producto" class="form-control"><br>
+        <select name="tipo_producto" class="form-select">
+            <option selected disabled value="{{datos.tipo_producto}}">{{datos.get_tipo_producto_display}}</option>
+            <option value="1" {% if datos.tipo_producto == "1" %}selected=""{% endif %}>Vino</option>
+            <option value="2" {% if datos.tipo_producto == "2" %}selected=""{% endif %}>Ron</option>
+            <option value="3" {% if datos.tipo_producto == "3" %}selected=""{% endif %}>Cerveza</option>
+            <option value="4" {% if datos.tipo_producto == "4" %}selected=""{% endif %}>Vodka</option>
+            <option value="5" {% if datos.tipo_producto == "5" %}selected=""{% endif %}>Wisky</option>
+            <option value="6" {% if datos.tipo_producto == "6" %}selected=""{% endif %}>Tequila</option>
+            <option value="7" {% if datos.tipo_producto == "7" %}selected=""{% endif %}>Guaro</option>
+            <option value="8" {% if datos.tipo_producto == "8" %}selected=""{% endif %}>Champan</option>
+        </select>
+
+        <label>Medidas:</label>
+        <textarea name="medidas" class="form-control">{{datos.medidas}}</textarea><br>
+
         <label>Precio:</label>
-        <input value="{{datos.precio|floatformat:0}}" type="number" name="precio" class="form-control"><br>
+        <input value="{{datos.precio}}" type="number" name="precio" class="form-control"><br>
+
         <label>Descripcion:</label>
-        <textarea value="{{datos.descripcion}}" type="text" name="descripcion" class="form-control">{{datos.descripcion}}</textarea><br>
+        <textarea name="descripcion" class="form-control">{{datos.descripcion}}</textarea><br>
+
         <label>Cantidad:</label>
-        <input value="{{datos.cantidad}}" type="number" name="cantidad" class="form-control">
+        <input value="{{datos.cantidad}}" type="number" name="cantidad" class="form-control"><br>
 
         <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
+        <a href="{% url 'productos' %}" class="btn btn-secondary">Cancelar</a>
     </form>
+</div>
 {% endblock %}
