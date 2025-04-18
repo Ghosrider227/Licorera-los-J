@@ -1,0 +1,46 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block titulo %}Usuarios{% endblock %}
+{% block miga %}
+    <li class="breadcrumb-item active" aria-current="page">Usuarios</li>
+{% endblock %}
+
+{% block cuerpo %}
+
+    <a href="{% url 'agregar_productos' %}" class="btn btn-success col-1">Agregar</a>
+    {% if dato %}
+        <table class="table table-striped table-hover table-sm t">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Cuenta</th>
+                    <th>Email</th>
+                    <th>Telefono</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                {% for usuario in dato %}
+                <tr>
+                    <td>{{ usuario.nombre }}</td>
+                    <td>{{ usuario.apellido}}</td>
+                    <td>{{ usuario.get_cuenta_display }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td>{{ usuario.telefono}}</td>
+                    <td>
+                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-info">Editar</a>    
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+<br>
+
+    {% else %}
+        <p>No hay Usuarios aún...</p>
+    {% endif %}
+
+{% endblock %}
+

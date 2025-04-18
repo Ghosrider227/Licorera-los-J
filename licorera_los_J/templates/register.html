@@ -33,14 +33,11 @@
                     <input name="apellido" id="apellido" type="text" placeholder="APELLIDO" required>
                 </div>
             </div>
-            {% comment %} <div class="form-group"> {% endcomment %}
                 <select name='cuenta' class="form-group" id="cuenta">
                     <option value=''>Seleccione</option>
                     <option value='1'>Administrador</option>
                     <option value='2' selected=''>Cliente</option>
                 </select>
-                {% comment %} <input name="cuenta" type="text" value="Cliente" > {% endcomment %}
-            {% comment %} </div> {% endcomment %}
             <div class="form-group">
                 <label for="email">Correo Electronico</label>
                 <input name="email" id="email" type="email" placeholder="EMAIL" required>
@@ -60,7 +57,7 @@
             </div>
             {% if messages %}
                 {% for message in messages %}
-                    <div class="alert alert-{% if {{ message.tags }}}">
+                    <div class="alert alert-{{ message.tags }}">
                         <p>{{ message }}</p>
                     </div>
                 {% endfor %}
@@ -73,8 +70,7 @@
                     <a href="#">Más información</a>
                 </label>
             </div>
-            <button type="submit" class="auth-button">REGISTRAR</button> <!--id="registrar"-->
+            <button type="submit" class="auth-button">REGISTRAR</button>
         </form>
     </div>
-    <!-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> -->
 {% endblock  %}
