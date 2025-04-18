@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'licorera_los_J',
 ]
 
@@ -123,8 +124,15 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# se agrega para que los numero traidos de la BD tengan formato de miles
-# USE_THOUSAND_SEPARATOR = True
+# Para cargar las fotos de los productos
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "licorera_los_J/media"
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Validacion del correo
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'LicoreraLosJ@gmail.com'
+EMAIL_HOST_PASSWORD = 'xmnrqdkkstcf xknv'
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True

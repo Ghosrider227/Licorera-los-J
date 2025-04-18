@@ -1,6 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
-
+{% load humanize %}
+{{ my_num|intcomma }}
 
 {% block titulo %}
     Catalogo
@@ -64,19 +65,22 @@
 <section class="products-grid">
     {% if productos %}
         {% for producto in productos %}
-        <div class="product-card">
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre_producto }}">
-            <div class="product-info">
-                <h3>{{ producto.nombre_producto }}</h3>
-                <p class="price">${{ producto.precio }}</p>
-                <p>{{ producto.descripcion }}</p>
-                {% if producto.disponible %}
-                    <button class="add-to-cart">AGREGAR AL CARRITO</button>
-                {% else %}
-                    <p class="status">AGOTADO</p>
-                {% endif %}
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="id_producto" value="{{ p.id }}">
+            <input type="hidden" name="foto" value="{{ p.foto.url }}">
+            <input type="hidden" name="nombre_producto" value="{{ p.nombre_producto }}">
+            <input type="hidden" name="precio" value="{{ p.precio }}">
+            <div class="product-card">
+                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}">
+                {% comment %} <div class="product-info"> {% endcomment %}
+                    <h3 class="nombre">{{ producto.nombre_producto }}</h3>
+                    <p class="price">${{ producto.precio|intcomma }}</p>
+                    <p class="descripcion">{{ producto.descripcion }}</p>
+                    <button type="submit" class="add-to-cart">AGREGAR AL CARRITO</button>
+                {% comment %} </div> {% endcomment %}
             </div>
-        </div>
+        </form>
         {% endfor %}
     {% else %}
         <p>No se encontraron productos para esta categoría.</p>
