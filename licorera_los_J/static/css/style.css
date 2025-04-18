@@ -202,21 +202,11 @@ footer {
     text-decoration: underline double;
 }
 
-@media (max-width: 768px) {
-    .nav-menu {
-        display: none;
-    }
-
-    .footer-content {
-        flex-direction: column;
-    }
-
-    .footer-section {
-        margin-bottom: 2rem;
-    }
+a:hover {
+    text-decoration: underline double;
 }
 
-a:hover {
+#p:hover {
     text-decoration: underline double;
 }
 
@@ -244,7 +234,8 @@ a:hover {
     z-index: 1;
     top: 100%;
     left: 0;
-    padding: 1rem;
+    padding: 15px 15px 15px 0px;
+    border: 1px solid #333;
 }
 
 .dropdown-content a {
@@ -269,66 +260,81 @@ a:hover {
 }
 .dropdown {
     /* Add some padding to match the cart */
-   padding: auto;
-   color: #fff;
-  }
-  
-  .dropdown-toggle {
+    padding: auto;
+    color: #fff;
+}
+
+.dropdown-toggle {
     /* Adjust the font size and color to match the cart */
     font-size: 16px;
     color: #fff;
     background-color: #111;
-  }
-  
-  .dropdown-menu {
+}
+
+.dropdown-menu {
     /* Adjust the width to match the cart */
     width: 300px;
     padding: 1rem;
     background-color: #111;
     border-radius: 4px;
-  }
-  
-  .dropdown-menu .form-label {
+}
+
+.dropdown-menu .form-label {
     /* Adjust the font size and color to match the cart */
     font-size: 16px;
     color: #fff;
-  }
-  
-  .dropdown-menu .form-control:focus {
+}
+
+.dropdown-menu .form-control:focus {
     /* Adjust the border color to match the cart */
     border-color: #f1ee1f;
-  }
-  .dropdown-menu .form-control::placeholder {
+}
+
+.dropdown-menu .form-control::placeholder {
     /* Adjust the placeholder color to match the cart */
     color: #aaa;
-  }
-  
-  .dropdown-menu .form-control {
+}
+
+.dropdown-menu .form-control {
     /* Adjust the font size and border radius to match the cart */
     font-size: 16px;
     border-radius: 5px;
     background-color: #111;
     color: #fff;
-  }
-  form .form-check {
+}
+
+form .form-check {
     /* Adjust the font size and color to match the cart */
     font-size: 16px;
     color: #fff;
-  }
-  
-  .dropdown-menu .btn-primary {
+}
+
+.dropdown-menu .btn-primary {
     /* Adjust the background color and border radius to match the cart */
     background-color: #b9a116;
     border-radius: 5px;
     color: #fff;
     border-color: #b9a116;
-  }
-  
-  .dropdown-menu .btn-secondary {
+}
+
+.dropdown-menu .btn-secondary {
     /* Adjust the background color and border radius to match the cart */
     background-color: #b9a116;
     border-radius: 5px;
     color: #fff;
     text-decoration: none;
-  }
-  
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-section {
+        margin-bottom: 2rem;
+    }
+}

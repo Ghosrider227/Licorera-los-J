@@ -1,13 +1,15 @@
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import *
+import re
+from django.core.validators import validate_email
+from django.core.exceptions import ValidationError
+from .utils import *
 from django.views.decorators.csrf import csrf_exempt
 import json
-from django.shortcuts import render, redirect
-from .models import *
 from django.db.utils import IntegrityError
-from django.contrib import messages
 from django.conf import settings
 from django.http import JsonResponse
-import re
-from .utils import *
 
 def index(request):
     # Traigo la informacion de la BD y se la mando al index con el contexto
@@ -80,6 +82,12 @@ def register(request):
         confirmar_contrasena = request.POST.get('confirmar_contrasena')
         telefono = request.POST.get('telefono')
         
+        try:
+            validate_email(email)
+        except ValidationError:
+            messages.warning(request, 'El correo no es valido')
+            return redirect('register')
+        
         if not re.match(r'^[A-Za-z\s]+$', nombre):
             messages.warning(request, 'El nombre solo debe contener letras')
             return redirect('register')
@@ -88,7 +96,7 @@ def register(request):
             messages.warning(request, 'El apellido solo debe contener letras')
             return redirect('register')
         
-        if not telefono.isdigit() and len(telefono) != 10:
+        if not telefono.isdigit() or len(telefono) != 10:
             messages.warning(request, 'El telefono debe contener solo numeros y tener 10 digitos')
             return redirect('register')
         

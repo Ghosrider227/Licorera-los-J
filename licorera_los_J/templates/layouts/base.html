@@ -25,13 +25,12 @@
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
                     <div class="dropdown">
-                        <button class="dropdown-button" class="fa-solid fa-user">Perfil</button>
+                        <button id="p" class="dropdown-button"><i class="fa-solid fa-user"></i> Perfil</button>
                         <div class="dropdown-content">
                             <a href="">Configuración</a>
                             <a href="{% url 'logout' %}">Cerrar sesión</a>
                         </div>
                     </div>
-                    <a href="{% url 'cart' %}" class="icon-cart"><i class="fa-solid fa-cart-shopping"></i> Carrito</a>
                     <a href="#" class="icon-cart" id="cartButton">
                         <i class="fa-solid fa-cart-shopping"></i> Carrito
                         <span id="cartCount">0</span>
@@ -61,7 +60,7 @@
                         {% endfor %}
                     {% endif %}
                     <div class="dropdown">
-                        <button type="button" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                        <button type="button" id="p" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
                             Iniciar sesión
                         </button>
                         <form class="dropdown-menu p-4" id="loginForm" method="post" action="{% url 'login' %}">

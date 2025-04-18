@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load humanize %}
+{{ my_num|intcomma }}
 
 
 {% block titulo %}
@@ -17,20 +19,13 @@
             <h2>OFERTAS</h2>
             <div class="products">
                 {% for p in data %}
-                <form method="post">
-                    <input type="hidden" name="id_producto" value="{{ p.id }}">
-                    <input type="hidden" name="foto" value="{{ p.foto.url }}">
-                    <input type="hidden" name="nombre_producto" value="{{ p.nombre_producto }}">
-                    <input type="hidden" name="precio" value="{{ p.precio }}">
                     <div class="product-card">
                         <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
                         <div class="product-info">
                             <h3>{{ p.nombre_producto }}</h3>
-                            <p class="price">${{ p.precio }}</p>
-                            <button class="add-to-cart" type="submit">AGREGAR AL CARRITO</button>
+                            <p class="price">${{ p.precio|intcomma }}</p>
                         </div>
                     </div>
-                </form>
                 {% endfor %}
             </div>
         </section>
