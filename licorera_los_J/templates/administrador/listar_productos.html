@@ -10,8 +10,8 @@
     <a href="{% url 'agregar_productos' %}" class="btn btn-success mb-3">Agregar Producto</a>
     {% if data %}
         <div class="table-responsive">
-            <table class="table-container custom-table ">
-                <thead class="table-dark text-center">
+            <table class="table table-dark table-striped table-hover table-bordered text-center">
+                <thead>
                     <tr>
                         <th>ID</th>
                         <th>Nombre</th>
@@ -26,14 +26,14 @@
                 <tbody>
                     {% for producto in data %}
                     <tr>
-                        <td class="text-center">{{ producto.id }}</td>
+                        <td>{{ producto.id }}</td>
                         <td>{{ producto.nombre_producto }}</td>
                         <td>{{ producto.get_tipo_producto_display }}</td>
                         <td>{{ producto.medidas }}</td>
                         <td>${{ producto.precio }}</td>
                         <td>{{ producto.descripcion }}</td>
-                        <td class="text-center">{{ producto.cantidad }}</td>
-                        <td class="text-center">
+                        <td>{{ producto.cantidad }}</td>
+                        <td>
                             <div class="d-flex justify-content-center gap-2">
                                 <a href="javascript:confirmar_eliminar(`{% url 'eliminar_productos' producto.id %}`);" class="btn btn-danger btn-sm">Eliminar</a>
                                 <a href="{% url 'editar_producto' producto.id %}" class="btn btn-primary btn-sm">Editar</a>
@@ -45,7 +45,7 @@
             </table>
         </div>
     {% else %}
-        <div class="alert alert-warning" role="alert">
+        <div class="alert alert-warning text-center" role="alert">
             No hay productos registrados aún.
         </div>
     {% endif %}

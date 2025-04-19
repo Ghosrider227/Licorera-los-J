@@ -2,29 +2,31 @@
 {% load static %}
 {% block titulo %}Editar Usuario{% endblock %}
 {% block miga %}
-    <li class="breadcrumb-item"><a href="{% url 'productos' %}">Productos</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'usuarios' %}">Usuarios</a></li>
     <li class="breadcrumb-item active" aria-current="page">Editar Usuario</li>
 {% endblock %}
 
 {% block cuerpo %}
-<div class="form-container">
-    <form action="" method="post" class="form-content">
-        {% csrf_token %}
-        {% if usuarios %}
-            <h1 class="form-title">Editar Usuario {{usuarios.id}}</h1>
-        {% else %}
-            <h1 class="form-title">Editar Usuario</h1>
-        {% endif %}
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="form-container bg-dark text-light p-5 rounded shadow-lg" style="width: 400px;">
+        <form action="" method="post" class="form-content">
+            {% csrf_token %}
+            <h2 class="text-center mb-4">Editar Usuario</h2>
 
-        <label>Cuenta:</label>
-        <select name="cuenta" class="form-select">
-            <option selected disabled value="{{usuarios.cuenta}}">{{usuarios.get_cuenta_display}}</option>
-            <option value="1" {% if usuarios.cuenta == "1" %}selected=""{% endif %}>Administrador</option>
-            <option value="2" {% if usuarios.cuenta == "2" %}selected=""{% endif %}>Cliente</option>
-        </select>
+            <div class="mb-3">
+                <label for="cuenta" class="form-label">Cuenta:</label>
+                <select name="cuenta" id="cuenta" class="form-select">
+                    <option selected disabled value="{{usuarios.cuenta}}">{{usuarios.get_cuenta_display}}</option>
+                    <option value="1" {% if usuarios.cuenta == "1" %}selected{% endif %}>Administrador</option>
+                    <option value="2" {% if usuarios.cuenta == "2" %}selected{% endif %}>Cliente</option>
+                </select>
+            </div>
 
-        <button type="submit" class="btn btn-{% if usuarios %}info{% else %}success{% endif %}">{% if usuarios %}Actualizar{% else %}Guardar{% endif %}</button>
-        <a href="{% url 'usuarios' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success w-100 me-2">Guardar</button>
+                <a href="{% url 'usuarios' %}" class="btn btn-secondary w-100 ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
