@@ -35,7 +35,7 @@
 
             <div class="mb-3">
                 <label for="medidas" class="form-label">Medidas:</label>
-                <input value="{{ datos.medidas }}" type="text" name="medidas" id="medidas" class="form-control">
+                <input value="{{ datos.medidas|slice:'1:-2' }}" type="text" name="medidas" id="medidas" class="form-control">
             </div>
 
             <div class="mb-3">
@@ -56,7 +56,7 @@
             
 
             <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-success w-100 me-2">Guardar</button>
+                <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
                 <a href="{% url 'productos' %}" class="btn btn-secondary w-100 ms-2">Cancelar</a>
             </div>
         </form>
