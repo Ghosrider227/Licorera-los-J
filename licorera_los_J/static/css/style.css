@@ -8,6 +8,7 @@
 /* Contenedor principal del contenido */
 .main-content {
     flex: 1; /* Hace que este contenedor ocupe el espacio restante entre el header y el footer */
+    margin-top: 100px;
 }
 
 

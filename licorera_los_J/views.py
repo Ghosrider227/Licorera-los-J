@@ -224,17 +224,11 @@ def catalogo(request):
 
 
 
-def validar_administrador(request):
-    sesion= request.session.get("sesion", None)
-    if not sesion or sesion.get("cuenta") != "1":
-        messages.error(request, "No tienes permisos para acceder")
-        return False
-    return True
-
 
 
 
 #ADMINISTRADOR
+@validar_administrador
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
     q = Productos.objects.all()
@@ -243,6 +237,7 @@ def productos(request):
     }
     return render(request, "administrador/listar_productos.html",contexto)
 
+@validar_administrador
 def eliminar_productos(request, id_producto):
     # Obtener la instancia
     try:
@@ -259,6 +254,7 @@ def eliminar_productos(request, id_producto):
 
     return redirect("productos")
 
+@validar_administrador
 def agregar_productos(request):
     if request.method == "POST":
         nombre_producto = request.POST.get("nombre_producto")
@@ -286,6 +282,7 @@ def agregar_productos(request):
         return render(request, "administrador/formulario_productos.html")
     
     
+@validar_administrador
 def editar_productos(request, id_productos):
     if request.method == "POST":
         try:
@@ -314,6 +311,7 @@ def editar_productos(request, id_productos):
 
 #ADMINISTRADOR/USUARIOS
 
+@validar_administrador
 def usuarios(request):
     u = Usuarios.objects.all()
     contexto = {
@@ -321,6 +319,7 @@ def usuarios(request):
     }
     return render(request, "administrador/listar_usuarios.html",contexto)
 
+@validar_administrador
 def editar_usuario(request, id_usuario):
     if request.method == "POST":
         try:
