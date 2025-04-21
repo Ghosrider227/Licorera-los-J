@@ -78,17 +78,25 @@ nav {
     height: 24px;
 }
 
-.hero {
-    position: relative;
+.carousel-item {
+    /* position: absolute; */
     height: 60vh;
     overflow: hidden;
     margin-top: 60px;
+    opacity: 0; /*Ocultar por defecto*/  
+    z-index: 0; /*Asegura que las imágenes no activas estén detrás*/ 
+    transition: opacity 1s ease-in-out; /*Transición suave*/ 
+    width: 100%;  /*Asegura que ocupe todo el ancho*/ 
 }
 
-.hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+.carousel-item.active {
+    opacity: 1;  /*Mostrar la imagen activa*/ 
+    
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
 }
 
 .slider-controls {
@@ -350,4 +358,10 @@ form .form-check {
     .footer-section {
         margin-bottom: 2rem;
     }
+}
+
+#error{
+    z-index: 2000;
+    position: fixed;
+    top: 101px;
 }
