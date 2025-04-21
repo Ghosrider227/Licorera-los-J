@@ -377,3 +377,49 @@ def editar_usuario(request, id_usuario):
 
         print(q.contrasena)
         return render(request, "administrador/formulario_usuario.html", contexto)
+    
+def pago(request):
+    sesion = request.session.get("sesion", None)
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para realizar un pago.")
+        return redirect('login')
+
+    carrito = sesion.get("carrito", [])
+    productos_carrito = []
+    total = 0
+
+    # Cargar los productos del carrito desde la base de datos
+    for item in carrito:
+        if 'producto_id' in item and 'cantidad' in item:  # Validar claves
+            try:
+                producto = Productos.objects.get(id=item['producto_id'])
+                subtotal = producto.precio * item['cantidad']
+                total += subtotal
+                productos_carrito.append({
+                    'producto': producto,
+                    'cantidad': item['cantidad'],
+                    'subtotal': subtotal
+                })
+            except Productos.DoesNotExist:
+                messages.error(request, f"El producto con ID {item['producto_id']} no existe.")
+        else:
+            messages.error(request, "El carrito contiene datos inválidos.")
+
+    return render(request, 'pago.html', {
+        'productos_carrito': productos_carrito,
+        'total': total
+    })
+
+def procesar_pago(request):
+    if request.method == "POST":
+        direccion = request.POST.get('direccion')
+        metodo_pago = request.POST.get('metodo_pago')
+
+        # Aquí puedes agregar la lógica para procesar el pago
+        # Por ejemplo, guardar la orden en la base de datos o integrar un servicio de pago
+
+        messages.success(request, "Pago realizado con éxito. ¡Gracias por tu compra!")
+        return redirect('index')
+    else:
+        messages.error(request, "Hubo un error al procesar el pago.")
+        return redirect('pago')

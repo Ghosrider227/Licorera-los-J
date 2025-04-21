@@ -33,6 +33,9 @@
                         <p class="subtotal">Subtotal: ${{ item.subtotal|intcomma }}</p>
                 </div>
                 {% endfor %}
+            <a href="{% url 'pago' %}" class="carrito-boton carrito-boton-secundario">
+                COMPRAR AHORA
+            </a>
         </div>
     {% else %}
         <h1 class="carrito-titulo">
