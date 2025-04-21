@@ -1,6 +1,6 @@
 /* Contenedor principal del carrito */
 .carrito-container {
-    max-width: 600px; /* Limita el ancho máximo del contenedor */
+    max-width: 1000px; /* Limita el ancho máximo del contenedor */
     margin: 200px auto 0; /* Añade un margen superior para evitar que toque el menú */
     padding: 20px;
     background-color: #fff;
@@ -38,10 +38,10 @@
 }
 
 /* Productos en el carrito */
-.productos-carrito ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.productos-item {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
 }
 
 /* Descripción del carrito */

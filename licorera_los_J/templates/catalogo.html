@@ -81,6 +81,16 @@
                 {% comment %} </div> {% endcomment %}
             </div>
         </form>
+<div>
+            <h3>{{ producto.nombre_producto }}</h3>
+            <p>Precio: {{ producto.precio }}</p>
+            <form method="POST" action="{% url 'agregar_carrito' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id_producto" value="{{ producto.id }}">
+                <input type="number" name="cantidad" value="1" min="1">
+                <button type="submit">Agregar al carrito</button>
+            </form>
+        </div>
         {% endfor %}
     {% else %}
         <p>No se encontraron productos para esta categoría.</p>

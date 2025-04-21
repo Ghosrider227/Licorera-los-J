@@ -1,5 +1,7 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load humanize %}
+{{ my_num|intcomma }}
 
 {% block titulo %}
     Canasta de compra
@@ -9,6 +11,7 @@
 {% block cuerpo %}
 <head>
     <link rel="stylesheet" href="{% static 'css/canasta.css' %}">
+    <link rel="stylesheet" href="{% static 'css/catalogo.css' %}">
 </head>
 <div class="carrito-container">
     <div class="carrito-icono">
@@ -20,19 +23,16 @@
         </h1>
         <div class="productos-carrito">
             <h2 class="carrito-subtitulo">Tus productos</h2>
-            <ul>
                 {% for item in productos_carrito %}
-                <li class="producto-item">
-                    <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre }}" class="producto-imagen">
-                    <div class="producto-detalle">
-                        <h3>{{ item.producto.nombre }}</h3>
-                        <p>Precio: ${{ item.producto.precio }}</p>
-                        <p>Cantidad: {{ item.cantidad }}</p>
-                        <p>Subtotal: ${{ item.subtotal }}</p>
-                    </div>
-                </li>
+                
+                <div class="product-card">
+                    <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
+                        <h3 class="nombre">{{ item.producto.nombre_producto }}</h3>
+                        <p class="price">Precio: ${{ item.producto.precio|intcomma }}</p>
+                        <p class="descripcion">Cantidad: {{ item.cantidad }}</p>
+                        <p class="subtotal">Subtotal: ${{ item.subtotal|intcomma }}</p>
+                </div>
                 {% endfor %}
-            </ul>
         </div>
     {% else %}
         <h1 class="carrito-titulo">
@@ -57,8 +57,8 @@
             {% for producto in productos_sugeridos %}
             <div class="sugerencia-card">
                 <img src="{{ producto.foto.url }}" alt="{{ producto.nombre }}" class="sugerencia-imagen">
-                <h3 class="sugerencia-nombre">{{ producto.nombre }}</h3>
-                <p class="sugerencia-precio">${{ producto.precio }}</p>
+                <h3 class="sugerencia-nombre">{{ producto.nombre|intcomma }}</h3>
+                <p class="sugerencia-precio">${{ producto.precio|intcomma }}</p>
                 <a href="{% url 'detalle_producto' producto.id %}" class="sugerencia-boton">Ver más</a>
             </div>
             {% endfor %}
