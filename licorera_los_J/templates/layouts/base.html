@@ -25,7 +25,7 @@
                     <li><a href="{% url 'productos' %}">PRODUCTOS</a></li>
                     <li><a href="{% url 'usuarios' %}">USUARIOS</a></li>
                 {% endif %}
-           </ul>
+            </ul>
             {% if request.session.sesion %}
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
@@ -95,19 +95,38 @@
                         <i class="fa-solid fa-cart-shopping"></i> Carrito
                         <span id="cartCount">0</span>
                     </a>
-                      <div id="cartMenu" class="cart-menu">
-                          <div class="cart-header">
-                              <h4>Tu Carrito</h4>
-                              <button id="closeCartMenu" class="close-cart">&times;</button>
-                          </div>
-                          <div class="cart-content">
-                              <!-- Aquí se cargarán los productos dinámicamente -->
-                          </div>
-                          <div class="cart-footer">
-                              <p class="total-price">Total: $0</p>
-                              <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
-                          </div>
-                      </div>
+                    <div id="cartMenu" class="cart-menu">
+                        <div class="cart-header">
+                            <h4>Tu Carrito</h4>
+                            <button id="closeCartMenu" class="close-cart">&times;</button>
+                        </div>
+                        <div class="cart-content">
+                            {% if productos %}
+                            <p>hola mundo</p>
+                                {% for p in pc %}
+                                    {% for pp in productos %}
+                                        {% if p == pp %}
+                                            <div class="cart-item">
+                                                <img src="{{ pp.foto.url }}" alt="{{ pp.nombre_producto }}">
+                                                <div class="cart-item-details">
+                                                    <h5>{{ pp.nombre_producto }}</h5>
+                                                    <p>Precio: ${{ pp.precio }}</p>
+                                                    <p>Cantidad: {{ p.cantidad }}</p>
+                                                </div>
+                                            </div>
+                                        {%endif%}
+                                    {% endfor %}
+                                {% endfor %}
+                            {% else %}
+                                <p>No hay productos en el carrito.</p>
+                            {% endif %}
+                            <!-- Aquí se cargarán los productos dinámicamente -->
+                        </div>
+                        <div class="cart-footer">
+                            <p class="total-price">Total: $0</p>
+                            <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
+                        </div>
+                    </div>
                 </div>
             {% endif %}
         </nav>

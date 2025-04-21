@@ -164,28 +164,28 @@ def register(request):
 def compra(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.warning(request, "Debes iniciar sesión para ver tu carrito.")
-        return redirect("catalogo")
-
-    carrito = sesion.get("carrito", [])
-    productos_carrito = []
-
-    # Carga los productos del carrito desde la base de datos
-    for item in carrito:
-        producto = get_object_or_404(Productos, id=item['id_producto'])
-        productos_carrito.append({
-            'producto': producto,
-            'cantidad': item['cantidad'],
-            'subtotal': producto.precio * item['cantidad']
+        productos_sugeridos = Productos.objects.all()[:4]
+        return render(request, 'compra.html', {'productos_sugeridos': productos_sugeridos})
+    else:
+        carrito = sesion.get("carrito", [])
+        productos_carrito = []
+        
+        # Carga los productos del carrito desde la base de datos
+        for item in carrito:
+            producto = get_object_or_404(Productos, id=item['id_producto'])
+            productos_carrito.append({
+                'producto': producto,
+                'cantidad': item['cantidad'],
+                'subtotal': producto.precio * item['cantidad']
+            })
+            
+        # Productos sugeridos (puedes personalizar esta lógica)
+        productos_sugeridos = Productos.objects.all()[:4]
+        
+        return render(request, 'compra.html', {
+            'productos_carrito': productos_carrito,
+            'productos_sugeridos': productos_sugeridos
         })
-
-    # Productos sugeridos (puedes personalizar esta lógica)
-    productos_sugeridos = Productos.objects.all()[:4]
-
-    return render(request, 'compra.html', {
-        'productos_carrito': productos_carrito,
-        'productos_sugeridos': productos_sugeridos
-    })
 
 
 def detalle_producto(request, id):
@@ -211,33 +211,43 @@ def agregar_carrito(request):
         # Obtén la sesión actual
         sesion = request.session.get("sesion", None)
         if not sesion:
-            messages.warning(
-                request, "Debes iniciar sesión para agregar productos al carrito.")
-            return redirect("catalogo")
-        
-        carrito = sesion.get("carrito", [])
-        
-        # Verifica si el producto ya está en el carrito
-        for item in carrito:
-            if item['id_producto'] == id_producto:
-                item['cantidad'] += cantidad
-                break
+            producto = []
+            ct = []
+            for i in ct:
+                if i['id_producto'] == id_producto:
+                    i['cantidad'] += cantidad
+                    break
+            else:
+                producto.append(id_producto)
+                producto.append(cantidad)
+                ct.append(producto)
+            return render(request, "catalogo.html", {'pc': ct})
         else:
-            # Si no está, agrega un nuevo producto al carrito
-            producto = get_object_or_404(Productos, id=id_producto)
-            carrito.append({
-                'id_producto': id_producto,
-                'nombre': producto.nombre_producto,
-                'precio': producto.precio,
-                'cantidad': cantidad,
-            })
+            carrito = sesion.get("carrito", [])
             
-        # Actualiza el carrito en la sesión
-        sesion["carrito"] = carrito
-        request.session["sesion"] = sesion
-        
-        messages.success(request, "Producto agregado al carrito.")
-        return redirect("catalogo")
+            # Verifica si el producto ya está en el carrito
+            for item in carrito:
+                if item['id_producto'] == id_producto:
+                    item['cantidad'] += cantidad
+                    break
+            else:
+                # Si no está, agrega un nuevo producto al carrito
+                producto = get_object_or_404(Productos, id=id_producto)
+                carrito.append({
+                    'id_producto': id_producto,
+                    'nombre': producto.nombre_producto,
+                    'precio': producto.precio,
+                    'cantidad': cantidad,
+                })
+                
+            # Actualiza el carrito en la sesión
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
+            
+            messages.success(request, "Producto agregado al carrito.")
+            return redirect("catalogo")
+    else:
+        return render(request, "catalogo.html")
 
 
 def catalogo(request):
