@@ -1,0 +1,127 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block titulo %}
+    Pago
+{% endblock %}
+
+{% block cuerpo %}
+<head>
+    <link rel="stylesheet" href="{% static 'css/pago.css' %}">
+</head>
+<div class="pago-container">
+    <h1 class="pago-titulo">Proceso de Pago</h1>
+    <div class="pago-productos">
+        <h2 class="pago-subtitulo">Tus productos</h2>
+        {% for item in productos_carrito %}
+        <div class="pago-producto">
+            <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}" class="pago-producto-imagen">
+            <div class="pago-producto-info">
+                <h3>{{ item.producto.nombre_producto }}</h3>
+                <p>Precio: ${{ item.producto.precio|intcomma }}</p>
+                <p>Cantidad: {{ item.cantidad }}</p>
+                <p>Subtotal: ${{ item.subtotal|intcomma }}</p>
+            </div>
+        </div>
+        {% endfor %}
+        <div class="pago-total">
+            <h3>Total a pagar: ${{ total|intcomma }}</h3>
+        </div>
+    </div>
+    <form method="POST" action="{% url 'procesar_pago' %}" class="pago-formulario">
+        {% csrf_token %}
+        <h2 class="pago-subtitulo">Información de Envío</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="calle">Calle:</label>
+                <input type="text" id="calle" name="calle" class="form-control" placeholder="Ingresa tu calle" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="numero">Número:</label>
+                <input type="text" id="numero" name="numero" class="form-control" placeholder="Número telefonico" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="ciudad">Ciudad:</label>
+                <input type="text" id="ciudad" name="ciudad" class="form-control" placeholder="Ingresa tu ciudad" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="estado">Referencias:</label>
+                <input type="text" id="estado" name="estado" class="form-control" placeholder="Apartamento, piso, unidad, etc" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="codigo_postal">Código Postal:</label>
+                <input type="text" id="codigo_postal" name="codigo_postal" class="form-control" placeholder="Ingresa tu código postal" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="pais">Ubicación:</label>
+                <input type="text" id="pais" name="pais" class="form-control" placeholder="Colombia" required defaultValue="Colombia" disabled>
+            </div>
+        </div>
+        
+        <h2 class="pago-subtitulo">Método de Pago</h2>
+        <label for="metodo_pago">Selecciona un método de pago:</label>
+        <select id="metodo_pago" name="metodo_pago" class="form-select" required>
+            <option value="">Selecciona un método</option>
+            <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+            <option value="paypal">PayPal</option>
+            <option value="transferencia">Transferencia Bancaria</option>
+        </select>
+        
+        <!-- Formulario para Tarjeta de Crédito/Débito -->
+        <div id="form-tarjeta" class="metodo-pago-form" style="display: none;">
+            <h3>Detalles de Tarjeta</h3>
+            <div class="form-group">
+                <label for="numero_tarjeta">Número de Tarjeta:</label>
+                <input type="text" id="numero_tarjeta" name="numero_tarjeta" class="form-control"
+                    placeholder="1234 5678 9012 3456">
+            </div>
+            <div class="form-group">
+                <label for="nombre_tarjeta">Nombre en la Tarjeta:</label>
+                <input type="text" id="nombre_tarjeta" name="nombre_tarjeta" class="form-control" placeholder="Nombre completo">
+            </div>
+            <div class="form-group">
+                <label for="fecha_expiracion">Fecha de Expiración:</label>
+                <input type="text" id="fecha_expiracion" name="fecha_expiracion" class="form-control" placeholder="MM/AA">
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV:</label>
+                <input type="text" id="cvv" name="cvv" class="form-control" placeholder="123">
+            </div>
+        </div>
+        
+        <!-- Formulario para PayPal -->
+        <div id="form-paypal" class="metodo-pago-form" style="display: none;">
+            <h3>Detalles de PayPal</h3>
+            <div class="form-group">
+                <label for="correo_paypal">Correo Electrónico:</label>
+                <input type="email" id="correo_paypal" name="correo_paypal" class="form-control"
+                    placeholder="correo@ejemplo.com">
+            </div>
+        </div>
+        
+        <!-- Formulario para Transferencia Bancaria -->
+        <div id="form-transferencia" class="metodo-pago-form" style="display: none;">
+            <h3>Detalles de Transferencia Bancaria</h3>
+            <div class="form-group">
+                <label for="banco">Banco:</label>
+                <input type="text" id="banco" name="banco" class="form-control" placeholder="Nombre del banco">
+            </div>
+            <div class="form-group">
+                <label for="numero_cuenta">Número de Cuenta:</label>
+                <input type="text" id="numero_cuenta" name="numero_cuenta" class="form-control" placeholder="123456789">
+            </div>
+            <div class="form-group">
+                <label for="titular_cuenta">Titular de la Cuenta:</label>
+                <input type="text" id="titular_cuenta" name="titular_cuenta" class="form-control" placeholder="Nombre completo">
+            </div>
+        </div>
+    </form>
+</div>
+<script src="{% static 'js/metodo_pago.js' %}"></script>
+{% endblock %}
