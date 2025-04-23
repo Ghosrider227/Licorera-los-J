@@ -7,39 +7,40 @@
 
 {% block cuerpo %}
 
-    <a href="{% url 'agregar_productos' %}" class="btn btn-success col-1">Agregar</a>
+    <a href="{% url 'agregar_productos' %}" class="btn btn-success mb-3">Agregar Producto</a>
     {% if dato %}
-        <table class="table table-striped table-hover table-sm t">
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Cuenta</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                {% for usuario in dato %}
-                <tr>
-                    <td>{{ usuario.nombre }}</td>
-                    <td>{{ usuario.apellido}}</td>
-                    <td>{{ usuario.get_cuenta_display }}</td>
-                    <td>{{ usuario.email }}</td>
-                    <td>{{ usuario.telefono}}</td>
-                    <td>
-                        <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-info">Editar</a>    
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-<br>
-
+        <div class="table-responsive">
+            <table class="table table-dark table-striped table-hover table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Cuenta</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for usuario in dato %}
+                    <tr>
+                        <td>{{ usuario.nombre }}</td>
+                        <td>{{ usuario.apellido }}</td>
+                        <td>{{ usuario.get_cuenta_display }}</td>
+                        <td>{{ usuario.email }}</td>
+                        <td>{{ usuario.telefono }}</td>
+                        <td>
+                            <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-primary btn-sm">Editar</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
-        <p>No hay Usuarios aún...</p>
+        <div class="alert alert-warning text-center" role="alert">
+            No hay usuarios registrados aún.
+        </div>
     {% endif %}
 
 {% endblock %}
