@@ -108,45 +108,75 @@
     transform: rotate(45deg);
 }
 
-
+/* Estilo base del menú */
 .nav {
     display: flex;
     justify-content: center; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
-    background-color: #000; /* Fondo negro para estilo licorera */
+    background-color: #000; /* Fondo negro */
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra para un efecto elegante */
+    margin-bottom: 20px; /* Espaciado inferior */
 }
 
 .nav-item {
     margin: 0 15px; /* Espaciado entre los elementos */
     list-style: none;
+    position: relative; /* Necesario para el efecto lavalamp */
 }
 
 .nav-link {
     text-decoration: none;
-    color: #1e90ff; /* Azul brillante */
+    color: #fff; /* Blanco para el texto */
     font-size: 1.2rem;
     font-weight: bold;
-    transition: color 0.3s ease;
+    padding: 10px 20px;
+    position: relative;
+    transition: color 0.3s ease; /* Transición suave para el color */
 }
 
 .nav-link:hover {
-    color: #ffcc00; /* Amarillo dorado al pasar el mouse */
+    color: #b8860b; /* Dorado oscuro al pasar el mouse */
+}
+
+/* Efecto lavalamp */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #b8860b; /* Dorado oscuro */
+    transition: width 0.3s ease-in-out; /* Transición suave */
+}
+
+.nav-link:hover::after {
+    width: 100%; /* Subrayado completo al pasar el mouse */
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    margin-left: 20px; /* Separación del buscador */
+    gap: 10px;
+    margin-top: 20px;
 }
 
 .search-bar input {
     width: 300px;
     padding: 10px;
-    border: 2px solid #1e90ff;
+    border: 2px solid #b8860b; /* Borde dorado oscuro */
     border-radius: 4px;
     margin-right: 10px;
     background-color: #000;
@@ -157,9 +187,23 @@
     color: #aaa;
 }
 
+.search-bar select {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #b8860b; /* Borde dorado oscuro */
+    border-radius: 4px;
+    background-color: #000;
+    color: #fff;
+}
+
+.search-bar select:focus {
+    outline: none;
+    border-color: #fff; /* Borde blanco al enfocar */
+}
+
 .search-bar button {
     padding: 10px 20px;
-    background-color: #1e90ff;
+    background-color: #b8860b; /* Fondo dorado oscuro */
     border: none;
     border-radius: 4px;
     color: #fff;
@@ -169,16 +213,8 @@
 }
 
 .search-bar button:hover {
-    background-color: #ffcc00; /* Amarillo dorado al pasar el mouse */
-}
-
-.buscador {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-top: 20px;
+    background-color: #fff; /* Fondo blanco al pasar el mouse */
+    color: #000; /* Texto negro */
 }
 
 #formulario-busqueda{

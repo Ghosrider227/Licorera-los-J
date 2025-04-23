@@ -7,43 +7,59 @@
 {% endblock %}
 
 {% block cuerpo %}
-<div class="form-container">
-    <form action="" method="post" class="form-content">
-        {% csrf_token %}
-        {% if datos %}
-            <h1 class="form-title">Editar Producto {{datos.id}}</h1>
-        {% else %}
-            <h1 class="form-title">Agregar Producto</h1>
-        {% endif %}
-        <label>Nombre:</label>
-        <input value="{{datos.nombre_producto}}" type="text" name="nombre_producto" class="form-control"><br>
-        <label>Categoria:</label>
-        <select name="tipo_producto" class="form-select">
-            <option selected disabled value="{{datos.tipo_producto}}">{{datos.get_tipo_producto_display}}</option>
-            <option value="1" {% if datos.tipo_producto == "1" %}selected=""{% endif %}>Vino</option>
-            <option value="2" {% if datos.tipo_producto == "2" %}selected=""{% endif %}>Ron</option>
-            <option value="3" {% if datos.tipo_producto == "3" %}selected=""{% endif %}>Cerveza</option>
-            <option value="4" {% if datos.tipo_producto == "4" %}selected=""{% endif %}>Vodka</option>
-            <option value="5" {% if datos.tipo_producto == "5" %}selected=""{% endif %}>Wisky</option>
-            <option value="6" {% if datos.tipo_producto == "6" %}selected=""{% endif %}>Tequila</option>
-            <option value="7" {% if datos.tipo_producto == "7" %}selected=""{% endif %}>Guaro</option>
-            <option value="8" {% if datos.tipo_producto == "8" %}selected=""{% endif %}>Champan</option>
-        </select>
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="form-container bg-dark text-light p-5 rounded shadow-lg" style="width: 400px;">
+        <form action="" method="post" class="form-content">
+            {% csrf_token %}
+            <h2 class="text-center mb-4">Agregar Producto</h2>
 
-        <label>Medidas:</label>
-        <textarea name="medidas" class="form-control">{{datos.medidas}}</textarea><br>
+            <div class="mb-3">
+                <label for="nombre_producto" class="form-label">Nombre:</label>
+                <input value="{{datos.nombre_producto}}" type="text" name="nombre_producto" id="nombre_producto" class="form-control">
+            </div>
 
-        <label>Precio:</label>
-        <input value="{{datos.precio}}" type="number" name="precio" class="form-control"><br>
+            <div class="mb-3">
+                <label for="tipo_producto" class="form-label">Categoría:</label>
+                <select name="tipo_producto" id="tipo_producto" class="form-select">
+                    <option selected disabled value="{{datos.tipo_producto}}">{{datos.get_tipo_producto_display}}</option>
+                    <option value="1" {% if datos.tipo_producto == "1" %}selected{% endif %}>Vino</option>
+                    <option value="2" {% if datos.tipo_producto == "2" %}selected{% endif %}>Ron</option>
+                    <option value="3" {% if datos.tipo_producto == "3" %}selected{% endif %}>Cerveza</option>
+                    <option value="4" {% if datos.tipo_producto == "4" %}selected{% endif %}>Vodka</option>
+                    <option value="5" {% if datos.tipo_producto == "5" %}selected{% endif %}>Wisky</option>
+                    <option value="6" {% if datos.tipo_producto == "6" %}selected{% endif %}>Tequila</option>
+                    <option value="7" {% if datos.tipo_producto == "7" %}selected{% endif %}>Guaro</option>
+                    <option value="8" {% if datos.tipo_producto == "8" %}selected{% endif %}>Champan</option>
+                </select>
+            </div>
 
-        <label>Descripcion:</label>
-        <textarea name="descripcion" class="form-control">{{datos.descripcion}}</textarea><br>
+            <div class="mb-3">
+                <label for="medidas" class="form-label">Medidas:</label>
+                <input value="{{ datos.medidas|slice:'1:-2' }}" type="text" name="medidas" id="medidas" class="form-control">
+            </div>
 
-        <label>Cantidad:</label>
-        <input value="{{datos.cantidad}}" type="number" name="cantidad" class="form-control"><br>
+            <div class="mb-3">
+                <label for="precio" class="form-label">Precio:</label>
+                <input value="{{datos.precio}}" type="number" name="precio" id="precio" class="form-control">
+            </div>
 
-        <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
-        <a href="{% url 'productos' %}" class="btn btn-secondary">Cancelar</a>
-    </form>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripcion:</label>
+                <textarea value="{{datos.descripcion}}" type="text" name="descripcion" id="descripcion" class="form-control">{{datos.descripcion}}</textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="cantidad" class="form-label">Cantidad:</label>
+                <input value="{{datos.cantidad}}" type="number" name="cantidad" id="cantidad" class="form-control">
+            </div>
+
+            
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-{% if datos %}info{% else %}success{% endif %}">{% if datos %}Actualizar{% else %}Guardar{% endif %}</button>
+                <a href="{% url 'productos' %}" class="btn btn-secondary w-100 ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
 </div>
 {% endblock %}
