@@ -164,28 +164,89 @@ def register(request):
 def compra(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.warning(request, "Debes iniciar sesión para ver tu carrito.")
-        return redirect("catalogo")
+        messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+        return redirect('login')
 
-    carrito = sesion.get("carrito", [])
+    carrito = request.session.get("carrito", [])
     productos_carrito = []
+    subtotal = 0
 
-    # Carga los productos del carrito desde la base de datos
+    # Cargar los productos del carrito desde la base de datos
     for item in carrito:
         producto = get_object_or_404(Productos, id=item['id_producto'])
+        cantidad = item['cantidad']
+        subtotal_producto = producto.precio * cantidad
         productos_carrito.append({
             'producto': producto,
-            'cantidad': item['cantidad'],
-            'subtotal': producto.precio * item['cantidad']
+            'cantidad': cantidad,
+            'subtotal': subtotal_producto
         })
+        subtotal += subtotal_producto
 
-    # Productos sugeridos (puedes personalizar esta lógica)
+    # Manejar las acciones del formulario
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+
+        # Validar y proceder al pago
+        if action == "checkout":
+            cantidades_validas = True
+            for item in productos_carrito:
+                cantidad_ingresada = int(request.POST.get(f"cantidad_{item['producto'].id}", item['cantidad']))
+                if cantidad_ingresada < 1:
+                    cantidades_validas = False
+                    messages.error(request, f"La cantidad para {item['producto'].nombre_producto} no puede ser menor a 1.")
+                elif cantidad_ingresada > item['producto'].cantidad:
+                    cantidades_validas = False
+                    messages.error(request, f"La cantidad ingresada para {item['producto'].nombre_producto} excede el stock disponible ({item['producto'].cantidad}).")
+                else:
+                    item['cantidad'] = cantidad_ingresada
+                    item['subtotal'] = item['producto'].precio * cantidad_ingresada
+
+            # Recalcular el subtotal general
+            subtotal = sum(item['subtotal'] for item in productos_carrito)
+
+            if cantidades_validas:
+                messages.success(request, "Todo está correcto. Procediendo al pago...")
+                return redirect('pago')  # Redirigir a la vista de pago si todo es válido
+
+    # Productos sugeridos
     productos_sugeridos = Productos.objects.all()[:4]
 
     return render(request, 'compra.html', {
         'productos_carrito': productos_carrito,
+        'subtotal': subtotal,
+        'total': subtotal,  # Si hay impuestos o descuentos, ajusta aquí
         'productos_sugeridos': productos_sugeridos
     })
+
+
+# def vaciar_bolsa(request):
+#     sesion = request.session.get("sesion", None)
+#     if not sesion:
+#         messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+#         return redirect('login')
+
+#     # Vaciar el carrito
+#     request.session['carrito'] = []
+#     request.session.modified = True  # Asegurar que la sesión se actualice
+#     messages.success(request, "Todos los productos han sido eliminados de la bolsa.")
+#     return redirect('compra')  # Redirigir a la bolsa
+
+
+# def eliminar_producto(request, producto_id):
+#     sesion = request.session.get("sesion", None)
+#     if not sesion:
+#         messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+#         return redirect('login')
+
+#     carrito = request.session.get("carrito", [])
+#     # Eliminar el producto del carrito
+#     carrito = [item for item in carrito if item['id_producto'] != producto_id]
+#     request.session['carrito'] = carrito
+#     request.session.modified = True  # Asegurar que la sesión se actualice
+#     messages.success(request, "Producto eliminado del carrito.")
+#     return redirect('compra')  # Redirigir a la bolsa
 
 
 def detalle_producto(request, id):
@@ -373,7 +434,11 @@ def editar_usuario(request, id_usuario):
 
         print(q.contrasena)
         return render(request, "administrador/formulario_usuario.html", contexto)
-    
+
+
+
+
+#PAGOS Y CARRITO
 def pago(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
@@ -408,12 +473,26 @@ def pago(request):
 
 def procesar_pago(request):
     if request.method == "POST":
-        direccion = request.POST.get('direccion')
-        metodo_pago = request.POST.get('metodo_pago')
+        sesion = request.session.get("sesion", None)
+        if not sesion:
+            messages.error(request, "Debes iniciar sesión para realizar un pago.")
+            return redirect('login')
 
-        # Aquí puedes agregar la lógica para procesar el pago
-        # Por ejemplo, guardar la orden en la base de datos o integrar un servicio de pago
+        carrito = sesion.get("carrito", [])
+        errores = []
 
+        # Validar cantidades disponibles
+        for item in carrito:
+            producto = get_object_or_404(Productos, id=item['id_producto'])
+            if item['cantidad'] > producto.cantidad:
+                errores.append(f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
+
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+            return redirect('compra')
+
+        # Procesar el pago si no hay errores
         messages.success(request, "Pago realizado con éxito. ¡Gracias por tu compra!")
         return redirect('index')
     else:
