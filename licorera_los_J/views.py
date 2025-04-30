@@ -161,22 +161,59 @@ def register(request):
             return render(request, 'register.html')
 
 def agregar_carrito(request):
+
+#     import json
+
+# def agregar_carrito(request):
+#     if request.method == 'POST':
+#         id_producto = request.POST.get('id_producto')
+#         cantidad = int(request.POST.get('cantidad', 1))
+#         producto = get_object_or_404(Productos, id=id_producto)
+
+#         # Obtener el carrito de las cookies
+#         carrito = request.COOKIES.get('carrito')
+#         if carrito:
+#             carrito = json.loads(carrito)
+#         else:
+#             carrito = []
+
+#         # Verificar si el producto ya está en el carrito
+#         for item in carrito:
+#             if item['id_producto'] == id_producto:
+#                 item['cantidad'] += cantidad
+#                 break
+#         else:
+#             carrito.append({
+#                 'id_producto': id_producto,
+#                 'nombre': producto.nombre_producto,
+#                 'precio': producto.precio,
+#                 'cantidad': cantidad,
+#             })
+
+#         # Guardar el carrito actualizado en las cookies
+#         response = redirect('catalogo')
+#         response.set_cookie('carrito', json.dumps(carrito), max_age=60*60*24*7)  # 7 días
+#         return response
+
     if request.method == 'POST':
         id_producto = request.POST.get('id_producto')
         # foto = request.POST.get('foto')
         # nombre_producto = request.POST.get('nombre_producto')
         # precio = request.POST.get('precio')
-        cantidad = int(request.POST.get('cantidad'))
+        cantidad = request.POST.get('cantidad')
         
-        if not cantidad.isdigit() or cantidad <= 0:
-            messages.warning(
-                request, 'Cantidad invalida')
-            return redirect('catalogo')
+        # if not cantidad.isdigit() or int(cantidad) <= 0:
+        #     messages.warning(request, 'Cantidad invalida')
+        #     return redirect('catalogo')
         
         # Obtén la sesión actual
         sesion = request.session.get("sesion", None)
+        # ct = []
+            
         if not sesion:
-            ct = []
+            request.session["sin_sesion"] = {"carrito": []}
+            sesion = request.session.get("sin_sesion")
+            ct = sesion.get("carrito", [])
             for item in ct:
                 if item['id_producto'] == id_producto:
                     item['cantidad'] += cantidad
@@ -189,6 +226,8 @@ def agregar_carrito(request):
                     'precio': producto.precio,
                     'cantidad': cantidad,
                 })
+            sesion["carrito"] = ct
+            request.session["sesion"] = sesion
                 
             tipo_producto = request.GET.get('tipo_producto', '')
             if tipo_producto:
@@ -200,19 +239,6 @@ def agregar_carrito(request):
                 'productos': productos,
                 'tipo_producto': tipo_producto,
             }
-            # if not ct:
-            #     ct.append({
-            #         'id_producto': id_producto,
-            #         'cantidad': cantidad,
-            #     })
-            # for i in ct:
-            #     if i['id_producto'] == id_producto:
-            #         i['cantidad'] += cantidad
-            #         break
-            # else:
-            #     producto.append(id_producto)
-            #     producto.append(cantidad)
-            #     ct.append(producto)
             return render(request, "catalogo.html", contexto)
         else:
             carrito = sesion.get("carrito", [])

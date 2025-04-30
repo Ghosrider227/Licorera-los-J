@@ -107,7 +107,14 @@
                             <button id="closeCartMenu" class="close-cart">&times;</button>
                         </div>
                         <div class="cart-content">
-                            {% for i in ct %}
+                            {% for i in pc %}
+                            <div class="cart-item">
+                                <img src="{{ item.producto.foto.url }}" alt="Producto 1">
+                                <div class="cart-item-details">
+                                    <h5>{{ i.nombre }}</h5>
+                                    <p>{{ i.cantidad }}</p>
+                                    <p class="item-price">{{i.precio}}</p>
+                                </div>
                             {% endfor %}
                             <!-- Aquí se cargarán los productos dinámicamente -->
                         </div>
