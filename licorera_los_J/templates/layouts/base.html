@@ -11,8 +11,6 @@
         <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-        <link rel="stylesheet" href="{% static 'css/form-styles.css' %}">
     </head>
     <body>
         <nav>
@@ -29,6 +27,14 @@
             {% if request.session.sesion %}
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <div class="dropdown">
                         <button id="p" class="dropdown-button"><i class="fa-solid fa-user"></i> Perfil</button>
                         <div class="dropdown-content">
@@ -101,25 +107,8 @@
                             <button id="closeCartMenu" class="close-cart">&times;</button>
                         </div>
                         <div class="cart-content">
-                            {% if productos %}
-                            <p>hola mundo</p>
-                                {% for p in pc %}
-                                    {% for pp in productos %}
-                                        {% if p == pp %}
-                                            <div class="cart-item">
-                                                <img src="{{ pp.foto.url }}" alt="{{ pp.nombre_producto }}">
-                                                <div class="cart-item-details">
-                                                    <h5>{{ pp.nombre_producto }}</h5>
-                                                    <p>Precio: ${{ pp.precio }}</p>
-                                                    <p>Cantidad: {{ p.cantidad }}</p>
-                                                </div>
-                                            </div>
-                                        {%endif%}
-                                    {% endfor %}
-                                {% endfor %}
-                            {% else %}
-                                <p>No hay productos en el carrito.</p>
-                            {% endif %}
+                            {% for i in ct %}
+                            {% endfor %}
                             <!-- Aquí se cargarán los productos dinámicamente -->
                         </div>
                         <div class="cart-footer">

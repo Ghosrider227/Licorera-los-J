@@ -28,7 +28,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    /* grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
     gap: 20px;
     padding: 2rem;
     max-width: 1250px;

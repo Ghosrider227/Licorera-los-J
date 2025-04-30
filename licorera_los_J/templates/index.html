@@ -21,10 +21,8 @@
                 {% for p in data %}
                     <div class="product-card">
                         <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
-                        <div class="product-info">
-                            <h3>{{ p.nombre_producto }}</h3>
-                            <p class="price">${{ p.precio|intcomma }}</p>
-                        </div>
+                        <h3 class="nombre">{{ p.nombre_producto }}</h3>
+                        <p class="price">${{ p.precio|intcomma }}</p>
                     </div>
                 {% endfor %}
             </div>

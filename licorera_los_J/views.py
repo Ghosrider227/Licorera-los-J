@@ -160,6 +160,86 @@ def register(request):
         else:
             return render(request, 'register.html')
 
+def agregar_carrito(request):
+    if request.method == 'POST':
+        id_producto = request.POST.get('id_producto')
+        # foto = request.POST.get('foto')
+        # nombre_producto = request.POST.get('nombre_producto')
+        # precio = request.POST.get('precio')
+        cantidad = int(request.POST.get('cantidad'))
+        
+        if not cantidad.isdigit() or cantidad <= 0:
+            messages.warning(
+                request, 'Cantidad invalida')
+            return redirect('catalogo')
+        
+        # Obtén la sesión actual
+        sesion = request.session.get("sesion", None)
+        if not sesion:
+            ct = []
+            for item in ct:
+                if item['id_producto'] == id_producto:
+                    item['cantidad'] += cantidad
+                    break
+            else:
+                producto = get_object_or_404(Productos, id=id_producto)
+                ct.append({
+                    'id_producto': id_producto,
+                    'nombre': producto.nombre_producto,
+                    'precio': producto.precio,
+                    'cantidad': cantidad,
+                })
+                
+            tipo_producto = request.GET.get('tipo_producto', '')
+            if tipo_producto:
+                productos = Productos.objects.filter(tipo_producto=tipo_producto)
+            else:
+                productos = Productos.objects.all()
+            contexto = {
+                'pc': ct,
+                'productos': productos,
+                'tipo_producto': tipo_producto,
+            }
+            # if not ct:
+            #     ct.append({
+            #         'id_producto': id_producto,
+            #         'cantidad': cantidad,
+            #     })
+            # for i in ct:
+            #     if i['id_producto'] == id_producto:
+            #         i['cantidad'] += cantidad
+            #         break
+            # else:
+            #     producto.append(id_producto)
+            #     producto.append(cantidad)
+            #     ct.append(producto)
+            return render(request, "catalogo.html", contexto)
+        else:
+            carrito = sesion.get("carrito", [])
+            
+            # Verifica si el producto ya está en el carrito
+            for item in carrito:
+                if item['id_producto'] == id_producto:
+                    item['cantidad'] += cantidad
+                    break
+            else:
+                # Si no está, agrega un nuevo producto al carrito
+                producto = get_object_or_404(Productos, id=id_producto)
+                carrito.append({
+                    'id_producto': id_producto,
+                    'nombre': producto.nombre_producto,
+                    'precio': producto.precio,
+                    'cantidad': cantidad,
+                })
+                
+            # Actualiza el carrito en la sesión
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
+            
+            messages.success(request, "Producto agregado al carrito.")
+            return redirect("catalogo")
+    else:
+        return render(request, "catalogo.html")
 
 def compra(request):
     sesion = request.session.get("sesion", None)
@@ -192,63 +272,10 @@ def detalle_producto(request, id):
     producto = get_object_or_404(Productos, id=id)
     return render(request, 'detalle_producto.html', {'producto': producto})
 
-
-def cobertura(request):
-    return render(request, 'cobertura.html')
-
-
 def obtener_carrito(request):
     carrito = request.session.get('carrito', [])
     total = sum(item['precio'] * item['cantidad'] for item in carrito)
     return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
-
-
-def agregar_carrito(request):
-    if request.method == 'POST':
-        id_producto = request.POST.get('id_producto')
-        cantidad = int(request.POST.get('cantidad', 1))
-        
-        # Obtén la sesión actual
-        sesion = request.session.get("sesion", None)
-        if not sesion:
-            producto = []
-            ct = []
-            for i in ct:
-                if i['id_producto'] == id_producto:
-                    i['cantidad'] += cantidad
-                    break
-            else:
-                producto.append(id_producto)
-                producto.append(cantidad)
-                ct.append(producto)
-            return render(request, "catalogo.html", {'pc': ct})
-        else:
-            carrito = sesion.get("carrito", [])
-            
-            # Verifica si el producto ya está en el carrito
-            for item in carrito:
-                if item['id_producto'] == id_producto:
-                    item['cantidad'] += cantidad
-                    break
-            else:
-                # Si no está, agrega un nuevo producto al carrito
-                producto = get_object_or_404(Productos, id=id_producto)
-                carrito.append({
-                    'id_producto': id_producto,
-                    'nombre': producto.nombre_producto,
-                    'precio': producto.precio,
-                    'cantidad': cantidad,
-                })
-                
-            # Actualiza el carrito en la sesión
-            sesion["carrito"] = carrito
-            request.session["sesion"] = sesion
-            
-            messages.success(request, "Producto agregado al carrito.")
-            return redirect("catalogo")
-    else:
-        return render(request, "catalogo.html")
-
 
 def catalogo(request):
     # Obtiene el valor seleccionado en el <select>
@@ -268,14 +295,8 @@ def catalogo(request):
     }
     return render(request, 'catalogo.html', contexto)
 
-
-def validar_administrador(request):
-    sesion = request.session.get("sesion", None)
-    if not sesion or sesion.get("cuenta") != "1":
-        messages.error(request, "No tienes permisos para acceder")
-        return False
-    return True
-
+def cobertura(request):
+    return render(request, 'cobertura.html')
 
 # ADMINISTRADOR
 def productos(request):
