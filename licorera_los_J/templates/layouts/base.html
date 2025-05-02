@@ -11,8 +11,6 @@
         <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
-        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
-        <link rel="stylesheet" href="{% static 'css/form-styles.css' %}">
     </head>
     <body>
         <nav>
@@ -25,10 +23,18 @@
                     <li><a href="{% url 'productos' %}">PRODUCTOS</a></li>
                     <li><a href="{% url 'usuarios' %}">USUARIOS</a></li>
                 {% endif %}
-           </ul>
+            </ul>
             {% if request.session.sesion %}
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
                     <div class="dropdown">
                         <button id="p" class="dropdown-button"><i class="fa-solid fa-user"></i> Perfil</button>
                         <div class="dropdown-content">
@@ -66,6 +72,7 @@
                     {% endif %}
                     <div class="dropdown">
                         <button type="button" id="p" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            <i class="fa-solid fa-user"></i>
                             Iniciar sesión
                         </button>
                         <form class="dropdown-menu p-4" id="loginForm" method="post" action="{% url 'login' %}">
@@ -91,23 +98,6 @@
                             <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
                         </form>
                     </div>
-                    <a href="#" class="icon-cart" id="cartButton">
-                        <i class="fa-solid fa-cart-shopping"></i> Carrito
-                        <span id="cartCount">0</span>
-                    </a>
-                      <div id="cartMenu" class="cart-menu">
-                          <div class="cart-header">
-                              <h4>Tu Carrito</h4>
-                              <button id="closeCartMenu" class="close-cart">&times;</button>
-                          </div>
-                          <div class="cart-content">
-                              <!-- Aquí se cargarán los productos dinámicamente -->
-                          </div>
-                          <div class="cart-footer">
-                              <p class="total-price">Total: $0</p>
-                              <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
-                          </div>
-                      </div>
                 </div>
             {% endif %}
         </nav>
