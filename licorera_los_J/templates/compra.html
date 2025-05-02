@@ -23,19 +23,57 @@
         </h1>
         <div class="productos-carrito">
             <h2 class="carrito-subtitulo">Tus productos</h2>
-                {% for item in productos_carrito %}
-                
-                <div class="product-card">
-                    <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
-                        <h3 class="nombre">{{ item.producto.nombre_producto }}</h3>
-                        <p class="price">Precio: ${{ item.producto.precio|intcomma }}</p>
-                        <p class="descripcion">Cantidad: {{ item.cantidad }}</p>
-                        <p class="subtotal">Subtotal: ${{ item.subtotal|intcomma }}</p>
+            <form method="POST" action="{% url 'compra' %}" id="form-carrito">
+                {% csrf_token %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in productos_carrito %}
+                        <tr>
+                            <td>
+                                <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
+                                {{ item.producto.nombre_producto }}
+                            </td>
+                            <td>${{ item.producto.precio|intcomma }}</td>
+                            <td>
+                                <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1">
+                            </td>
+                            <td>${{ item.subtotal|intcomma }}</td>
+                            <td>
+                                <!-- Botón de Actualizar -->
+                                <button type="submit" name="action" value="update_{{ item.producto.id }}" class="carrito-boton carrito-boton-actualizar">
+                                    Actualizar
+                                </button>
+                                <!-- Botón de Eliminar -->
+                                <a href="{% url 'eliminar_producto' item.producto.id %}" class="carrito-boton carrito-boton-eliminar">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <div class="total-container">
+                    <p>Subtotal: ${{ subtotal|intcomma }}</p>
+                    <p>Total: ${{ total|intcomma }}</p>
                 </div>
-                {% endfor %}
-            <a href="{% url 'pago' %}" class="carrito-boton carrito-boton-secundario">
-                COMPRAR AHORA
-            </a>
+                <div class="carrito-acciones">
+                    <a href="{% url 'vaciar_bolsa' %}" class="carrito-boton carrito-boton-secundario">
+                        Vaciar Bolsa
+                    </a>
+                    <button type="submit" name="action" value="checkout" class="carrito-boton carrito-boton-secundario">
+                        PROCEDER A PAGAR
+                    </button>
+                </div>
+            </form>
         </div>
     {% else %}
         <h1 class="carrito-titulo">
@@ -68,4 +106,26 @@
         </div>
     </div>
 </div>
+
+
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div class="message {{ message.tags }}">
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+<script>
+    // Ocultar los mensajes después de 2 segundos
+    setTimeout(function() {
+        const messages = document.querySelector('.messages');
+        if (messages) {
+            messages.style.display = 'none';
+        }
+    }, 2000); // 2000 ms = 2 segundos
+</script>
+{% endif %}
+
 {% endblock %}

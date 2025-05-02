@@ -29,4 +29,9 @@ urlpatterns = [
     path("usuarios/", views.usuarios, name='usuarios'),
     path("editar_usuario/<int:id_usuario>/", views.editar_usuario, name='editar_usuario'),
 
+
+    #COMPRAS
+    path('vaciar_bolsa/', views.vaciar_bolsa, name='vaciar_bolsa'),
+    path('eliminar_producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
