@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from .utils import *
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
+import json
 
 
 def index(request):
@@ -160,6 +161,42 @@ def register(request):
         else:
             return render(request, 'register.html')
 
+def agregar_carrito(request):
+    if request.method == 'POST':
+        id_producto = request.POST.get('id_producto')
+        cantidad = request.POST.get('cantidad')        
+        # Obtén la sesión actual
+        sesion = request.session.get("sesion", None)
+            
+        if not sesion:
+            messages.warning(request, "Debes iniciar sesión para agregar productos al carrito.")
+            return redirect("catalogo")
+        else:
+            carrito = sesion.get("carrito", [])
+            
+            # Verifica si el producto ya está en el carrito
+            for item in carrito:
+                if item['id_producto'] == id_producto:
+                    item['cantidad'] += cantidad
+                    break
+            else:
+                # Si no está, agrega un nuevo producto al carrito
+                producto = get_object_or_404(Productos, id=id_producto)
+                carrito.append({
+                    'id_producto': id_producto,
+                    'nombre': producto.nombre_producto,
+                    'precio': producto.precio,
+                    'cantidad': cantidad,
+                })
+                
+            # Actualiza el carrito en la sesión
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
+            
+            messages.success(request, "Producto agregado al carrito.")
+            return redirect("catalogo")
+    else:
+        return render(request, "catalogo.html")
 
 def compra(request):
     sesion = request.session.get("sesion", None)
@@ -277,21 +314,14 @@ def eliminar_producto(request, producto_id):
     messages.success(request, "Producto eliminado del carrito.")
     return redirect('compra')  # Redirigir a la bolsa
 
-
 def detalle_producto(request, id):
     producto = get_object_or_404(Productos, id=id)
     return render(request, 'detalle_producto.html', {'producto': producto})
-
-
-def cobertura(request):
-    return render(request, 'cobertura.html')
-
 
 def obtener_carrito(request):
     carrito = request.session.get('carrito', [])
     total = sum(item['precio'] * item['cantidad'] for item in carrito)
     return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
-
 
 def agregar_carrito(request):
     if request.method == 'POST':
@@ -328,7 +358,6 @@ def agregar_carrito(request):
         messages.success(request, "Producto agregado al carrito.")
         return redirect("catalogo")
 
-
 def catalogo(request):
     # Obtiene el valor seleccionado en el <select>
     # Por defecto, vacío si no se selecciona nada
@@ -347,6 +376,8 @@ def catalogo(request):
     }
     return render(request, 'catalogo.html', contexto)
 
+def cobertura(request):
+    return render(request, 'cobertura.html')
 
 #ADMINISTRADOR
 @validar_administrador
