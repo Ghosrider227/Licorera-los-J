@@ -44,14 +44,19 @@
                             </td>
                             <td>${{ item.producto.precio|intcomma }}</td>
                             <td>
-                                <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1" max="{{ item.producto.cantidad }}" onchange="document.getElementById('form-carrito').submit();">
+                                <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1">
                             </td>
                             <td>${{ item.subtotal|intcomma }}</td>
                             <td>
-    <a href="#" class="carrito-boton carrito-boton-eliminar">
-        Eliminar
-    </a>
-</td>
+                                <!-- Botón de Actualizar -->
+                                <button type="submit" name="action" value="update_{{ item.producto.id }}" class="carrito-boton carrito-boton-actualizar">
+                                    Actualizar
+                                </button>
+                                <!-- Botón de Eliminar -->
+                                <a href="{% url 'eliminar_producto' item.producto.id %}" class="carrito-boton carrito-boton-eliminar">
+                                    Eliminar
+                                </a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -61,7 +66,7 @@
                     <p>Total: ${{ total|intcomma }}</p>
                 </div>
                 <div class="carrito-acciones">
-                    <a href="#" class="carrito-boton carrito-boton-secundario">
+                    <a href="{% url 'vaciar_bolsa' %}" class="carrito-boton carrito-boton-secundario">
                         Vaciar Bolsa
                     </a>
                     <button type="submit" name="action" value="checkout" class="carrito-boton carrito-boton-secundario">
@@ -112,6 +117,15 @@
     </div>
     {% endfor %}
 </div>
+<script>
+    // Ocultar los mensajes después de 2 segundos
+    setTimeout(function() {
+        const messages = document.querySelector('.messages');
+        if (messages) {
+            messages.style.display = 'none';
+        }
+    }, 2000); // 2000 ms = 2 segundos
+</script>
 {% endif %}
 
 {% endblock %}

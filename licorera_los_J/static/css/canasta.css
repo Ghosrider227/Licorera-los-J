@@ -222,21 +222,45 @@ input[type="number"] {
 }
 
 .carrito-boton-eliminar {
-    background-color: #ff4d4d;
+    background-color: #f44336; /* Rojo */
     color: white;
     border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
+    padding: 8px 12px;
+    border-radius: 5px;
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
 }
 
 .carrito-boton-eliminar:hover {
-    background-color: #e60000;
+    background-color: #d32f2f; /* Rojo más oscuro */
 }
 
 .carrito-acciones {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
+}
+
+/* Contenedor para los botones de acciones */
+.acciones-botones {
+    display: flex;
+    gap: 10px; /* Espaciado entre los botones */
+    align-items: center;
+}
+
+/* Botón de Actualizar */
+.carrito-boton-actualizar {
+    background-color: #4CAF50; /* Verde */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+
+.carrito-boton-actualizar:hover {
+    background-color: #45a049; /* Verde más oscuro */
 }

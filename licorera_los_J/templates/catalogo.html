@@ -77,17 +77,25 @@
                 {% comment %} </div> {% endcomment %}
             </div>
         </form>
-<div>
+        <div>
             <h3>{{ producto.nombre_producto }}</h3>
             <p>Precio: {{ producto.precio }}</p>
             <form method="POST" action="{% url 'agregar_carrito' %}">
                 {% csrf_token %}
                 <input type="hidden" name="id_producto" value="{{ producto.id }}">
                 <input type="number" name="cantidad" value="1" min="1">
-                <button type="submit">Agregar al carrito</button>
+                <button type="submit" class="add-to-cart">Agregar al carrito</button>
             </form>
         </div>
         {% endfor %}
+        <div class="carrito-acciones">
+            <a href="{% url 'vaciar_bolsa' %}" class="carrito-boton carrito-boton-secundario">
+                Vaciar Bolsa
+            </a>
+            <button type="submit" name="action" value="checkout" class="carrito-boton carrito-boton-secundario">
+                PROCEDER A PAGAR
+            </button>
+        </div>
     {% else %}
         <p>No se encontraron productos para esta categoría.</p>
     {% endif %}
