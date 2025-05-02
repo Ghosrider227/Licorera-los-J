@@ -1,0 +1,59 @@
+{% extends 'layouts/base.html' %}
+
+{% block titulo %}Editar Perfil{% endblock %}
+
+{% block cuerpo %}
+<div class="container mt-5">
+    <div class="row">
+        <!-- Columna para la foto de perfil -->
+        <div class="col-md-4 text-center">
+            <img src="{{ user.foto.url }}" 
+                alt="Foto de perfil" 
+                class="img-fluid rounded-circle mb-3" 
+                style="max-width: 150px;">
+        </div>
+        
+        <!-- Columna para los datos del usuario -->
+        <div class="col-md-8">
+            <h3 class="mb-4">Editar Perfil</h3>
+            <form method="post" enctype="multipart/form-data" action="{% url 'editar_perfil' %}">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ user.nombre }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="apellidos" class="form-label">Apellidos</label>
+                        <input type="text" class="form-control" id="apellidos" name="apellidos" value="{{ user.apellido }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="telefono" class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" id="telefono" name="telefono" value="{{ user.telefono }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="ciudad" class="form-label">Ciudad</label>
+                        <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ user.direccion }}" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
+                        <input type="date" class="form-control" id="fecha_nacimiento" name="fecha_nacimiento" value="{{ user.fecha_nacimiento|date:'Y-m-d' }}" required>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                    <label class="btn btn-primary btn-sm">
+                        Actualizar Foto
+                        <input type="file" name="foto" hidden>
+                    </label>
+                    <a href="{% url 'index' %}" class="btn btn-danger">Cancelar</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

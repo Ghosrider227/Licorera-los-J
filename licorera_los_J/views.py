@@ -558,3 +558,26 @@ def procesar_pago(request):
     else:
         messages.error(request, "Hubo un error al procesar el pago.")
         return redirect('pago')
+
+
+
+def editar_perfil(request):
+    
+    user = request.session.get('sesion', False)
+    u = Usuarios.objects.get(id=user['id'])
+    if not user:
+        messages.error(request, "Debes iniciar sesión para editar tu perfil.")
+        return redirect('login')
+    
+    if request.method == 'POST':
+        u.nombre = request.POST.get('nombre')
+        u.apellido = request.POST.get('apellidos')
+        u.telefono = request.POST.get('telefono')
+        u.email = request.POST.get('email')
+        u.direccion = request.POST.get('ciudad')
+        u.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        if 'foto' in request.FILES:
+            u.foto = request.FILES['foto']
+        u.save()
+        return redirect('index')  # Redirige al inicio o a otra página
+    return render(request, 'editar_perfil.html', {'user': u})
