@@ -162,40 +162,6 @@ def register(request):
             return render(request, 'register.html')
 
 def agregar_carrito(request):
-
-#     import json
-
-# def agregar_carrito(request):
-#     if request.method == 'POST':
-#         id_producto = request.POST.get('id_producto')
-#         cantidad = int(request.POST.get('cantidad', 1))
-#         producto = get_object_or_404(Productos, id=id_producto)
-
-#         # Obtener el carrito de las cookies
-#         carrito = request.COOKIES.get('carrito')
-#         if carrito:
-#             carrito = json.loads(carrito)
-#         else:
-#             carrito = []
-
-#         # Verificar si el producto ya está en el carrito
-#         for item in carrito:
-#             if item['id_producto'] == id_producto:
-#                 item['cantidad'] += cantidad
-#                 break
-#         else:
-#             carrito.append({
-#                 'id_producto': id_producto,
-#                 'nombre': producto.nombre_producto,
-#                 'precio': producto.precio,
-#                 'cantidad': cantidad,
-#             })
-
-#         # Guardar el carrito actualizado en las cookies
-#         response = redirect('catalogo')
-#         response.set_cookie('carrito', json.dumps(carrito), max_age=60*60*24*7)  # 7 días
-#         return response
-
     if request.method == 'POST':
         id_producto = request.POST.get('id_producto')
         cantidad = request.POST.get('cantidad')        
@@ -289,7 +255,8 @@ def catalogo(request):
 def cobertura(request):
     return render(request, 'cobertura.html')
 
-# ADMINISTRADOR
+#ADMINISTRADOR
+@validar_administrador
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
     q = Productos.objects.all()
@@ -299,6 +266,7 @@ def productos(request):
     return render(request, "administrador/listar_productos.html", contexto)
 
 
+@validar_administrador
 def eliminar_productos(request, id_producto):
     # Obtener la instancia
     try:
@@ -316,7 +284,7 @@ def eliminar_productos(request, id_producto):
 
     return redirect("productos")
 
-
+@validar_administrador
 def agregar_productos(request):
     if request.method == "POST":
         nombre_producto = request.POST.get("nombre_producto")
@@ -343,7 +311,7 @@ def agregar_productos(request):
     else:
         return render(request, "administrador/formulario_productos.html")
 
-
+@validar_administrador
 def editar_productos(request, id_productos):
     if request.method == "POST":
         try:
@@ -372,6 +340,7 @@ def editar_productos(request, id_productos):
 
 # ADMINISTRADOR/USUARIOS
 
+@validar_administrador
 def usuarios(request):
     u = Usuarios.objects.all()
     contexto = {
@@ -380,6 +349,7 @@ def usuarios(request):
     return render(request, "administrador/listar_usuarios.html", contexto)
 
 
+@validar_administrador
 def editar_usuario(request, id_usuario):
     if request.method == "POST":
         try:
@@ -399,3 +369,49 @@ def editar_usuario(request, id_usuario):
 
         print(q.contrasena)
         return render(request, "administrador/formulario_usuario.html", contexto)
+    
+def pago(request):
+    sesion = request.session.get("sesion", None)
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para realizar un pago.")
+        return redirect('login')
+
+    carrito = sesion.get("carrito", [])
+    productos_carrito = []
+    total = 0
+
+    # Cargar los productos del carrito desde la base de datos
+    for item in carrito:
+        if 'producto_id' in item and 'cantidad' in item:  # Validar claves
+            try:
+                producto = Productos.objects.get(id=item['producto_id'])
+                subtotal = producto.precio * item['cantidad']
+                total += subtotal
+                productos_carrito.append({
+                    'producto': producto,
+                    'cantidad': item['cantidad'],
+                    'subtotal': subtotal
+                })
+            except Productos.DoesNotExist:
+                messages.error(request, f"El producto con ID {item['producto_id']} no existe.")
+        else:
+            messages.error(request, "El carrito contiene datos inválidos.")
+
+    return render(request, 'pago.html', {
+        'productos_carrito': productos_carrito,
+        'total': total
+    })
+
+def procesar_pago(request):
+    if request.method == "POST":
+        direccion = request.POST.get('direccion')
+        metodo_pago = request.POST.get('metodo_pago')
+
+        # Aquí puedes agregar la lógica para procesar el pago
+        # Por ejemplo, guardar la orden en la base de datos o integrar un servicio de pago
+
+        messages.success(request, "Pago realizado con éxito. ¡Gracias por tu compra!")
+        return redirect('index')
+    else:
+        messages.error(request, "Hubo un error al procesar el pago.")
+        return redirect('pago')

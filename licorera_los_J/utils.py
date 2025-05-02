@@ -1,6 +1,8 @@
 import base64
 import hashlib
 import secrets
+from django.shortcuts import redirect
+from django.contrib import messages
 
 ALGORITHM = "pbkdf2_sha256"
 
@@ -25,3 +27,13 @@ def verify_password(password, password_hash):
     assert algorithm == ALGORITHM
     compare_hash = hash_password(password, salt, iterations)
     return secrets.compare_digest(password_hash, compare_hash)
+
+
+def validar_administrador(view_func):
+    def wrapper(request, *args, **kwargs):
+        sesion = request.session.get("sesion", None)
+        if not sesion or sesion.get("cuenta") != "1":  # Verifica si el usuario es administrador
+            messages.error(request, "No tienes permisos para acceder.")
+            return redirect("index")  # Redirige al inicio si no es administrador
+        return view_func(request, *args, **kwargs)
+    return wrapper
