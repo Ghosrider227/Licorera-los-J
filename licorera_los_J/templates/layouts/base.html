@@ -72,6 +72,7 @@
                     {% endif %}
                     <div class="dropdown">
                         <button type="button" id="p" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                            <i class="fa-solid fa-user"></i>
                             Iniciar sesión
                         </button>
                         <form class="dropdown-menu p-4" id="loginForm" method="post" action="{% url 'login' %}">
@@ -96,32 +97,6 @@
                             <a class="btn btn-secondary" href="{% url 'register' %}">Registrar</a>
                             <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
                         </form>
-                    </div>
-                    <a href="#" class="icon-cart" id="cartButton">
-                        <i class="fa-solid fa-cart-shopping"></i> Carrito
-                        <span id="cartCount">0</span>
-                    </a>
-                    <div id="cartMenu" class="cart-menu">
-                        <div class="cart-header">
-                            <h4>Tu Carrito</h4>
-                            <button id="closeCartMenu" class="close-cart">&times;</button>
-                        </div>
-                        <div class="cart-content">
-                            {% for i in pc %}
-                            <div class="cart-item">
-                                <img src="{{ item.producto.foto.url }}" alt="Producto 1">
-                                <div class="cart-item-details">
-                                    <h5>{{ i.nombre }}</h5>
-                                    <p>{{ i.cantidad }}</p>
-                                    <p class="item-price">{{i.precio}}</p>
-                                </div>
-                            {% endfor %}
-                            <!-- Aquí se cargarán los productos dinámicamente -->
-                        </div>
-                        <div class="cart-footer">
-                            <p class="total-price">Total: $0</p>
-                            <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
-                        </div>
                     </div>
                 </div>
             {% endif %}

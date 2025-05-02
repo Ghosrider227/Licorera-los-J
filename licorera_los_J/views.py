@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from .utils import *
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
+import json
 
 
 def index(request):
@@ -197,49 +198,13 @@ def agregar_carrito(request):
 
     if request.method == 'POST':
         id_producto = request.POST.get('id_producto')
-        # foto = request.POST.get('foto')
-        # nombre_producto = request.POST.get('nombre_producto')
-        # precio = request.POST.get('precio')
-        cantidad = request.POST.get('cantidad')
-        
-        # if not cantidad.isdigit() or int(cantidad) <= 0:
-        #     messages.warning(request, 'Cantidad invalida')
-        #     return redirect('catalogo')
-        
+        cantidad = request.POST.get('cantidad')        
         # Obtén la sesión actual
         sesion = request.session.get("sesion", None)
-        # ct = []
             
         if not sesion:
-            request.session["sin_sesion"] = {"carrito": []}
-            sesion = request.session.get("sin_sesion")
-            ct = sesion.get("carrito", [])
-            for item in ct:
-                if item['id_producto'] == id_producto:
-                    item['cantidad'] += cantidad
-                    break
-            else:
-                producto = get_object_or_404(Productos, id=id_producto)
-                ct.append({
-                    'id_producto': id_producto,
-                    'nombre': producto.nombre_producto,
-                    'precio': producto.precio,
-                    'cantidad': cantidad,
-                })
-            sesion["carrito"] = ct
-            request.session["sesion"] = sesion
-                
-            tipo_producto = request.GET.get('tipo_producto', '')
-            if tipo_producto:
-                productos = Productos.objects.filter(tipo_producto=tipo_producto)
-            else:
-                productos = Productos.objects.all()
-            contexto = {
-                'pc': ct,
-                'productos': productos,
-                'tipo_producto': tipo_producto,
-            }
-            return render(request, "catalogo.html", contexto)
+            messages.warning(request, "Debes iniciar sesión para agregar productos al carrito.")
+            return redirect("catalogo")
         else:
             carrito = sesion.get("carrito", [])
             
