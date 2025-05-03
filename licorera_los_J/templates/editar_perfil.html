@@ -4,10 +4,22 @@
 
 {% block cuerpo %}
 <div class="container mt-5">
+    {% if messages %}
+        <div>
+            {% for message in messages %}
+                {% if message.tags == "success" %}
+                    <div class="alert alert-success alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index: 1050;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
     <div class="row">
         <!-- Columna para la foto de perfil -->
         <div class="col-md-4 text-center">
-            <img src="{{ user.foto.url }}" 
+            <img src="{{ u.foto.url }}" 
                 alt="Foto de perfil" 
                 class="img-fluid rounded-circle mb-3" 
                 style="max-width: 150px;">
@@ -36,8 +48,8 @@
                         <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="ciudad" class="form-label">Ciudad</label>
-                        <input type="text" class="form-control" id="ciudad" name="ciudad" value="{{ user.direccion }}" required>
+                        <label for="ciudad" class="form-label">Calle</label>
+                        <input type="text" class="form-control" id="calle" name="calle" value="{{ user.direccion }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="fecha_nacimiento" class="form-label">Fecha de Nacimiento</label>
@@ -56,4 +68,15 @@
         </div>
     </div>
 </div>
+<script>
+    // Espera 3 segundos y luego oculta los mensajes
+    setTimeout(function() {
+        const alert = document.querySelector('.alert');
+        if (alert) {
+            alert.style.transition = 'opacity 0.5s ease';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500); // Elimina el elemento después de la transición
+        }
+    }, 3000); // 3000 ms = 3 segundos
+</script>
 {% endblock %}

@@ -8,6 +8,8 @@ from .utils import *
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 import json
+from datetime import date
+from django.core.serializers.json import DjangoJSONEncoder
 
 
 def index(request):
@@ -562,22 +564,111 @@ def procesar_pago(request):
 
 
 def editar_perfil(request):
-    
     user = request.session.get('sesion', False)
-    u = Usuarios.objects.get(id=user['id'])
     if not user:
         messages.error(request, "Debes iniciar sesión para editar tu perfil.")
         return redirect('login')
-    
+
+    u = Usuarios.objects.get(id=user['id'])
+
     if request.method == 'POST':
+        # Obtener los datos del formulario
         u.nombre = request.POST.get('nombre')
         u.apellido = request.POST.get('apellidos')
         u.telefono = request.POST.get('telefono')
         u.email = request.POST.get('email')
         u.direccion = request.POST.get('ciudad')
-        u.fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        fecha_nacimiento = request.POST.get('fecha_nacimiento')
+
+        # Validar mayoría de edad
+        if fecha_nacimiento:
+            fecha_nacimiento = date.fromisoformat(fecha_nacimiento)
+            hoy = date.today()
+            edad = hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+            if edad < 18:
+                messages.error(request, "Debes ser mayor de edad para editar tu perfil.")
+                return render(request, 'editar_perfil.html', {'user': u})
+
+            u.fecha_nacimiento = fecha_nacimiento
+
+        # Manejar la actualización de la foto
         if 'foto' in request.FILES:
             u.foto = request.FILES['foto']
+
+        # Guardar los cambios
         u.save()
-        return redirect('index')  # Redirige al inicio o a otra página
+        messages.success(request, "Perfil actualizado con éxito.")
+        return redirect('editar_perfil')  # Redirige al inicio o a otra página
+
     return render(request, 'editar_perfil.html', {'user': u})
+
+
+
+#PAGOS
+
+
+def procesar_pago(request):
+    if request.method == "POST":
+        sesion = request.session.get("sesion", None)
+        if not sesion:
+            messages.error(request, "Debes iniciar sesión para realizar un pago.")
+            return redirect('login')
+
+        usuario = Usuarios.objects.get(id=sesion['id'])
+        if not usuario.fecha_nacimiento:
+            messages.error(request, "Debes actualizar tu perfil con tu fecha de nacimiento antes de proceder al pago.")
+            return redirect('editar_perfil')
+
+        carrito = request.session.get("carrito", [])
+        errores = []
+        total_pagado = 0
+
+        # Crear la factura
+        factura = Facturas.objects.create(
+            cliente=usuario,
+            valor_pedido=0,  # Se calculará después
+            valor_total=0,  # Se calculará después
+            fecha_factura=date.today(),
+            hora_factura=date.today().strftime("%H:%M:%S")
+        )
+
+        # Crear los detalles de la factura
+        for item in carrito:
+            producto = get_object_or_404(Productos, id=item['id_producto'])
+            if item['cantidad'] > producto.cantidad:
+                errores.append(f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
+            else:
+                producto.cantidad -= item['cantidad']
+                producto.save()
+
+                subtotal = producto.precio * item['cantidad']
+                total_pagado += subtotal
+
+                cantidad = int(item['cantidad'])  # Convierte a entero si es necesario
+                DetallesFacturas.objects.create(
+                    producto=producto,
+                    factura=factura,
+                    subtotal=subtotal
+                )
+
+        if errores:
+            for error in errores:
+                messages.error(request, error)
+            return redirect('compra')
+
+        # Actualizar el total de la factura
+        factura.valor_pedido = total_pagado
+        factura.valor_total = total_pagado
+        factura.save()
+
+        # Limpiar el carrito
+        request.session['carrito'] = []
+        request.session.modified = True
+
+        messages.success(request, f"Pago realizado con éxito. Factura #{factura.id} generada.")
+        return redirect('facturas')
+    else:
+        messages.error(request, "Hubo un error al procesar el pago.")
+        return redirect('pago')
+    
+    
