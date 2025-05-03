@@ -39,6 +39,6 @@ urlpatterns = [
     
     
     #Facturas
-     path('facturas/', views.facturas, name='facturas'),
+     
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
