@@ -43,7 +43,8 @@ def login(request):
                         "cuenta": u.cuenta,
                         "email": u.email,
                         "carrito": u.carrito,
-                        "fecha_nacimiento": u.fecha_nacimiento.isoformat() if u.fecha_nacimiento else None,  # Convertir a cadena
+                        # Convertir a cadena
+                        "fecha_nacimiento": u.fecha_nacimiento.isoformat() if u.fecha_nacimiento else None,
                     }
                     return redirect("index")
             else:
@@ -69,14 +70,27 @@ def logout(request):
         sesion = request.session.get("sesion", None)
         if sesion:
             u = Usuarios.objects.get(pk=sesion["id"])
-            # Guarda el carrito en el modelo
-            u.carrito = sesion.get("carrito", [])
-            u.save()
-        del request.session["sesion"]
+            # Obtén el carrito de la sesión
+            carrito = sesion.get("carrito", [])
+            print("Carrito obtenido de la sesión:", carrito)  # Depuración
+            if isinstance(carrito, list):  # Verifica que sea una lista
+                # Serializa el carrito y guárdalo en el modelo
+                u.carrito = carrito
+                u.save()
+                print("Carrito guardado en el modelo:", u.carrito)  # Depuración
+            else:
+                messages.warning(
+                    request, "El carrito no tiene un formato válido.")
+        # Elimina la sesión actual
+        request.session.flush()
+        return redirect("index")
+    except Usuarios.DoesNotExist:
+        messages.error(request, "El usuario no existe.")
         return redirect("index")
     except Exception as e:
-        messages.info(request, "No se pudo cerrar sesión, intente de nuevo")
-        return redirect("inicio")
+        print(f"Error al guardar el carrito: {e}")  # Depuración
+        messages.error(request, f"Error inesperado: {e}")
+        return redirect("index")
 
 
 def cambiar_clave(request):
@@ -163,57 +177,67 @@ def register(request):
         else:
             return render(request, 'register.html')
 
+
 def agregar_carrito(request):
     if request.method == 'POST':
-        id_producto = request.POST.get('id_producto')
-        cantidad = request.POST.get('cantidad')        
-        # Obtén la sesión actual
+        id_producto = int(request.POST.get('id_producto'))
+        cantidad = int(request.POST.get('cantidad', 1))
+
+        # Verificar si el usuario está logueado
         sesion = request.session.get("sesion", None)
-            
         if not sesion:
-            messages.warning(request, "Debes iniciar sesión para agregar productos al carrito.")
+            messages.warning(
+                request, "Debes iniciar sesión para agregar productos al carrito.")
             return redirect("catalogo")
+
+        # Obtener el carrito de la sesión
+        carrito = sesion.get("carrito", [])
+        print("Carrito antes de agregar:", carrito)  # Depuración
+
+        # Verificar si el producto ya está en el carrito
+        producto_existente = next(
+            (item for item in carrito if item['id_producto'] == id_producto), None)
+        if producto_existente:
+            # Incrementar la cantidad si el producto ya está en el carrito
+            producto_existente['cantidad'] += cantidad
         else:
-            carrito = sesion.get("carrito", [])
-            
-            # Verifica si el producto ya está en el carrito
-            for item in carrito:
-                if item['id_producto'] == id_producto:
-                    item['cantidad'] += cantidad
-                    break
-            else:
-                # Si no está, agrega un nuevo producto al carrito
-                producto = get_object_or_404(Productos, id=id_producto)
-                carrito.append({
-                    'id_producto': id_producto,
-                    'nombre': producto.nombre_producto,
-                    'precio': producto.precio,
-                    'cantidad': cantidad,
-                })
-                
-            # Actualiza el carrito en la sesión
-            sesion["carrito"] = carrito
-            request.session["sesion"] = sesion
-            
-            messages.success(request, "Producto agregado al carrito.")
-            return redirect("catalogo")
+            # Agregar un nuevo producto al carrito
+            producto = get_object_or_404(Productos, id=id_producto)
+            carrito.append({
+                'id_producto': id_producto,
+                'nombre': producto.nombre_producto,
+                'precio': producto.precio,
+                'cantidad': cantidad,
+            })
+
+        # Guardar el carrito actualizado en la sesión
+        sesion["carrito"] = carrito
+        sesion["agregado_desde_catalogo"] = True  # Establecer la bandera
+        request.session["sesion"] = sesion
+        request.session.modified = True  # Asegurar que la sesión se actualice
+        print("Carrito después de agregar:", carrito)  # Depuración
+
+        messages.success(request, "Producto agregado al carrito.")
+        return redirect("catalogo")
     else:
         return render(request, "catalogo.html")
+
 
 def compra(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+        messages.error(
+            request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
-    carrito = request.session.get("carrito", [])
+    carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
+    print("Carrito cargado desde la sesión:", carrito)  # Depuración
+
     productos_carrito = []
     subtotal = 0
     puede_proceder = True  # Variable para verificar si se puede proceder al pago
-
-    # Inicializar la variable de actualización en la sesión si no existe
-    if 'actualizado' not in request.session:
-        request.session['actualizado'] = False
+    # Bandera para verificar si se requiere actualización
+    requiere_actualizacion = False
 
     # Manejar las acciones del formulario
     if request.method == "POST":
@@ -222,44 +246,54 @@ def compra(request):
         # Manejar la acción de Actualizar
         if action and action.startswith("update_"):
             producto_id = int(action.split("_")[1])
-            nueva_cantidad = int(request.POST.get(f"cantidad_{producto_id}", 1))
+            nueva_cantidad = int(request.POST.get(
+                f"cantidad_{producto_id}", 1))
             producto = get_object_or_404(Productos, id=producto_id)
 
             if nueva_cantidad > producto.cantidad:
-                messages.error(request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
+                messages.error(
+                    request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
             elif nueva_cantidad < 1:
                 messages.error(request, "La cantidad debe ser mayor a 0.")
             else:
                 for item in carrito:
                     if item['id_producto'] == producto_id:
                         item['cantidad'] = nueva_cantidad
-                        request.session['actualizado'] = True  # Marcar como actualizado
                         break
-                messages.success(request, f"Cantidad actualizada para {producto.nombre_producto}.")
+                messages.success(
+                    request, f"Cantidad actualizada para {producto.nombre_producto}.")
 
             # Guardar el carrito actualizado en la sesión
-            request.session['carrito'] = carrito
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
             request.session.modified = True
-            return redirect('compra')  # Redirigir para evitar reenvío del formulario
+            # Redirigir para evitar reenvío del formulario
+            return redirect('compra')
 
         # Validar y proceder al pago
         elif action == "checkout":
-            if not request.session['actualizado']:
-                messages.error(request, "Debes actualizar las cantidades antes de proceder al pago.")
-                return redirect('compra')
-
             for item in carrito:
                 producto_id = item['id_producto']
-                producto = get_object_or_404(Productos, id=producto_id)
+                cantidad_en_formulario = int(request.POST.get(
+                    f"cantidad_{producto_id}", item['cantidad']))
 
+                # Verificar si la cantidad en el formulario coincide con la del carrito
+                if cantidad_en_formulario != item['cantidad']:
+                    messages.error(
+                        request, f"Debes dar clic en 'Actualizar' para confirmar la cantidad de {item['nombre']}.")
+                    puede_proceder = False
+                    break
+
+                # Validar stock
+                producto = get_object_or_404(Productos, id=producto_id)
                 if item['cantidad'] > producto.cantidad:
-                    messages.error(request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
+                    messages.error(
+                        request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
                     puede_proceder = False
 
             if puede_proceder:
-                # Limpiar la variable de actualización después de proceder al pago
-                request.session['actualizado'] = False
-                messages.success(request, "Todo está correcto. Procediendo al pago...")
+                messages.success(
+                    request, "Todo está correcto. Procediendo al pago...")
                 return redirect('pago')  # Redirigir a la página de pago
 
     # Cargar los productos del carrito desde la base de datos
@@ -276,9 +310,14 @@ def compra(request):
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
             # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
-            request.session['carrito'] = carrito
+            carrito = [i for i in carrito if i['id_producto']
+                       != item['id_producto']]
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
             request.session.modified = True
+
+    print("Productos cargados para la vista de compra:",
+          productos_carrito)  # Depuración
 
     # Productos sugeridos
     productos_sugeridos = Productos.objects.all()[:4]
@@ -290,75 +329,59 @@ def compra(request):
         'productos_sugeridos': productos_sugeridos
     })
 
+
 def vaciar_bolsa(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+        messages.error(
+            request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
-    # Vaciar el carrito
-    request.session['carrito'] = []
+    # Vaciar el carrito en la sesión
+    sesion["carrito"] = []
+    request.session["sesion"] = sesion
     request.session.modified = True  # Asegurar que la sesión se actualice
-    messages.success(request, "Todos los productos han sido eliminados de la bolsa.")
+
+    print("Carrito después de vaciar:", sesion["carrito"])  # Depuración
+    messages.success(
+        request, "Todos los productos han sido eliminados de la bolsa.")
     return redirect('compra')  # Redirigir a la bolsa
+
 
 def eliminar_producto(request, producto_id):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.error(request, "Debes iniciar sesión para acceder al carrito.")
+        messages.error(
+            request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
-    carrito = request.session.get("carrito", [])
-    # Eliminar el producto del carrito
-    carrito = [item for item in carrito if item['id_producto'] != producto_id]
-    request.session['carrito'] = carrito
+    carrito = sesion.get("carrito", [])
+    print("Carrito antes de eliminar:", carrito)  # Depuración
+
+    # Filtrar el carrito para eliminar el producto con el ID especificado
+    carrito = [item for item in carrito if int(
+        item['id_producto']) != int(producto_id)]
+
+    # Actualizar el carrito en la sesión
+    sesion["carrito"] = carrito
+    request.session["sesion"] = sesion
     request.session.modified = True  # Asegurar que la sesión se actualice
+
+    print("Carrito después de eliminar:", carrito)  # Depuración
     messages.success(request, "Producto eliminado del carrito.")
-    return redirect('compra')  # Redirigir a la bolsa
+    return redirect('compra')  # Redirigir al carrito
+
 
 def detalle_producto(request, id):
     producto = get_object_or_404(Productos, id=id)
     return render(request, 'detalle_producto.html', {'producto': producto})
+
 
 def obtener_carrito(request):
     carrito = request.session.get('carrito', [])
     total = sum(item['precio'] * item['cantidad'] for item in carrito)
     return JsonResponse({'success': True, 'carrito': carrito, 'total': total})
 
-def agregar_carrito(request):
-    if request.method == 'POST':
-        id_producto = int(request.POST.get('id_producto'))
-        cantidad = int(request.POST.get('cantidad', 1))
-
-        # Verificar si el usuario está logueado
-        sesion = request.session.get("sesion", None)
-        if not sesion:
-            messages.warning(request, "Debes iniciar sesión para agregar productos al carrito.")
-            return redirect("catalogo")
-
-        # Obtener el carrito de la sesión
-        carrito = request.session.get("carrito", [])
-
-        # Verificar si el producto ya está en el carrito
-        producto_existente = next((item for item in carrito if item['id_producto'] == id_producto), None)
-        if producto_existente:
-            # Incrementar la cantidad si el producto ya está en el carrito
-            producto_existente['cantidad'] += cantidad
-        else:
-            # Agregar un nuevo producto al carrito
-            producto = get_object_or_404(Productos, id=id_producto)
-            carrito.append({
-                'id_producto': id_producto,
-                'nombre': producto.nombre_producto,
-                'precio': producto.precio,
-                'cantidad': cantidad,
-            })
-
-        # Guardar el carrito actualizado en la sesión
-        request.session['carrito'] = carrito
-        request.session.modified = True  # Asegurar que la sesión se actualice
-        messages.success(request, "Producto agregado al carrito.")
-        return redirect("catalogo")
 
 def catalogo(request):
     # Obtiene el valor seleccionado en el <select>
@@ -378,10 +401,13 @@ def catalogo(request):
     }
     return render(request, 'catalogo.html', contexto)
 
+
 def cobertura(request):
     return render(request, 'cobertura.html')
 
-#ADMINISTRADOR
+# ADMINISTRADOR
+
+
 @validar_administrador
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
@@ -410,6 +436,7 @@ def eliminar_productos(request, id_producto):
 
     return redirect("productos")
 
+
 @validar_administrador
 def agregar_productos(request):
     if request.method == "POST":
@@ -436,6 +463,7 @@ def agregar_productos(request):
             return redirect("agregar_productos")
     else:
         return render(request, "administrador/formulario_productos.html")
+
 
 @validar_administrador
 def editar_productos(request, id_productos):
@@ -497,16 +525,16 @@ def editar_usuario(request, id_usuario):
         return render(request, "administrador/formulario_usuario.html", contexto)
 
 
-
-
-#PAGOS Y CARRITO
+# PAGOS Y CARRITO
 def pago(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
         messages.error(request, "Debes iniciar sesión para proceder al pago.")
         return redirect('login')
 
-    carrito = request.session.get("carrito", [])
+    carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
+    print("Carrito cargado desde la sesión en pago:", carrito)  # Depuración
+
     productos_carrito = []
     subtotal = 0
 
@@ -524,31 +552,43 @@ def pago(request):
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
             # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
-            request.session['carrito'] = carrito
+            carrito = [i for i in carrito if i['id_producto']
+                       != item['id_producto']]
+            sesion["carrito"] = carrito
+            request.session["sesion"] = sesion
             request.session.modified = True
+
+    print("Productos cargados para la vista de pago:",
+          productos_carrito)  # Depuración
 
     return render(request, 'pago.html', {
         'productos_carrito': productos_carrito,
         'total': subtotal
     })
 
+
 def procesar_pago(request):
     if request.method == "POST":
         # Validar que el usuario esté autenticado
         sesion = request.session.get("sesion", None)
         if not sesion:
-            messages.error(request, "Debes iniciar sesión para realizar un pago.")
+            messages.error(
+                request, "Debes iniciar sesión para realizar un pago.")
             return redirect('login')
 
-        # Obtener el usuario autenticado como instancia de Usuarios
-        usuario = Usuarios.objects.get(id=sesion['id'])
-
-        # Obtener el carrito de la sesión
-        carrito = request.session.get("carrito", [])
+        # Obtener el carrito directamente desde request.session
+        carrito = sesion.get("carrito", [])
         if not carrito:
             messages.error(request, "Tu carrito está vacío.")
+            print("Vacio?: ", carrito)
             return redirect('compra')
+
+        # Obtener el usuario autenticado como instancia de Usuarios
+        try:
+            usuario = Usuarios.objects.get(id=sesion['id'])
+        except Usuarios.DoesNotExist:
+            messages.error(request, "El usuario no existe.")
+            return redirect('login')
 
         # Validar método de pago
         metodo_pago = request.POST.get("metodo_pago")
@@ -562,7 +602,8 @@ def procesar_pago(request):
         for item in carrito:
             producto = get_object_or_404(Productos, id=item['id_producto'])
             if item['cantidad'] > producto.cantidad:
-                errores.append(f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
+                errores.append(
+                    f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
             else:
                 total_pagado += producto.precio * item['cantidad']
 
@@ -573,7 +614,7 @@ def procesar_pago(request):
 
         # Crear la factura
         factura = Facturas.objects.create(
-            cliente=usuario,  # Ahora es una instancia válida de Usuarios
+            cliente=usuario,
             valor_pedido=total_pagado,
             valor_total=total_pagado,
             fecha_factura=date.today(),
@@ -594,7 +635,8 @@ def procesar_pago(request):
             )
 
         # Limpiar el carrito
-        request.session['carrito'] = []
+        sesion["carrito"] = []
+        request.session["sesion"] = sesion
         request.session.modified = True
 
         # Redirigir al template de factura
@@ -629,9 +671,11 @@ def editar_perfil(request):
         if fecha_nacimiento:
             fecha_nacimiento = date.fromisoformat(fecha_nacimiento)
             hoy = date.today()
-            edad = hoy.year - fecha_nacimiento.year - ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
+            edad = hoy.year - fecha_nacimiento.year - \
+                ((hoy.month, hoy.day) < (fecha_nacimiento.month, fecha_nacimiento.day))
             if edad < 18:
-                messages.error(request, "Debes ser mayor de edad para editar tu perfil.")
+                messages.error(
+                    request, "Debes ser mayor de edad para editar tu perfil.")
                 return render(request, 'editar_perfil.html', {'user': u})
 
             u.fecha_nacimiento = fecha_nacimiento
@@ -648,15 +692,15 @@ def editar_perfil(request):
     return render(request, 'editar_perfil.html', {'user': u})
 
 
-
-#PAGOS
+# PAGOS
 
 def procesar_pago(request):
     if request.method == "POST":
         # Validar que el usuario esté autenticado
         sesion = request.session.get("sesion", None)
         if not sesion:
-            messages.error(request, "Debes iniciar sesión para realizar un pago.")
+            messages.error(
+                request, "Debes iniciar sesión para realizar un pago.")
             return redirect('login')
 
         # Obtener el usuario autenticado como instancia de Usuarios
@@ -684,7 +728,8 @@ def procesar_pago(request):
         for item in carrito:
             producto = get_object_or_404(Productos, id=item['id_producto'])
             if item['cantidad'] > producto.cantidad:
-                errores.append(f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
+                errores.append(
+                    f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
             else:
                 total_pagado += producto.precio * item['cantidad']
 
@@ -728,4 +773,3 @@ def procesar_pago(request):
     else:
         messages.error(request, "Método no permitido.")
         return redirect('pago')
-
