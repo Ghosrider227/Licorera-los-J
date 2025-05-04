@@ -1,0 +1,89 @@
+body {
+    background-color: #121212;
+    color: #ffffff;
+    font-family: 'Arial', sans-serif;
+}
+
+.factura-container {
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+}
+
+.factura-titulo {
+    text-align: center;
+    color: #f0a500;
+}
+
+.factura-detalles h2 {
+    color: #f0a500;
+    margin-bottom: 10px;
+}
+
+.factura-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.factura-tabla th, .factura-tabla td {
+    border: 1px solid #444;
+    padding: 10px;
+    text-align: left;
+}
+
+.factura-tabla th {
+    background-color: #333;
+    color: #f0a500;
+}
+
+.factura-tabla tr:nth-child(even) {
+    background-color: #2a2a2a;
+}
+
+.factura-tabla tr:hover {
+    background-color: #444;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn-secondary {
+    background-color: #f0a500;
+    color: #121212;
+}
+
+.btn-secondary:hover {
+    background-color: #d18e00;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.factura-total h3 {
+    text-align: right;
+    color: #f0a500;
+}
+
+.detalle-info {
+    margin-top: 10px;
+    background-color: #2a2a2a;
+    padding: 10px;
+    border-radius: 5px;
+}

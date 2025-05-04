@@ -193,3 +193,38 @@
 .metodo-pago-form input::placeholder {
     color: #aaa;
 }
+
+/* Estilo general para los botones */
+.btn-pagar,
+.btn-cancelar {
+    display: inline-block;
+    width: 48%; /* Ambos botones ocuparán el mismo ancho */
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    transition: background-color 0.3s ease;
+    margin: 5px 1%; /* Margen uniforme entre los botones */
+}
+
+/* Botón Pagar */
+.btn-pagar {
+    background-color: #ffc107; /* Amarillo dorado */
+    color: #000; /* Texto negro */
+}
+
+.btn-pagar:hover {
+    background-color: #e0a800; /* Amarillo más oscuro */
+    color: #fff; /* Texto blanco */
+}
+
+/* Botón Cancelar */
+.btn-cancelar {
+    background-color: #6c757d; /* Gris */
+    color: #fff; /* Texto blanco */
+}
+
+.btn-cancelar:hover {
+    background-color: #5a6268; /* Gris más oscuro */
+}

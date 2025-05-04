@@ -1,8 +1,9 @@
 import base64
 import hashlib
 import secrets
-from django.shortcuts import redirect
+from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 ALGORITHM = "pbkdf2_sha256"
 
@@ -37,3 +38,4 @@ def validar_administrador(view_func):
             return redirect("index")  # Redirige al inicio si no es administrador
         return view_func(request, *args, **kwargs)
     return wrapper
+

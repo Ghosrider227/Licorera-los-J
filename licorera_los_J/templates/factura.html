@@ -1,0 +1,49 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block titulo %}
+    Factura
+{% endblock %}
+
+{% block cuerpo %}
+<div class="factura-container">
+    <h1 class="factura-titulo">Factura #{{ factura.id }}</h1>
+    <p><strong>Fecha:</strong> {{ factura.fecha_factura }}</p>
+    <p><strong>Hora:</strong> {{ factura.hora_factura }}</p>
+
+    <div class="factura-detalles">
+        <h2>Detalles de la Compra</h2>
+        <table class="factura-tabla">
+            <thead>
+                <tr>
+                    <th>Productos</th>
+                    <th>Detalles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles %}
+                <tr>
+                    <td>{{ detalle.producto.nombre_producto }}</td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="toggleDetalles('detalle-{{ forloop.counter }}')">Detalles</button>
+                        <div id="detalle-{{ forloop.counter }}" class="detalle-info" style="display: none;">
+                            <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
+                            <p><strong>Subtotal:</strong> ${{ detalle.subtotal }}</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="factura-total">
+        <h3>Total Pagado: ${{ factura.valor_total }}</h3>
+    </div>
+
+    <a href="{% url 'index' %}" class="btn btn-primary">Volver al Inicio</a>
+</div>
+
+<!-- Enlace a los archivos CSS y JS -->
+<link rel="stylesheet" href="{% static 'css/factura.css' %}">
+<script src="{% static 'js/factura.js' %}"></script>
+{% endblock %}

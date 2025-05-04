@@ -78,6 +78,8 @@ class Facturas(models.Model):
 class DetallesFacturas(models.Model):
     producto = models.ForeignKey('Productos', on_delete=models.DO_NOTHING)
     factura = models.ForeignKey('Facturas', on_delete=models.DO_NOTHING)
+    cantidad = models.IntegerField(default=0)  # Nueva columna
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Nueva columna
 
     class Meta:
         verbose_name = 'Detalle Factura'
