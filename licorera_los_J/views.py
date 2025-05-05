@@ -533,79 +533,15 @@ def pago(request):
         'total': subtotal
     })
 
-def procesar_pago(request):
-    if request.method == "POST":
-        # Validar que el usuario esté autenticado
-        sesion = request.session.get("sesion", None)
-        if not sesion:
-            messages.error(request, "Debes iniciar sesión para realizar un pago.")
-            return redirect('login')
-
-        # Obtener el usuario autenticado como instancia de Usuarios
-        usuario = Usuarios.objects.get(id=sesion['id'])
-
-        # Obtener el carrito de la sesión
-        carrito = request.session.get("carrito", [])
-        if not carrito:
-            messages.error(request, "Tu carrito está vacío.")
-            return redirect('compra')
-
-        # Validar método de pago
-        metodo_pago = request.POST.get("metodo_pago")
-        if not metodo_pago:
-            messages.error(request, "Debes seleccionar un método de pago.")
-            return redirect('pago')
-
-        # Validar stock y calcular el total
-        total_pagado = 0
-        errores = []
-        for item in carrito:
-            producto = get_object_or_404(Productos, id=item['id_producto'])
-            if item['cantidad'] > producto.cantidad:
-                errores.append(f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
-            else:
-                total_pagado += producto.precio * item['cantidad']
-
-        if errores:
-            for error in errores:
-                messages.error(request, error)
-            return redirect('compra')
-
-        # Crear la factura
-        factura = Facturas.objects.create(
-            cliente=usuario,  # Ahora es una instancia válida de Usuarios
-            valor_pedido=total_pagado,
-            valor_total=total_pagado,
-            fecha_factura=date.today(),
-            hora_factura=date.today().strftime("%H:%M:%S")
-        )
-
-        # Crear los detalles de la factura y descontar el stock
-        for item in carrito:
-            producto = get_object_or_404(Productos, id=item['id_producto'])
-            producto.cantidad -= item['cantidad']
-            producto.save()
-
-            DetallesFacturas.objects.create(
-                producto=producto,
-                factura=factura,
-                cantidad=item['cantidad'],
-                subtotal=producto.precio * item['cantidad']
-            )
-
-        # Limpiar el carrito
-        request.session['carrito'] = []
-        request.session.modified = True
-
-        # Redirigir al template de factura
-        return render(request, 'factura.html', {
-            'factura': factura,
-            'detalles': DetallesFacturas.objects.filter(factura=factura)
-        })
-
-    else:
-        messages.error(request, "Método no permitido.")
-        return redirect('pago')
+@validar_administrador
+def facturas(request):
+    facturas = Facturas.objects.all()  # Obtiene todas las facturas
+    detalles_facturas = DetallesFacturas.objects.all()  # Obtiene todos los detalles de facturas
+    contexto = {
+        "facturas": facturas,
+        "detalles_facturas": detalles_facturas
+    }
+    return render(request, "administrador/listar_facturas.html", contexto)
 
 
 def editar_perfil(request):
