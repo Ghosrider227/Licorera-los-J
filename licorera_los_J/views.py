@@ -438,6 +438,7 @@ def agregar_productos(request):
         precio = request.POST.get("precio")
         descripcion = request.POST.get("descripcion")
         cantidad = request.POST.get("cantidad")
+        foto = request.FILES.get("foto")
         try:
             q = Productos(
                 nombre_producto=nombre_producto,
@@ -445,7 +446,8 @@ def agregar_productos(request):
                 medidas=medidas,
                 precio=precio,
                 descripcion=descripcion,
-                cantidad=cantidad
+                cantidad=cantidad,
+                foto = foto
             )
             q.save()
             messages.success(request, "Producto agregado exitosamente!")
@@ -468,6 +470,15 @@ def editar_productos(request, id_productos):
             q.precio = float(request.POST.get("precio"))
             q.descripcion = request.POST.get("descripcion")
             q.cantidad = request.POST.get("cantidad")
+            
+            if 'foto' in request.FILES:
+                foto = request.FILES['foto']
+                # Validar el tipo de archivo
+                if foto.content_type not in ['image/jpeg', 'image/png']:
+                    messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
+                    return redirect("editar_producto", id_productos=id_productos)
+                q.foto = foto  # Actualizar la foto si es válida
+                
             q.save()
             messages.success(request, "Producto actualizado correctamente!")
             return redirect("productos")
@@ -488,7 +499,7 @@ def editar_productos(request, id_productos):
 
 @validar_administrador
 def usuarios(request):
-    u = Usuarios.objects.all()
+    u = Usuarios.objects.filter(cuenta="2")
     contexto = {
         "dato": u
     }
@@ -671,7 +682,12 @@ def editar_perfil(request):
 
         # Manejar la actualización de la foto
         if 'foto' in request.FILES:
-            u.foto = request.FILES['foto']
+            foto = request.FILES['foto']
+            # Validar el tipo de archivo
+            if foto.content_type not in ['image/jpeg', 'image/png']:
+                messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
+                return render(request, 'editar_perfil.html', {'user': u})
+            u.foto = foto  # Actualizar la foto si es válida
 
         # Guardar los cambios
         u.save()
