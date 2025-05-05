@@ -226,8 +226,7 @@ def agregar_carrito(request):
 def compra(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
-        messages.error(
-            request, "Debes iniciar sesión para acceder al carrito.")
+        messages.error(request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
     carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
@@ -236,8 +235,6 @@ def compra(request):
     productos_carrito = []
     subtotal = 0
     puede_proceder = True  # Variable para verificar si se puede proceder al pago
-    # Bandera para verificar si se requiere actualización
-    requiere_actualizacion = False
 
     # Manejar las acciones del formulario
     if request.method == "POST":
@@ -246,8 +243,7 @@ def compra(request):
         # Manejar la acción de Actualizar
         if action and action.startswith("update_"):
             producto_id = int(action.split("_")[1])
-            nueva_cantidad = int(request.POST.get(
-                f"cantidad_{producto_id}", 1))
+            nueva_cantidad = int(request.POST.get(f"cantidad_{producto_id}", 1))
             producto = get_object_or_404(Productos, id=producto_id)
 
             if nueva_cantidad > producto.cantidad:
@@ -267,8 +263,7 @@ def compra(request):
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
-            # Redirigir para evitar reenvío del formulario
-            return redirect('compra')
+            return redirect('compra')  # Redirigir para evitar reenvío del formulario
 
         # Validar y proceder al pago
         elif action == "checkout":
@@ -292,8 +287,7 @@ def compra(request):
                     puede_proceder = False
 
             if puede_proceder:
-                messages.success(
-                    request, "Todo está correcto. Procediendo al pago...")
+                messages.success(request, "Todo está correcto. Procediendo al pago...")
                 return redirect('pago')  # Redirigir a la página de pago
 
     # Cargar los productos del carrito desde la base de datos
@@ -310,14 +304,12 @@ def compra(request):
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
             # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto']
-                       != item['id_producto']]
+            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
 
-    print("Productos cargados para la vista de compra:",
-          productos_carrito)  # Depuración
+    print("Productos cargados para la vista de compra:", productos_carrito)  # Depuración
 
     # Productos sugeridos
     productos_sugeridos = Productos.objects.all()[:4]
@@ -535,6 +527,10 @@ def pago(request):
     carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
     print("Carrito cargado desde la sesión en pago:", carrito)  # Depuración
 
+    if not carrito:
+        messages.error(request, "Tu carrito está vacío.")
+        return redirect('compra')
+
     productos_carrito = []
     subtotal = 0
 
@@ -552,14 +548,12 @@ def pago(request):
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
             # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto']
-                       != item['id_producto']]
+            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
 
-    print("Productos cargados para la vista de pago:",
-          productos_carrito)  # Depuración
+    print("Productos cargados para la vista de pago:", productos_carrito)  # Depuración
 
     return render(request, 'pago.html', {
         'productos_carrito': productos_carrito,
@@ -569,21 +563,17 @@ def pago(request):
 
 def procesar_pago(request):
     if request.method == "POST":
-        # Validar que el usuario esté autenticado
         sesion = request.session.get("sesion", None)
         if not sesion:
-            messages.error(
-                request, "Debes iniciar sesión para realizar un pago.")
+            messages.error(request, "Debes iniciar sesión para realizar un pago.")
             return redirect('login')
 
-        # Obtener el carrito directamente desde request.session
         carrito = sesion.get("carrito", [])
         if not carrito:
             messages.error(request, "Tu carrito está vacío.")
-            print("Vacio?: ", carrito)
             return redirect('compra')
 
-        # Obtener el usuario autenticado como instancia de Usuarios
+        # Obtener el usuario autenticado
         try:
             usuario = Usuarios.objects.get(id=sesion['id'])
         except Usuarios.DoesNotExist:
@@ -649,7 +639,6 @@ def procesar_pago(request):
         messages.error(request, "Método no permitido.")
         return redirect('pago')
 
-
 def editar_perfil(request):
     user = request.session.get('sesion', False)
     if not user:
@@ -690,86 +679,3 @@ def editar_perfil(request):
         return redirect('editar_perfil')  # Redirige al inicio o a otra página
 
     return render(request, 'editar_perfil.html', {'user': u})
-
-
-# PAGOS
-
-def procesar_pago(request):
-    if request.method == "POST":
-        # Validar que el usuario esté autenticado
-        sesion = request.session.get("sesion", None)
-        if not sesion:
-            messages.error(
-                request, "Debes iniciar sesión para realizar un pago.")
-            return redirect('login')
-
-        # Obtener el usuario autenticado como instancia de Usuarios
-        try:
-            usuario = Usuarios.objects.get(id=sesion['id'])
-        except Usuarios.DoesNotExist:
-            messages.error(request, "El usuario no existe.")
-            return redirect('login')
-
-        # Obtener el carrito de la sesión
-        carrito = request.session.get("carrito", [])
-        if not carrito:
-            messages.error(request, "Tu carrito está vacío.")
-            return redirect('compra')
-
-        # Validar método de pago
-        metodo_pago = request.POST.get("metodo_pago")
-        if not metodo_pago:
-            messages.error(request, "Debes seleccionar un método de pago.")
-            return redirect('pago')
-
-        # Validar stock y calcular el total
-        total_pagado = 0
-        errores = []
-        for item in carrito:
-            producto = get_object_or_404(Productos, id=item['id_producto'])
-            if item['cantidad'] > producto.cantidad:
-                errores.append(
-                    f"No hay suficiente stock para {producto.nombre_producto}. Disponible: {producto.cantidad}.")
-            else:
-                total_pagado += producto.precio * item['cantidad']
-
-        if errores:
-            for error in errores:
-                messages.error(request, error)
-            return redirect('compra')
-
-        # Crear la factura
-        factura = Facturas.objects.create(
-            cliente=usuario,  # Ahora es una instancia válida de Usuarios
-            valor_pedido=total_pagado,
-            valor_total=total_pagado,
-            fecha_factura=date.today(),
-            hora_factura=date.today().strftime("%H:%M:%S")
-        )
-
-        # Crear los detalles de la factura y descontar el stock
-        for item in carrito:
-            producto = get_object_or_404(Productos, id=item['id_producto'])
-            producto.cantidad -= item['cantidad']
-            producto.save()
-
-            DetallesFacturas.objects.create(
-                producto=producto,
-                factura=factura,
-                cantidad=item['cantidad'],
-                subtotal=producto.precio * item['cantidad']
-            )
-
-        # Limpiar el carrito
-        request.session['carrito'] = []
-        request.session.modified = True
-
-        # Redirigir al template de factura
-        return render(request, 'factura.html', {
-            'factura': factura,
-            'detalles': DetallesFacturas.objects.filter(factura=factura)
-        })
-
-    else:
-        messages.error(request, "Método no permitido.")
-        return redirect('pago')
