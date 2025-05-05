@@ -404,6 +404,9 @@ def cobertura(request):
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
     q = Productos.objects.all()
+    for producto in q:
+        print (producto.medidas)
+        
     contexto = {
         "data": q
     }
@@ -434,7 +437,7 @@ def agregar_productos(request):
     if request.method == "POST":
         nombre_producto = request.POST.get("nombre_producto")
         tipo_producto = request.POST.get("tipo_producto")
-        medidas = request.POST.get("medidas"),
+        medidas = request.POST.get("medidas")
         precio = request.POST.get("precio")
         descripcion = request.POST.get("descripcion")
         cantidad = request.POST.get("cantidad")
@@ -470,6 +473,7 @@ def editar_productos(request, id_productos):
             q.precio = float(request.POST.get("precio"))
             q.descripcion = request.POST.get("descripcion")
             q.cantidad = request.POST.get("cantidad")
+            q.medidas = request.POST.get("medidas")
             
             if 'foto' in request.FILES:
                 foto = request.FILES['foto']
