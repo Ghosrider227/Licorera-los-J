@@ -42,23 +42,9 @@
                             <a href="{% url 'logout' %}">Cerrar sesión</a>
                         </div>
                     </div>
-                    <a href="#" class="icon-cart" id="cartButton">
+                    <a href="{% url 'compra' %}" class="icon-cart" id="cartButton">
                         <i class="fa-solid fa-cart-shopping"></i> Carrito
-                        <span id="cartCount">0</span>
                     </a>
-                    <div id="cartMenu" class="cart-menu">
-                        <div class="cart-header">
-                            <h4>Tu Carrito</h4>
-                            <button id="closeCartMenu" class="close-cart">&times;</button>
-                        </div>
-                        <div class="cart-content">
-                            <!-- Aquí se cargarán los productos dinámicamente -->
-                        </div>
-                        <div class="cart-footer">
-                            <p class="total-price">Total: $0</p>
-                            <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
-                        </div>
-                    </div>
                 </div>
             {% else %}
                 <div class="nav-icons">
@@ -132,7 +118,6 @@
     </footer>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
-    <script src="{% static 'js/carrito.js' %}"></script>
     <script src="{% static 'js/funconalidad.js' %}"></script>
     <script src="static/js/carousel.js"></script>
     
