@@ -1,5 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
+{% load humanize %}
+{{ my_num|intcomma }}
+
 {% block titulo %}
     Factura
 {% endblock %}
@@ -27,7 +30,7 @@
                         <button class="btn btn-secondary" onclick="toggleDetalles('detalle-{{ forloop.counter }}')">Detalles</button>
                         <div id="detalle-{{ forloop.counter }}" class="detalle-info" style="display: none;">
                             <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
-                            <p><strong>Subtotal:</strong> ${{ detalle.subtotal }}</p>
+                            <p><strong>Subtotal:</strong> ${{ detalle.subtotal|intcomma }}</p>
                         </div>
                     </td>
                 </tr>
@@ -37,7 +40,7 @@
     </div>
 
     <div class="factura-total">
-        <h3>Total Pagado: ${{ factura.valor_total }}</h3>
+        <h3>Total Pagado: ${{ factura.valor_total|intcomma }}</h3>
     </div>
 
     <a href="{% url 'index' %}" class="btn btn-primary">Volver al Inicio</a>

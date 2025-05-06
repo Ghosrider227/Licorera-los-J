@@ -595,11 +595,124 @@ def procesar_pago(request):
             messages.error(request, "El usuario no existe.")
             return redirect('login')
 
+        # Validar información de envío
+        calle = request.POST.get("calle")
+        telefono = request.POST.get("telefono")
+        ciudad = request.POST.get("ciudad")
+        estado = request.POST.get("estado")
+        codigo_postal = request.POST.get("codigo_postal")
+        
+        # Validar que los campos no estén vacíos
+        if not calle:
+            messages.error(request, "El campo Calle es obligatorio.")
+            return redirect('pago')
+            
+        if not telefono:
+            messages.error(request, "El campo Teléfono es obligatorio.")
+            return redirect('pago')
+            
+        if not ciudad:
+            messages.error(request, "El campo Ciudad es obligatorio.")
+            return redirect('pago')
+            
+        if not estado:
+            messages.error(request, "El campo Referencias es obligatorio.")
+            return redirect('pago')
+            
+        if not codigo_postal:
+            messages.error(request, "El campo Código Postal es obligatorio.")
+            return redirect('pago')
+        
+        # Validar formato de teléfono (solo números y longitud adecuada)
+        if not telefono.isdigit() or len(telefono) < 7 or len(telefono) > 10:
+            messages.error(request, "El teléfono debe contener solo números y tener entre 7 y 10 dígitos.")
+            return redirect('pago')
+            
+        # Validar que la ciudad solo contenga letras y espacios
+        if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', ciudad):
+            messages.error(request, "La ciudad solo debe contener letras y espacios.")
+            return redirect('pago')
+            
+        # Validar código postal (formato numérico para Colombia)
+        if not re.match(r'^\d{6}$', codigo_postal):
+            messages.error(request, "El código postal debe ser un número de 6 dígitos.")
+            return redirect('pago')
+
         # Validar método de pago
         metodo_pago = request.POST.get("metodo_pago")
         if not metodo_pago:
             messages.error(request, "Debes seleccionar un método de pago.")
             return redirect('pago')
+            
+        # Validar detalles específicos según el método de pago
+        if metodo_pago == "tarjeta":
+            numero_tarjeta = request.POST.get("numero_tarjeta")
+            nombre_tarjeta = request.POST.get("nombre_tarjeta")
+            fecha_expiracion = request.POST.get("fecha_expiracion")
+            cvv = request.POST.get("cvv")
+            
+            if not numero_tarjeta or not nombre_tarjeta or not fecha_expiracion or not cvv:
+                messages.error(request, "Todos los campos de la tarjeta son obligatorios.")
+                return redirect('pago')
+                
+            # Validar número de tarjeta (solo números, sin espacios, longitud entre 13-19 dígitos)
+            numero_tarjeta = numero_tarjeta.replace(" ", "")
+            if not numero_tarjeta.isdigit() or len(numero_tarjeta) < 13 or len(numero_tarjeta) > 19:
+                messages.error(request, "El número de tarjeta debe contener entre 13 y 19 dígitos.")
+                return redirect('pago')
+                
+            # Validar nombre en la tarjeta (solo letras y espacios)
+            if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', nombre_tarjeta):
+                messages.error(request, "El nombre en la tarjeta solo debe contener letras y espacios.")
+                return redirect('pago')
+                
+            # Validar fecha de expiración (formato MM/AA o MM/AAAA)
+            if not re.match(r'^(0[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$', fecha_expiracion):
+                messages.error(request, "La fecha de expiración debe tener el formato MM/AA o MM/AAAA.")
+                return redirect('pago')
+                
+            # Validar CVV (3 o 4 dígitos)
+            if not cvv.isdigit() or len(cvv) < 3 or len(cvv) > 4:
+                messages.error(request, "El CVV debe ser un número de 3 o 4 dígitos.")
+                return redirect('pago')
+                
+        elif metodo_pago == "paypal":
+            correo_paypal = request.POST.get("correo_paypal")
+            
+            if not correo_paypal:
+                messages.error(request, "El correo electrónico de PayPal es obligatorio.")
+                return redirect('pago')
+                
+            # Validar formato de correo electrónico
+            try:
+                validate_email(correo_paypal)
+            except ValidationError:
+                messages.error(request, "El correo electrónico de PayPal no es válido.")
+                return redirect('pago')
+                
+        elif metodo_pago == "transferencia":
+            banco = request.POST.get("banco")
+            numero_cuenta = request.POST.get("numero_cuenta")
+            titular_cuenta = request.POST.get("titular_cuenta")
+            
+            if not banco or not numero_cuenta or not titular_cuenta:
+                messages.error(request, "Todos los campos de la transferencia bancaria son obligatorios.")
+                return redirect('pago')
+                
+            # Validar que el banco solo contenga letras y espacios
+            if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', banco):
+                messages.error(request, "El nombre del banco solo debe contener letras y espacios.")
+                return redirect('pago')
+                
+            # Validar número de cuenta (solo números)
+            if not numero_cuenta.isdigit():
+                messages.error(request, "El número de cuenta debe contener solo números.")
+                return redirect('pago')
+                
+            # Validar titular de la cuenta (solo letras y espacios)
+            if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', titular_cuenta):
+                messages.error(request, "El titular de la cuenta solo debe contener letras y espacios.")
+                return redirect('pago')
 
         # Validar stock y calcular el total
         total_pagado = 0
