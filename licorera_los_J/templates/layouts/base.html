@@ -28,12 +28,14 @@
                 Bienvenido: {{ request.session.sesion.nombre }}
                 <div class="nav-icons">
                     {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index: 1050;">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                     <div class="dropdown">
                         <button id="p" class="dropdown-button"><i class="fa-solid fa-user"></i> Perfil</button>
@@ -42,33 +44,21 @@
                             <a href="{% url 'logout' %}">Cerrar sesión</a>
                         </div>
                     </div>
-                    <a href="#" class="icon-cart" id="cartButton">
+                    <a href="{% url 'compra' %}" class="icon-cart" id="cartButton">
                         <i class="fa-solid fa-cart-shopping"></i> Carrito
-                        <span id="cartCount">0</span>
                     </a>
-                    <div id="cartMenu" class="cart-menu">
-                        <div class="cart-header">
-                            <h4>Tu Carrito</h4>
-                            <button id="closeCartMenu" class="close-cart">&times;</button>
-                        </div>
-                        <div class="cart-content">
-                            <!-- Aquí se cargarán los productos dinámicamente -->
-                        </div>
-                        <div class="cart-footer">
-                            <p class="total-price">Total: $0</p>
-                            <a href="{% url 'compra' %}" class="btn btn-primary">Ir al carrito</a>
-                        </div>
-                    </div>
                 </div>
             {% else %}
                 <div class="nav-icons">
                     {% if messages %}
-                        {% for message in messages %}
-                            <div id="error" class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-                                {{ message }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        {% endfor %}
+                        <div class="messages">
+                            {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show position-fixed top-0 end-0 m-3" role="alert" style="z-index: 1050;">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
                     {% endif %}
                     <div class="dropdown">
                         <button type="button" id="p" class="btn dropdown" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
@@ -132,8 +122,8 @@
     </footer>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
-    <script src="{% static 'js/carrito.js' %}"></script>
     <script src="{% static 'js/funconalidad.js' %}"></script>
-    <script src="static/js/carousel.js"></script>
+    <script src="{% static 'js/carousel.js' %}"></script>
+    <script src="{% static 'js/duracion_etiquetas.js' %}"></script>
     
 </html>

@@ -63,8 +63,8 @@ class Inventario(models.Model):
 
 class Facturas(models.Model):
     cliente = models.ForeignKey('Usuarios', on_delete=models.DO_NOTHING)
-    valor_pedido = models.DecimalField(max_digits=10, decimal_places=2)
-    valor_total = models.DecimalField(max_digits=10, decimal_places=2)
+    valor_pedido = models.IntegerField()
+    valor_total = models.IntegerField()
     fecha_factura = models.DateField(help_text='AAAA-MM-DD')
     hora_factura = models.TimeField(help_text='HH:MM')
 
@@ -79,7 +79,7 @@ class DetallesFacturas(models.Model):
     producto = models.ForeignKey('Productos', on_delete=models.DO_NOTHING)
     factura = models.ForeignKey('Facturas', on_delete=models.DO_NOTHING)
     cantidad = models.IntegerField(default=0)  # Nueva columna
-    subtotal = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)  # Nueva columna
+    subtotal = models.IntegerField()  # Nueva columna
 
     class Meta:
         verbose_name = 'Detalle Factura'

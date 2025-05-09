@@ -350,6 +350,22 @@ form .form-check {
     text-decoration: none;
 }
 
+.custom-file-upload label {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload label:hover {
+    background-color: #0056b3;
+}
+
 @media (max-width: 768px) {
     .nav-menu {
         display: none;
@@ -369,3 +385,5 @@ form .form-check {
     position: fixed;
     top: 101px;
 }
+
+
