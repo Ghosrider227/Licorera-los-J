@@ -576,6 +576,17 @@ def pago(request):
     })
 
 
+@validar_administrador
+def facturas(request):
+    facturas = Facturas.objects.all()  # Obtiene todas las facturas
+    detalles_facturas = DetallesFacturas.objects.all()  # Obtiene todos los detalles de facturas
+    contexto = {
+        "facturas": facturas,
+        "detalles_facturas": detalles_facturas
+    }
+    return render(request, "administrador/listar_facturas.html", contexto)
+
+
 def procesar_pago(request):
     if request.method == "POST":
         sesion = request.session.get("sesion", None)
@@ -766,6 +777,7 @@ def procesar_pago(request):
     else:
         messages.error(request, "Método no permitido.")
         return redirect('pago')
+
 
 def editar_perfil(request):
     user = request.session.get('sesion', False)

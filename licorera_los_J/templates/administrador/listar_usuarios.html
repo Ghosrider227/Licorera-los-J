@@ -31,6 +31,7 @@
                         <td>{{ usuario.telefono }}</td>
                         <td>
                             <a href="{% url 'editar_usuario' usuario.id %}" class="btn btn-primary btn-sm">Editar</a>
+                            <a href="{% url 'facturas' %}" class="btn btn-secondary btn-sm">ver Factura</a>
                         </td>
                     </tr>
                     {% endfor %}

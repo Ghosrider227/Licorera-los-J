@@ -29,6 +29,9 @@ urlpatterns = [
     path("usuarios/", views.usuarios, name='usuarios'),
     path("editar_usuario/<int:id_usuario>/", views.editar_usuario, name='editar_usuario'),
 
+    #ADMINISTRADOR/Facturas
+    path('facturas/', views.facturas, name='facturas'),  # Vista para listar facturas
+
 
     #COMPRAS
     path('vaciar_bolsa/', views.vaciar_bolsa, name='vaciar_bolsa'),
