@@ -77,6 +77,11 @@ nav {
     height: 24px;
 }
 
+/* Deshabilitar interacción con el slider */
+.nav-icons .dropdown:hover ~ .slider {
+    pointer-events: none; /* Desactiva clics en el slider */
+}
+
 .carousel-item {
     /* position: absolute; */
     height: 60vh;
@@ -238,51 +243,45 @@ a:hover {
 .dropdown {
     position: relative;
     display: inline-block;
-    margin-left: 1rem;
 }
 
 .dropdown-button {
     background-color: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font-size: 1rem;
     color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .dropdown-content {
-    display: none;
+    display: none; /* Ocultar por defecto */
     position: absolute;
-    background-color: rgba(0, 0, 0, 0.9);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top: 100%;
-    left: 0;
-    padding: 15px 15px 15px 0px;
+    background-color: #111; /* Fondo oscuro */
+    min-width: 150px;
+    z-index: 1050;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 10px 0;
+    border-radius: 5px;
     border: 1px solid #333;
 }
 
 .dropdown-content a {
-    color: #fff;
-    padding: 1rem;
-    text-decoration: none;
     display: block;
-    border-bottom: 1px solid #333;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #fff;
 }
 
 .dropdown-content a:hover {
     background-color: #333;
 }
 
-.dropdown-content a:last-child {
-    border-bottom: none;
-}
-
+/* Mostrar el menú cuando el botón está enfocado o el mouse está sobre el contenedor */
+.dropdown:focus-within .dropdown-content,
 .dropdown:hover .dropdown-content {
     display: block;
-
 }
+
 .dropdown {
     /* Add some padding to match the cart */
     padding: auto;
@@ -384,6 +383,79 @@ form .form-check {
     z-index: 2000;
     position: fixed;
     top: 101px;
+}
+
+.factura {
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.factura-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.factura-header p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.btn-detalles {
+    background-color: #333; /* Botón oscuro */
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-detalles:hover {
+    background-color: #555; /* Fondo más claro al pasar el cursor */
+}
+
+.toggle-detalles {
+    display: none; /* Ocultar el checkbox */
+}
+
+.factura-detalles {
+    display: none;
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Mostrar detalles cuando el checkbox está marcado */
+.toggle-detalles:checked + .btn-detalles + .factura-detalles {
+    display: block;
+}
+
+.factura-detalles table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.factura-detalles th, .factura-detalles td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.factura-detalles img {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 

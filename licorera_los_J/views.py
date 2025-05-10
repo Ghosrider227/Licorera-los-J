@@ -512,11 +512,34 @@ def usuarios(request):
 
 @validar_administrador
 def editar_usuario(request, id_usuario):
+    # Obtener la sesión
+    sesion = request.session.get("sesion", None)
+
+    # Verificar si el administrador ya está editando un usuario
+    id_en_edicion = sesion.get("id_en_edicion", None)
+    if id_en_edicion and id_en_edicion != id_usuario:
+        messages.error(request, "No puedes cambiar el usuario que estás editando.")
+        return redirect("editar_usuario", id_usuario=id_en_edicion)  # Redirigir al usuario en edición actual
+
+    # Verificar si el usuario existe
+    usuario_a_editar = get_object_or_404(Usuarios, pk=id_usuario)
+
+    # Almacenar el ID del usuario en edición en la sesión
+    sesion["id_en_edicion"] = id_usuario
+    request.session["sesion"] = sesion
+    request.session.modified = True
+
+    # Continuar con la lógica de edición
     if request.method == "POST":
         try:
-            q = Usuarios.objects.get(pk=id_usuario)
-            q.cuenta = request.POST.get("cuenta")
-            q.save()
+            usuario_a_editar.cuenta = request.POST.get("cuenta")
+            usuario_a_editar.save()
+
+            # Limpiar el ID en edición después de guardar
+            sesion.pop("id_en_edicion", None)
+            request.session["sesion"] = sesion
+            request.session.modified = True
+
             messages.success(request, "Usuario actualizado correctamente!")
             return redirect("usuarios")
         except Exception as e:
@@ -524,14 +547,8 @@ def editar_usuario(request, id_usuario):
             messages.error(request, f"Error: {e}")
             return redirect("editar_usuario", id_usuario=id_usuario)
     else:
-        q = Usuarios.objects.get(pk=id_usuario)
-        contexto = {"usuarios": q}
-        print(q)
-
-        print(q.contrasena)
+        contexto = {"usuarios": usuario_a_editar}
         return render(request, "administrador/formulario_usuario.html", contexto)
-
-
 # PAGOS Y CARRITO
 def pago(request):
     sesion = request.session.get("sesion", None)
@@ -824,3 +841,22 @@ def editar_perfil(request):
         return redirect('editar_perfil')  # Redirige al inicio o a otra página
 
     return render(request, 'editar_perfil.html', {'user': u})
+
+
+
+#FACTURAS DE USUARIO
+def mis_facturas(request):
+    sesion = request.session.get("sesion", None)
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para ver tus facturas.")
+        return redirect('login')
+
+    usuario = get_object_or_404(Usuarios, id=sesion['id'])
+    # Ordenar las facturas por ID en orden descendente
+    facturas = Facturas.objects.filter(cliente=usuario).order_by('-id')
+
+    return render(request, 'mis_facturas.html', {'facturas': facturas})
+
+def detalle_factura(request, factura_id):
+    factura = get_object_or_404(Facturas, id=factura_id)
+    return render(request, 'detalle_factura.html', {'factura': factura})

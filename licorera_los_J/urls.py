@@ -44,4 +44,6 @@ urlpatterns = [
     #Facturas
      
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
+    path('mis_facturas/', views.mis_facturas, name='mis_facturas'),
+     path('detalle_factura/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
