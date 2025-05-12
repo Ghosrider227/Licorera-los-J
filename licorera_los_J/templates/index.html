@@ -8,6 +8,21 @@
 {% endblock %}
 {% block cuerpo %}
     {% if data %}
+        <section class="hero-section" style="background-image: url('{% static "img/catalogo_background.jpg" %}');">
+            <div class="hero-overlay"></div>
+            <div class="container mx-auto px-4 relative z-10 h-full flex items-center">
+                <div class="max-w-xl text-center">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-4">Explora Nuestro Catálogo</h1>
+                    <p class="text-lg mb-8 text-gray-200">
+                        Descubre una amplia selección de licores premium, cuidadosamente seleccionados para satisfacer los gustos más exigentes.
+                    </p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="{% url 'catalogo' %}" class="btn-primary px-6 py-3 rounded-lg">Ver Catálogo</a>
+                        <a href="#offers" class="btn-outline px-6 py-3 rounded-lg">Ver Ofertas</a>
+                    </div>
+                </div>
+            </div>
+        </section>
         <div id="slide" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
                 <button type="button" data-bs-target="#slide" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>

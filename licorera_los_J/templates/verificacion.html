@@ -1,0 +1,102 @@
+{% load static %}
+
+{% block titulo %}
+  Inicio
+{% endblock %}
+{% block cuerpo %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  <style>
+    .age-verification {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.95); /* Fondo oscuro */
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        padding: 2rem;
+        text-align: center;
+        color: #fff; /* Texto blanco */
+    }
+    
+    .age-verification h2 {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #ffcc00; /* Color dorado */
+        margin-bottom: 1.5rem;
+    }
+    
+    .age-verification img {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 1.5rem;
+        border-radius: 50%; /* Imagen redonda */
+        border: 2px solid #ffcc00; /* Borde dorado */
+    }
+    
+    .age-verification p {
+        font-size: 1.2rem;
+        margin-bottom: 2rem;
+        color: #ccc; /* Texto gris claro */
+    }
+    
+    .age-verification .btn-primary {
+        background-color: #ffcc00; /* Fondo dorado */
+        color: #111; /* Texto oscuro */
+        border: none;
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .age-verification .btn-primary:hover {
+        background-color: #e6b800; /* Fondo dorado más oscuro */
+        transform: scale(1.05); /* Efecto de aumento */
+    }
+    
+    .age-verification .btn-outline {
+        background-color: transparent;
+        color: #ffcc00; /* Texto dorado */
+        border: 2px solid #ffcc00; /* Borde dorado */
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .age-verification .btn-outline:hover {
+        background-color: #ffcc00; /* Fondo dorado */
+        color: #111; /* Texto oscuro */
+        transform: scale(1.05); /* Efecto de aumento */
+    }
+    
+    .age-verification .text-gray-400 {
+        color: #aaa; /* Texto gris claro */
+        font-size: 0.9rem;
+        margin-top: 1rem;
+    }
+    }
+  </style>
+  <div class="age-verification" id="ageVerification">
+    <div class="max-w-md mx-auto">
+      <h2 class="text-4xl mb-6 font-bold text-gold">Verificación de Edad</h2>
+      <div class="nav-logo"><img src="{% static 'img/logo.png' %}" alt="Logo" height="50px" width="50px"></div>
+      <p class="mb-8 text-lg">Debes tener al menos 18 años para acceder a esta página. Por favor, confirma tu edad.</p>
+      <form method="POST">
+        {% csrf_token %}
+        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
+          <button type="submit" name="opcion" value="si" class="btn-primary px-6 py-3 rounded-lg">Sí, tengo más de 18 años</button>
+          <button type="submit" name="opcion" value="no" class="btn-outline px-6 py-3 rounded-lg">No, tengo menos de 18 años</button>
+        </div>
+      </form>
+      <p class="mt-6 text-sm text-gray-400">Al hacer clic en "Sí", confirmas que tienes la edad legal para consumir alcohol en tu país de residencia.</p>
+    </div>
+  </div>
+{% endblock %}

@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: serif;
 }
 
 /* Contenedor principal del contenido */
@@ -21,7 +21,80 @@ body {
     margin: 0; /* Elimina márgenes predeterminados */
 }
 
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 100vh; /* Ocupa toda la altura de la ventana */
+    background-size: cover; /* Asegura que la imagen de fondo cubra toda la sección */
+    background-position: center; /* Centra la imagen de fondo */
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    color: #fff; /* Texto blanco */
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+    z-index: 1; /* Asegura que el overlay esté detrás del contenido */
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté encima del overlay */
+    text-align: center; /* Centra el texto */
+}
+
+.hero-section h1 {
+    font-size: 3rem; /* Tamaño del título */
+    font-weight: bold;
+    margin-bottom: 1rem; /* Espaciado inferior */
+}
+
+.hero-section p {
+    font-size: 1.2rem; /* Tamaño del texto */
+    margin-bottom: 2rem; /* Espaciado inferior */
+    color: #ccc; /* Texto gris claro */
+}
+
+.hero-section .btn-primary {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    border: none;
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-primary:hover {
+    background-color: #e6b800; /* Fondo dorado más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
+.hero-section .btn-outline {
+    background-color: transparent;
+    color: #ffcc00; /* Texto dorado */
+    border: 2px solid #ffcc00; /* Borde dorado */
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-outline:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
 nav {
+    position: fixed;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,6 +111,8 @@ nav {
     display:inline-flex;
     flex-direction: row;
     align-items: center;
+    color: #ffcc00;
+    font-family: serif;
 }
 
 .nav-logo img {
@@ -59,7 +134,19 @@ nav {
 .nav-menu a {
     color: #fff;
     text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 2em;
+    border-radius: 5px;
+    transition: color 0.3s ease;
 }
+.nav-menu a:hover {
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
+}
+
 
 .nav-icons {
     display: flex;
@@ -228,66 +315,41 @@ footer {
 }
 
 a:hover {
-    text-decoration: underline double;
+    text-decoration: underline;
 }
 
 #p:hover {
-    text-decoration: underline double;
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
 }
 
 .dropdown {
-    position: relative;
-    display: inline-block;
-    margin-left: 1rem;
-}
-
-.dropdown-button {
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #fff;
-}
-
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background-color: rgba(0, 0, 0, 0.9);
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
-    top: 100%;
-    left: 0;
-    padding: 15px 15px 15px 0px;
-    border: 1px solid #333;
-}
-
-.dropdown-content a {
-    color: #fff;
-    padding: 1rem;
-    text-decoration: none;
-    display: block;
-    border-bottom: 1px solid #333;
-}
-
-.dropdown-content a:hover {
-    background-color: #333;
-}
-
-.dropdown-content a:last-child {
-    border-bottom: none;
-}
-
-.dropdown:hover .dropdown-content {
-    display: block;
-
-}
-.dropdown {
-    /* Add some padding to match the cart */
     padding: auto;
     color: #fff;
+    text-decoration: none;
+
 }
+
+.dropdown .dropdown-item {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 2em;
+    border-radius: 5px;
+    transition: color 0.3s ease;
+    background-color: #000;
+}
+.dropdown .dropdown-item:hover {
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
+}
+
+
 
 .dropdown-toggle {
     /* Adjust the font size and color to match the cart */
@@ -350,21 +412,6 @@ form .form-check {
     text-decoration: none;
 }
 
-.custom-file-upload label {
-    cursor: pointer;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.custom-file-upload label:hover {
-    background-color: #0056b3;
-}
 
 @media (max-width: 768px) {
     .nav-menu {

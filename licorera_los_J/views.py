@@ -11,6 +11,16 @@ import json
 from datetime import date
 from django.core.serializers.json import DjangoJSONEncoder
 
+def verificacion(request):
+    if request.method == 'POST':
+        # Verificar la opción seleccionada
+        opcion = request.POST.get('opcion')
+        if opcion == 'si':
+            return redirect('index')  # Redirige al index si es mayor de edad
+        elif opcion == 'no':
+            messages.error(request, "No puedes ingresar porque no cumples con la edad mínima.")
+            return redirect('verificacion')  # Redirige de nuevo a la página de verificación
+    return render(request, 'verificacion.html')
 
 def index(request):
     # Traigo la informacion de la BD y se la mando al index con el contexto
