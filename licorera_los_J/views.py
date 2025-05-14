@@ -376,20 +376,25 @@ def obtener_carrito(request):
 
 
 def catalogo(request):
-    # Obtiene el valor seleccionado en el <select>
-    # Por defecto, vacío si no se selecciona nada
     tipo_producto = request.GET.get('tipo_producto', '')
+    filtro_precio = request.GET.get('filtro_precio', '')
 
-    # Filtra los productos según el tipo seleccionado
+    # Filtrar por tipo de producto
     if tipo_producto:
         productos = Productos.objects.filter(tipo_producto=tipo_producto)
     else:
-        # Si no se selecciona nada, muestra todos los productos
         productos = Productos.objects.all()
+
+    # Filtrar por precio
+    if filtro_precio == 'baratos':
+        productos = productos.filter(precio__lte=200000)
+    elif filtro_precio == 'caros':
+        productos = productos.filter(precio__gt=200000)
 
     contexto = {
         'productos': productos,
-        'tipo_producto': tipo_producto,  # Pasamos el valor seleccionado al template
+        'tipo_producto': tipo_producto,
+        'filtro_precio': filtro_precio,  # Pasamos el filtro al template
     }
     return render(request, 'catalogo.html', contexto)
 
