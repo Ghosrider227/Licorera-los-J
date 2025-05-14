@@ -100,7 +100,7 @@
                 <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}" class="sugerencia-imagen">
                 <h3 class="sugerencia-nombre">{{ producto.nombre_producto }}</h3>
                 <p class="sugerencia-precio">${{ producto.precio|intcomma }}</p>
-                <a href="{% url 'detalle_producto' producto.id %}" class="sugerencia-boton">Ver más</a>
+                <a href="{% url 'catalogo'  %}" class="sugerencia-boton">Ver más</a>
             </div>
             {% endfor %}
         </div>
