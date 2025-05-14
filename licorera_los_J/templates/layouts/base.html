@@ -38,10 +38,11 @@
                         </div>
                     {% endif %}
                     <div class="dropdown">
-                        <button id="p" class="dropdown-button"><i class="fa-solid fa-user"></i> Perfil</button>
+                        <button id="perfilButton" class="dropdown-button" tabindex="0"> <i class="fa-solid fa-user"></i> Perfil</button>
                         <div class="dropdown-content">
                             <a href="{% url 'editar_perfil' %}">Configuración</a>
                             <a href="{% url 'logout' %}">Cerrar sesión</a>
+                            <a href="{% url 'mis_facturas' %}">Mis facturas</a>
                         </div>
                     </div>
                     <a href="{% url 'compra' %}" class="icon-cart" id="cartButton">
@@ -75,14 +76,7 @@
                                 <label for="password" class="form-label">Contraseña</label>
                                 <input type="password" class="form-control" id="password" name="contrasena" placeholder="Password" required>
                             </div>
-                            <div class="mb-3">
-                                <div class="form-check">
-                                    <input type="checkbox" class="form-check-input" id="dropdownCheck2">
-                                    <label class="form-check-label" for="dropdownCheck2">
-                                        Acordarse de mí
-                                    </label>
-                                </div>
-                            </div>
+                           
                             <button type="submit" class="btn btn-primary">Sign in</button>
                             <a class="btn btn-secondary" href="{% url 'register' %}">Registrar</a>
                             <a class="dropdown-item" href="#">¿Olvidaste tu contraseña?</a>
@@ -125,5 +119,5 @@
     <script src="{% static 'js/funconalidad.js' %}"></script>
     <script src="{% static 'js/carousel.js' %}"></script>
     <script src="{% static 'js/duracion_etiquetas.js' %}"></script>
-    
+    <script src="{% static 'js/boton_detalles.js' %}"></script>
 </html>

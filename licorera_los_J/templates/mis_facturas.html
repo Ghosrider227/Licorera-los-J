@@ -1,0 +1,50 @@
+{% extends 'layouts/base.html' %}
+
+{% block titulo %}Mis Facturas{% endblock %}
+
+{% block cuerpo %}
+<h1>Mis Facturas</h1>
+{% if facturas %}
+    {% for factura in facturas %}
+        <div class="factura">
+            <div class="factura-header">
+                <h2>Factura #{{ factura.id }}</h2>
+                <p>Fecha: {{ factura.fecha_factura }} - Hora: {{ factura.hora_factura }}</p>
+                <p>Total: ${{ factura.valor_total }}</p>
+                <!-- Botón para mostrar/ocultar detalles -->
+                <button class="btn-detalles" data-id="detalles-{{ factura.id }}">Detalles</button>
+            </div>
+            <div id="detalles-{{ factura.id }}" class="factura-detalles" style="display: none;">
+                <h3>Productos:</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Imagen</th>
+                            <th>Producto</th>
+                            <th>Precio</th>
+                            <th>Cantidad</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for detalle in factura.detallesfacturas_set.all %}
+                            <tr>
+                                <td>
+                                    <img src="{{ detalle.producto.foto.url }}" alt="{{ detalle.producto.nombre_producto }}" style="width: 100px; height: auto;">
+                                </td>
+                                <td>{{ detalle.producto.nombre_producto }}</td>
+                                <td>${{ detalle.producto.precio }}</td>
+                                <td>{{ detalle.cantidad }}</td>
+                                <td>${{ detalle.subtotal }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+{% else %}
+    <p>No tienes facturas registradas.</p>
+{% endif %}
+{% endblock %}
