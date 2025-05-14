@@ -451,7 +451,12 @@ def editar_productos(request, id_productos):
 
 @validar_administrador
 def usuarios(request):
-    u = Usuarios.objects.filter(cuenta="2")
+    sesion = request.session.get("sesion", None)
+    if sesion and sesion.get("id") == 10:
+        u = Usuarios.objects.exclude(pk="10")  # Excluir usuarios con cuenta 10
+    else:
+        u = Usuarios.objects.filter(cuenta="2")  # Filtrar usuarios con cuenta "2"
+    
     contexto = {
         "dato": u
     }
