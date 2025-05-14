@@ -97,8 +97,8 @@
         <div class="sugerencias-grid">
             {% for producto in productos_sugeridos %}
             <div class="sugerencia-card">
-                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre }}" class="sugerencia-imagen">
-                <h3 class="sugerencia-nombre">{{ producto.nombre|intcomma }}</h3>
+                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}" class="sugerencia-imagen">
+                <h3 class="sugerencia-nombre">{{ producto.nombre_producto }}</h3>
                 <p class="sugerencia-precio">${{ producto.precio|intcomma }}</p>
                 <a href="{% url 'detalle_producto' producto.id %}" class="sugerencia-boton">Ver más</a>
             </div>

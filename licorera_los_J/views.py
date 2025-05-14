@@ -229,68 +229,11 @@ def compra(request):
         messages.error(request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
-    carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
-    print("Carrito cargado desde la sesión:", carrito)  # Depuración
-
+    carrito = sesion.get("carrito", [])
     productos_carrito = []
     subtotal = 0
-    puede_proceder = True  # Variable para verificar si se puede proceder al pago
+    tipos_producto = set()
 
-    # Manejar las acciones del formulario
-    if request.method == "POST":
-        action = request.POST.get("action", None)
-
-        # Manejar la acción de Actualizar
-        if action and action.startswith("update_"):
-            producto_id = int(action.split("_")[1])
-            nueva_cantidad = int(request.POST.get(f"cantidad_{producto_id}", 1))
-            producto = get_object_or_404(Productos, id=producto_id)
-
-            if nueva_cantidad > producto.cantidad:
-                messages.error(
-                    request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
-            elif nueva_cantidad < 1:
-                messages.error(request, "La cantidad debe ser mayor a 0.")
-            else:
-                for item in carrito:
-                    if item['id_producto'] == producto_id:
-                        item['cantidad'] = nueva_cantidad
-                        break
-                messages.success(
-                    request, f"Cantidad actualizada para {producto.nombre_producto}.")
-
-            # Guardar el carrito actualizado en la sesión
-            sesion["carrito"] = carrito
-            request.session["sesion"] = sesion
-            request.session.modified = True
-            return redirect('compra')  # Redirigir para evitar reenvío del formulario
-
-        # Validar y proceder al pago
-        elif action == "checkout":
-            for item in carrito:
-                producto_id = item['id_producto']
-                cantidad_en_formulario = int(request.POST.get(
-                    f"cantidad_{producto_id}", item['cantidad']))
-
-                # Verificar si la cantidad en el formulario coincide con la del carrito
-                if cantidad_en_formulario != item['cantidad']:
-                    messages.error(
-                        request, f"Debes dar clic en 'Actualizar' para confirmar la cantidad de {item['nombre']}.")
-                    puede_proceder = False
-                    break
-
-                # Validar stock
-                producto = get_object_or_404(Productos, id=producto_id)
-                if item['cantidad'] > producto.cantidad:
-                    messages.error(
-                        request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
-                    puede_proceder = False
-
-            if puede_proceder:
-                messages.success(request, "Todo está correcto. Procediendo al pago...")
-                return redirect('pago')  # Redirigir a la página de pago
-
-    # Cargar los productos del carrito desde la base de datos
     for item in carrito:
         try:
             producto = get_object_or_404(Productos, id=item['id_producto'])
@@ -302,22 +245,22 @@ def compra(request):
                 'subtotal': subtotal_producto
             })
             subtotal += subtotal_producto
+            tipos_producto.add(producto.tipo_producto)
         except Productos.DoesNotExist:
-            # Si el producto no existe, lo eliminamos del carrito
             carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
 
-    print("Productos cargados para la vista de compra:", productos_carrito)  # Depuración
-
-    # Productos sugeridos
-    productos_sugeridos = Productos.objects.all()[:4]
+    # Limitar los productos sugeridos a un máximo de 4
+    productos_sugeridos = Productos.objects.filter(tipo_producto__in=tipos_producto).exclude(
+        id__in=[item['producto'].id for item in productos_carrito]
+    )[:4]
 
     return render(request, 'compra.html', {
         'productos_carrito': productos_carrito,
         'subtotal': subtotal,
-        'total': subtotal,  # Si hay impuestos o descuentos, ajusta aquí
+        'total': subtotal,
         'productos_sugeridos': productos_sugeridos
     })
 

@@ -227,6 +227,18 @@
     gap: 10px;
 }
 
+.sugerencia-card {
+    margin: 10px; /* Ajusta el margen entre las tarjetas */
+    text-align: center;
+}
+
+.sugerencia-imagen {
+    width: 100%; /* Asegura que la imagen ocupe el ancho del contenedor */
+    height: auto;
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
+}
+
 @media (max-width: 768px) {
     .products-grid {
         grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
