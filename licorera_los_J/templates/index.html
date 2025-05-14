@@ -46,11 +46,21 @@
             <h2>OFERTAS</h2>
             <div class="products">
                 {% for p in data %}
-                    <div class="product-card">
-                        <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
-                        <h3 class="nombre">{{ p.nombre_producto }}</h3>
-                        <p class="price">${{ p.precio|intcomma }}</p>
-                    </div>
+                    <form method="post" action="{% url 'agregar_carrito' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="id_producto" value="{{ p.id }}">
+                        <input type="hidden" name="cantidad" value="1" min="1">
+                        <div class="product-card">
+                            <img src="{{ p.foto.url }}" alt="{{ p.nombre_producto }}">
+                                <h3 class="nombre">{{ p.nombre_producto }}</h3>
+                                <p class="price">${{ p.precio|intcomma }}</p>
+                                {% if p.cantidad == 0 %}
+                                <h3 id="agotado">AGOTADO</h3>
+                                {% else %}
+                                <button type="submit" class="add-to-cart">AGREGAR AL CARRITO</button>
+                                {% endif %}
+                        </div>
+                    </form>
                 {% endfor %}
             </div>
         </section>
