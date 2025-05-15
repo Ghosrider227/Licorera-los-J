@@ -464,10 +464,26 @@ def agregar_productos(request):
         nombre_producto = request.POST.get("nombre_producto")
         tipo_producto = request.POST.get("tipo_producto")
         medidas = request.POST.get("medidas")
-        precio = request.POST.get("precio")
+        precio_str = request.POST.get("precio")
         descripcion = request.POST.get("descripcion")
-        cantidad = request.POST.get("cantidad")
+        cantidad_str = request.POST.get("cantidad")
         foto = request.FILES.get("foto")
+        
+        # Validar precio
+        if not precio_str or not precio_str.isdigit() or int(precio_str) <= 0:
+            messages.warning(request, "El precio debe ser un número positivo mayor a cero.")
+            return redirect("agregar_productos")
+        # Validar cantidad
+        if not cantidad_str or not cantidad_str.isdigit() or int(cantidad_str) <= 0:
+            messages.warning(request, "La cantidad debe ser un número positivo mayor a cero.")
+            return redirect("agregar_productos")
+
+        precio = int(precio_str)
+        cantidad = int(cantidad_str)
+        if foto.content_type not in ['image/jpeg', 'image/png']:
+                messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
+                return redirect("agregar_productos")
+        
         try:
             q = Productos(
                 nombre_producto=nombre_producto,
@@ -584,6 +600,7 @@ def editar_usuario(request, id_usuario):
 
 def pago(request):
     sesion = request.session.get("sesion", None)
+    u = Usuarios.objects.get(pk=sesion["id"])
     if not sesion:
         messages.error(request, "Debes iniciar sesión para proceder al pago.")
         return redirect('login')
@@ -629,7 +646,8 @@ def pago(request):
 
     return render(request, 'pago.html', {
         'productos_carrito': productos_carrito,
-        'total': subtotal
+        'total': subtotal,
+        'usuario': u
     })
 
 @validar_administrador
@@ -818,7 +836,7 @@ def procesar_pago(request):
                 cantidad=item['cantidad'],
                 subtotal=producto.precio * item['cantidad']
             )
-
+        detalles = DetallesFacturas.objects.filter(factura=factura)
         # Limpiar el carrito
         sesion["carrito"] = []
         request.session["sesion"] = sesion
@@ -827,7 +845,7 @@ def procesar_pago(request):
         # Redirigir al template de factura
         return render(request, 'factura.html', {
             'factura': factura,
-            'detalles': DetallesFacturas.objects.filter(factura=factura)
+            'detalles': detalles
         })
 
     else:

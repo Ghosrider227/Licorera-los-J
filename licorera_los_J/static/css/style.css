@@ -439,7 +439,7 @@ form .form-check {
 }
 
 .factura-detalles {
-    display: none;
+    display: block;
     margin-top: 20px;
     transition: all 0.3s ease-in-out;
 }
