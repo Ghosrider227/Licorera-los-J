@@ -37,14 +37,14 @@
         <div class="form-grid">
             <div class="form-group">
                 <label for="calle">Calle:</label>
-                <input type="text" id="calle" name="calle" class="form-control" placeholder="Ingresa tu calle" 
-                    value="{{ usuario.direccion }}" required>
+                <input type="text" id="calle" name="calle" class="form-control" {% if usuario.direccion %} 
+                value="{{ usuario.direccion }}" {% else %} placeholder="Ingresa tu calle" {% endif %} required>
             </div>
             
             <div class="form-group">
                 <label for="numero">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Número telefónico" 
-                    value="{{ usuario.telefono }}" required>
+                <input type="text" id="telefono" name="telefono" class="form-control" {% if usuario.telefono %} 
+                value="{{ usuario.telefono }}" {% else %} placeholder="Número telefónico" {% endif %} required>
             </div>
             
             <div class="form-group">
