@@ -20,78 +20,89 @@ body {
     min-height: 100vh; /* Altura mínima igual a la altura de la ventana */
     margin: 0; /* Elimina márgenes predeterminados */
 }
+html {
+    scroll-behavior: smooth;
+}
+.alert {
+    animation: fadeOut 5s ease forwards;
+}
 
-/* Hero Section */
-.hero-section {
-    position: relative;
-    height: 100vh; /* Ocupa toda la altura de la ventana */
-    background-size: cover; /* Asegura que la imagen de fondo cubra toda la sección */
-    background-position: center; /* Centra la imagen de fondo */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+/* Mensaje centrado en la pantalla */
+.alert-centered {
+    position: fixed; /* Fija el mensaje en la pantalla */
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta el punto de referencia al centro */
+    z-index: 2000; /* Asegura que esté por encima de otros elementos */
+    max-width: 90%; /* Limita el ancho en pantallas pequeñas */
+    padding: 1rem 2rem; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para darle profundidad */
+    animation: fadeInOut 5s ease-in-out; /* Animación de entrada y salida */
+}
+
+/* Animación de entrada y salida */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+}
+/* Contenedor de Mensajes */
+.messages-container {
     display: flex;
-    align-items: center; /* Centra verticalmente el contenido */
-    justify-content: center; /* Centra horizontalmente el contenido */
-    color: #fff; /* Texto blanco */
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* Espaciado entre las tarjetas */
 }
 
-.hero-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
-    z-index: 1; /* Asegura que el overlay esté detrás del contenido */
+/* Animación de Entrada y Salida */
+.card {
+    animation: fadeInOut 5s ease-in-out;
+    border-radius: 10px; /* Bordes redondeados */
 }
 
-.hero-section .container {
-    position: relative;
-    z-index: 2; /* Asegura que el contenido esté encima del overlay */
-    text-align: center; /* Centra el texto */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
 }
 
-.hero-section h1 {
-    font-size: 3rem; /* Tamaño del título */
-    font-weight: bold;
-    margin-bottom: 1rem; /* Espaciado inferior */
+/* Imagen de Confirmación */
+.card img {
+    border-radius: 50%; /* Imagen redondeada */
+    background-color: #d4edda; /* Fondo verde claro */
+    padding: 0.5rem;
 }
-
-.hero-section p {
-    font-size: 1.2rem; /* Tamaño del texto */
-    margin-bottom: 2rem; /* Espaciado inferior */
-    color: #ccc; /* Texto gris claro */
-}
-
-.hero-section .btn-primary {
-    background-color: #ffcc00; /* Fondo dorado */
-    color: #111; /* Texto oscuro */
-    border: none;
-    padding: 0.75rem 1.5rem; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: all 0.3s ease; /* Transición suave */
-    text-decoration: none; /* Elimina el subrayado */
-}
-
-.hero-section .btn-primary:hover {
-    background-color: #e6b800; /* Fondo dorado más oscuro */
-    transform: scale(1.05); /* Efecto de aumento */
-}
-
-.hero-section .btn-outline {
-    background-color: transparent;
-    color: #ffcc00; /* Texto dorado */
-    border: 2px solid #ffcc00; /* Borde dorado */
-    padding: 0.75rem 1.5rem; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    transition: all 0.3s ease; /* Transición suave */
-    text-decoration: none; /* Elimina el subrayado */
-}
-
-.hero-section .btn-outline:hover {
-    background-color: #ffcc00; /* Fondo dorado */
-    color: #111; /* Texto oscuro */
-    transform: scale(1.05); /* Efecto de aumento */
-}
-
 nav {
     position: fixed;
     z-index: 1000;
@@ -164,35 +175,75 @@ nav {
     height: 24px;
 }
 
-.carousel-item {
-    /* position: absolute; */
-    height: 60vh;
-    overflow: hidden;
-    margin-top: 60px;
-    opacity: 0; /*Ocultar por defecto*/  
-    z-index: 0; /*Asegura que las imágenes no activas estén detrás*/ 
-    transition: opacity 1s ease-in-out; /*Transición suave*/ 
-    width: 100%;  /*Asegura que ocupe todo el ancho*/ 
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 80vh; /* Ocupa toda la altura de la ventana */
+    background-size: cover; /* Asegura que la imagen de fondo cubra toda la sección */
+    background-position: center; /* Centra la imagen de fondo */
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    color: #fff; /* Texto blanco */
 }
 
-.carousel-item.active {
-    opacity: 1;  /*Mostrar la imagen activa*/ 
-    
-}
-
-@keyframes slide {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
-}
-
-.slider-controls {
+.hero-overlay {
     position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+    z-index: 1; /* Asegura que el overlay esté detrás del contenido */
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté encima del overlay */
+    text-align: center; /* Centra el texto */
+}
+
+.hero-section h1 {
+    font-size: 3rem; /* Tamaño del título */
+    font-weight: bold;
+    margin-bottom: 1rem; /* Espaciado inferior */
+}
+
+.hero-section p {
+    font-size: 1.2rem; /* Tamaño del texto */
+    margin-bottom: 2rem; /* Espaciado inferior */
+    color: #ccc; /* Texto gris claro */
+}
+
+.hero-section .btn-primary {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    border: none;
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-primary:hover {
+    background-color: #e6b800; /* Fondo dorado más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
+.hero-section .btn-outline {
+    background-color: transparent;
+    color: #ffcc00; /* Texto dorado */
+    border: 2px solid #ffcc00; /* Borde dorado */
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-outline:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
 }
 
 .offers {
@@ -204,73 +255,370 @@ nav {
     margin-bottom: 2rem;
     font-size: 2rem;
 }
-
-.products {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+/* Estilo para los títulos h2 */
+h2.text-3xl {
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    margin-top: 6rem; /* Espaciado inferior */
+}
+/* Contenedor de Categorías */
+.categories-container {
+    display: grid; /* Usa CSS Grid para organizar las tarjetas */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Columnas responsivas */
+    gap: 1.5rem; /* Espaciado entre las tarjetas */
+    justify-items: center; /* Centra las tarjetas horizontalmente */
 }
 
-.product-card {
-    background-color: #000;
-    border-radius: 8px;
+/* Tarjetas de Categorías */
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+    background-color: #111; /* Fondo oscuro */
+    width: 100%; /* Asegura que las tarjetas ocupen el ancho disponible */
+    max-width: 250px; /* Ancho máximo para mantener simetría */
+}
+
+.category-card img {
+    width: 100%;
+    height: 150px; /* Altura fija para las imágenes */
+    object-fit: cover; /* Ajusta la imagen al contenedor */
+    transition: transform 0.5s ease; /* Efecto de zoom */
+    border-radius: 10px 10px 0 0; /* Bordes superiores redondeados */
+}
+
+.category-card:hover img {
+    transform: scale(1.1); /* Zoom al pasar el cursor */
+}
+
+.category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0)); /* Fondo degradado */
+    padding: 1rem;
+    text-align: center;
+    transition: background 0.3s ease; /* Transición suave */
+}
+
+.category-card:hover .category-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0)); /* Fondo más oscuro al pasar el cursor */
+}
+
+.category-overlay h3 {
+    font-size: 1.2rem; /* Tamaño del título */
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Espaciado inferior */
+    color: #ffcc00; /* Color dorado */
+}
+
+.category-overlay a {
+    font-size: 0.9rem; /* Tamaño del texto */
+    color: #ffcc00; /* Texto dorado */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* Espaciado entre texto e ícono */
+    transition: color 0.3s ease; /* Transición suave */
+}
+
+.category-overlay a:hover {
+    color: #e6b800; /* Color dorado más oscuro al pasar el cursor */
+}
+
+.category-overlay i {
+    font-size: 1rem; /* Tamaño del ícono */
+}
+
+/* Sección de Productos en Oferta */
+.offers {
+    background-color: #000; /* Fondo oscuro */
+    padding: 1rem 1rem; /* Espaciado interno */
+    color: #fff; /* Texto blanco */
+}
+
+.offers h2 {
+    font-size: 2.5rem; /* Tamaño del título */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem; /* Espaciado inferior */
+    color: #ffcc00; /* Color dorado */
+}
+
+.offers p {
+    font-size: 1.2rem; /* Tamaño del texto */
+    text-align: center;
+    margin-bottom: 2rem; /* Espaciado inferior */
+    color: #ccc; /* Texto gris claro */
+}
+
+/* Contenedor de Productos */
+.offers-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten automáticamente */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    gap: 20px; /* Espaciado entre las tarjetas */
+    padding: 2rem;
+}
+
+/* Tarjetas de Productos */
+.offer-card {
+    background-color: #000; /* Fondo oscuro */
+    border-radius: 8px; /* Bordes redondeados */
     overflow: hidden;
     position: relative;
-    transition: transform 0.3s ease;
-    scale: auto;
-    height: 500px;
-    width: 350px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+    width: 250px; /* Ancho reducido */
+    height: 450px; /* Altura reducida */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra ligera */
 }
 
-.product-card img {
+.offer-card:hover {
+    transform: translateY(-5px) scale(1.02); /* Efecto de elevación y zoom */
+    box-shadow: 0 4px 8px rgb(255, 255, 255); /* Sombra más intensa */
+}
+
+/* Imagen del Producto */
+.offer-image {
     width: 100%;
-    height: 350px;
-    object-fit: cover;
-    border: #fff solid 2px;
-    border-radius: 8px;
+    height: 200px; /* Altura reducida para las imágenes */
+    object-fit: cover; /* Ajusta la imagen al contenedor */
+    border: #fff solid 2px; /* Borde blanco */
+    border-radius: 8px 8px 0 0; /* Bordes superiores redondeados */
+    transition: transform 0.5s ease; /* Transición suave para el zoom */
 }
 
-.product-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    min-height: 2.4em;
+.offer-card:hover .offer-image {
+    transform: scale(1.1); /* Zoom al pasar el cursor */
 }
 
-.product-card .price {
-    color: #fff;
-    font-size: 1.5rem;
+/* Contenido de la Tarjeta */
+.offer-overlay {
+    padding: 0.5rem; /* Reduce el espaciado interno */
+    text-align: center;
+}
+
+.offer-overlay h3 {
+    font-size: 1.2rem; /* Tamaño del título reducido */
     font-weight: bold;
-    margin: 1rem 0;
+    margin-bottom: 0.3rem;
+    color: #fff; /* Texto blanco */
 }
 
-.product-card:hover{
-    transition: 0.3s ease;
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 4px 8px rgb(255, 255, 255);
+.offer-overlay p {
+    font-size: 0.9rem; /* Tamaño del texto reducido */
+    color: #ccc; /* Texto gris claro */
+    margin-bottom: 0.5rem;
 }
 
-.product-card:hover .nombre{
-    transition: 0.6s ease;
-    text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
+/* Precio del Producto */
+.offer-price {
+    color: #ffcc00; /* Color dorado */
+    font-weight: bold;
+    font-size: 1.2rem; /* Tamaño del precio reducido */
+    margin: 0.5rem 0;
 }
 
-.add-to-cart {
-    display: block;
+/* Botón de Ver Detalles */
+.offer-overlay a {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #333;
+    padding: 0.5rem; /* Reduce el tamaño del botón */
+    background-color: transparent;
+    border: 2px solid #fff;
     color: #fff;
-    border: none;
+    font-weight: bold;
     cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem; /* Tamaño del texto reducido */
 }
 
-.add-to-cart:hover {
-    background-color: #444;
+.offer-overlay a:hover {
+    background-color: #fff; /* Fondo blanco */
+    color: #000; /* Texto negro */
+}
+
+/* Contenedor de Productos */
+.offers-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten automáticamente */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    gap: 15px; /* Reduce el espaciado entre las tarjetas */
+    padding: 1rem; /* Reduce el espaciado interno */
+}
+
+/* Responsividad */
+@media (max-width: 1024px) {
+    .offer-card {
+        width: 200px; /* Ajusta el ancho en pantallas medianas */
+        height: 400px; /* Ajusta la altura en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .offer-card {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        height: auto; /* Ajusta la altura automáticamente */
+    }
+}
+
+/* Sección de Newsletter */
+.newsletter-section {
+    background: linear-gradient(to right, #0a0a0a, #141414); /* Fondo degradado */
+    padding: 4rem 1rem; /* Espaciado interno */
+    color: #fff; /* Texto blanco */
+    text-align: center;
+    border-top: 2px solid #ffcc0028; /* Línea decorativa superior */
+    border-bottom: 2px solid #ffcc0021; /* Línea decorativa inferior */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra ligera */
+    animation: fadeIn 1.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Título de la Sección */
+.newsletter-section h2 {
+    font-size: 2.5rem; /* Tamaño del título */
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem; /* Espaciado inferior */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    animation: slideInDown 1.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Descripción */
+.newsletter-section p {
+    font-size: 1rem; /* Tamaño del texto */
+    color: #ccc; /* Texto gris claro */
+    margin-bottom: 1.5rem; /* Espaciado inferior */
+    line-height: 1.6; /* Altura de línea */
+    animation: fadeIn 2s ease-in-out; /* Animación de entrada */
+}
+
+/* Formulario */
+.newsletter-form {
+    display: flex;
+    flex-wrap: wrap; /* Ajusta los elementos en pantallas pequeñas */
+    gap: 1rem; /* Espaciado entre los elementos */
+    max-width: 600px; /* Ancho máximo del formulario */
+    margin: 0 auto; /* Centra el formulario */
+    justify-content: center; /* Centra los elementos */
+    animation: fadeInUp 2s ease-in-out; /* Animación de entrada */
+}
+
+/* Campo de Entrada */
+.newsletter-form .form-control {
+    flex-grow: 1;
+    padding: 0.75rem 1rem; /* Espaciado interno */
+    border: 2px solid #ffcc0054; /* Borde dorado */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #222; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    font-size: 1rem; /* Tamaño del texto */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+.newsletter-form .form-control:focus {
+    border-color: #e6b800; /* Borde dorado más oscuro al enfocar */
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.5); /* Sombra dorada */
+    outline: none; /* Elimina el borde predeterminado */
+}
+
+/* Botón de Suscripción */
+.newsletter-form .btn-primary {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    font-weight: bold;
+    border: none;
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño del texto */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+    cursor: pointer;
+    animation: pulse 2s infinite; /* Animación de pulso */
+}
+
+.newsletter-form .btn-primary:hover {
+    background-color: #e6b800; /* Fondo dorado más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
+/* Texto de Política */
+.newsletter-section p.text-xs {
+    font-size: 0.75rem; /* Tamaño del texto reducido */
+    color: #888; /* Texto gris claro */
+    margin-top: 1rem; /* Espaciado superior */
+    line-height: 1.4; /* Altura de línea */
+    animation: fadeIn 2.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .newsletter-section h2 {
+        font-size: 2rem; /* Tamaño del título reducido */
+    }
+
+    .newsletter-form {
+        flex-direction: column; /* Elementos en columna */
+    }
+
+    .newsletter-form .form-control {
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
+
+    .newsletter-form .btn-primary {
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
 }
 
 footer {

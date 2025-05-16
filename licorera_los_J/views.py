@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import *
 import re
+from django.core.mail import send_mail
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
 from .utils import *
@@ -24,9 +25,11 @@ def verificacion(request):
 
 def index(request):
     # Traigo la informacion de la BD y se la mando al index con el contexto
-    p = Productos.objects.all()
+    p = Productos.objects.all()[:4]
+    productos_destacados = Productos.objects.all()[:4]  # Filtra los productos destacados
     contexto = {
         'data': p,
+        'productos_destacados': productos_destacados,
     }
     return render(request, 'index.html', contexto)
 
@@ -834,3 +837,22 @@ def editar_perfil(request):
         return redirect('editar_perfil')  # Redirige al inicio o a otra página
 
     return render(request, 'editar_perfil.html', {'user': u})
+
+
+def enviar_correo(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')  # Obtén el correo del formulario
+        if email:
+            # Envía el correo
+            send_mail(
+                'Gracias por suscribirte',  # Asunto
+                'Te has suscrito exitosamente a nuestro newsletter.',  # Mensaje
+                'tu_correo@gmail.com',  # Correo del remitente
+                [email],  # Lista de destinatarios
+                fail_silently=False,
+            )
+            messages.success(request, 'correo enviado exitosamente.')
+            return redirect('index')  # Redirige a una página
+        else:
+            messages.error(request, 'Por favor, ingresa un correo válido.')
+    return render(request, 'index.html')

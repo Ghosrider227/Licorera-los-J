@@ -19,7 +19,7 @@ urlpatterns = [
     path('cobertura/', views.cobertura, name='cobertura'),
     path('api/agregar_carrito/', views.agregar_carrito, name='agregar_carrito'),
     path('api/carrito/', views.obtener_carrito, name='obtener_carrito'),
-
+    path('enviar_correo/', views.enviar_correo, name='enviar_correo'),
     #ADMINISTRADOR/PRODUCTOS
     path("productos/", views.productos, name='productos'),
     path("eliminar_productos/<int:id_producto>/", views.eliminar_productos, name='eliminar_productos'),

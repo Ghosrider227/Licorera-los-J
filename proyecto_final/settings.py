@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -136,3 +137,11 @@ EMAIL_HOST_USER = 'LicoreraLosJ@gmail.com'
 EMAIL_HOST_PASSWORD = 'xmnrqdkkstcf xknv'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'secondary',  # Clase de Bootstrap para debug
+    messages.INFO: 'info',        # Clase de Bootstrap para info
+    messages.SUCCESS: 'success',  # Clase de Bootstrap para success
+    messages.WARNING: 'warning',  # Clase de Bootstrap para warning
+    messages.ERROR: 'danger',     # Clase de Bootstrap para error
+}

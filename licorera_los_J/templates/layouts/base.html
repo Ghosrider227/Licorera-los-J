@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
         <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
         <link rel="stylesheet" href="{% static 'css/style.css' %}">
     </head>
@@ -83,7 +84,6 @@
                 </div>
             {% endif %}
         </nav>
-
         <div class="main-content">
             {% block cuerpo %}
                 
@@ -112,6 +112,37 @@
             </div>
         </div>
     </footer>
+    {% comment %} {% if messages %}
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                {% for message in messages %}
+                    Swal.fire({
+                        title: 'Mensaje',
+                        text: "{{ message }}",
+                        icon: '{% if message.tags == "success" %}success{% elif message.tags == "error" %}error{% elif message.tags == "warning" %}warning{% elif message.tags == "info" %}info{% else %}question{% endif %}',
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                    Swal.fire({
+                        title: '¡Éxito!',
+                        text: 'Correo enviado correctamente.',
+                        icon: 'success',
+                        imageWidth: 100,
+                        imageHeight: 100,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-primary'
+                        },
+                        buttonsStyling: false
+                    });
+                {% endfor %}
+            });
+        </script>
+    {% endif %} {% endcomment %}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js.map' %}"></script>
     <script src="{% static 'js/funconalidad.js' %}"></script>
