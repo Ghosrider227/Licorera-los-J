@@ -242,7 +242,7 @@ def compra(request):
 
     productos_carrito = []
     subtotal = 0
-    puede_proceder = True  # Variable para verificar si se puede proceder al pago
+    puede_proceder = False  # Variable para verificar si se puede proceder al pago
 
     # Manejar las acciones del formulario
     if request.method == "POST":
@@ -285,7 +285,8 @@ def compra(request):
                     messages.error(
                         request, f"Debes dar clic en 'Actualizar' para confirmar la cantidad de {item['nombre']}.")
                     puede_proceder = False
-                    break
+                else:
+                    puede_proceder = True
 
                 # Validar stock
                 producto = get_object_or_404(Productos, id=producto_id)
@@ -293,10 +294,15 @@ def compra(request):
                     messages.error(
                         request, f"La cantidad ingresada para {producto.nombre_producto} excede el stock disponible ({producto.cantidad}).")
                     puede_proceder = False
+                else:
+                    puede_proceder = True
 
             if puede_proceder:
                 messages.success(request, "Todo está correcto. Procediendo al pago...")
                 return redirect('pago')  # Redirigir a la página de pago
+            else:
+                messages.error(request, "No se puede proceder al pago.")
+                return redirect('compra')
 
     # Cargar los productos del carrito desde la base de datos
     for item in carrito[:]:  # Usamos una copia del carrito para modificarlo mientras iteramos
