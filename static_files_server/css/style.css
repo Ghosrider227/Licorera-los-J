@@ -1,0 +1,468 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+/* Contenedor principal del contenido */
+.main-content {
+    flex: 1; /* Hace que este contenedor ocupe el espacio restante entre el header y el footer */
+    margin-top: 100px;
+}
+
+
+body {
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Altura mínima igual a la altura de la ventana */
+    margin: 0; /* Elimina márgenes predeterminados */
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: rgba(0, 0, 0, 0.9);
+    /* position: fixed; */
+    width: 100%;
+    top: 0;
+}
+
+.nav-logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    display:inline-flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.nav-logo img {
+    margin: 0px 4px 0px 0px;
+    padding: 0px;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: row;
+    margin: 0;
+    list-style: none;
+}
+
+.nav-menu li {
+    margin-left: 2rem;
+}
+
+.nav-menu a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.nav-icons {
+    display: flex;
+    align-items: center;
+}
+
+.nav-icons a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 1rem;
+}
+
+.nav-icons img {
+    width: 24px;
+    height: 24px;
+}
+
+/* Deshabilitar interacción con el slider */
+.nav-icons .dropdown:hover ~ .slider {
+    pointer-events: none; /* Desactiva clics en el slider */
+}
+
+.carousel-item {
+    /* position: absolute; */
+    height: 60vh;
+    overflow: hidden;
+    margin-top: 60px;
+    opacity: 0; /*Ocultar por defecto*/  
+    z-index: 0; /*Asegura que las imágenes no activas estén detrás*/ 
+    transition: opacity 1s ease-in-out; /*Transición suave*/ 
+    width: 100%;  /*Asegura que ocupe todo el ancho*/ 
+}
+
+.carousel-item.active {
+    opacity: 1;  /*Mostrar la imagen activa*/ 
+    
+}
+
+@keyframes slide {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
+}
+
+.slider-controls {
+    position: absolute;
+    bottom: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.offers {
+    padding: 2rem;
+    text-align: center;
+}
+
+.offers h2 {
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+
+.products {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.product-card {
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease;
+    scale: auto;
+    height: 550px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border: #fff solid 2px;
+    border-radius: 8px;
+}
+
+.product-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    min-height: 2.4em;
+}
+
+.product-card .price {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.product-card:hover{
+    transition: 0.3s ease;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 4px 8px rgb(255, 255, 255);
+}
+
+.product-card:hover .nombre{
+    transition: 0.6s ease;
+    text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
+}
+
+#agotado {
+    color: #ff0000;
+}
+
+.add-to-cart {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.add-to-cart:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+footer {
+    background-color: #111;
+    padding: 2rem;
+    margin-top: 3rem;
+    text-align: center;
+    border-top: 1px solid #ddd; /* Línea superior para separar el footer */
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-section {
+    flex: 1;
+    margin-right: 2rem;
+}
+
+.footer-section h3, .footer-section h4 {
+    margin-bottom: 1rem;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    text-decoration: underline double;
+}
+
+a:hover {
+    text-decoration: underline double;
+}
+
+#p:hover {
+    text-decoration: underline double;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-button {
+    background-color: transparent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.dropdown-content {
+    display: none; /* Ocultar por defecto */
+    position: absolute;
+    background-color: #111; /* Fondo oscuro */
+    min-width: 150px;
+    z-index: 1050;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
+    padding: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #333;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 8px 16px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.dropdown-content a:hover {
+    background-color: #333;
+}
+
+/* Mostrar el menú cuando el botón está enfocado o el mouse está sobre el contenedor */
+.dropdown:focus-within .dropdown-content,
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown {
+    /* Add some padding to match the cart */
+    padding: auto;
+    color: #fff;
+}
+
+.dropdown-toggle {
+    /* Adjust the font size and color to match the cart */
+    font-size: 16px;
+    color: #fff;
+    background-color: #111;
+}
+
+.dropdown-menu {
+    /* Adjust the width to match the cart */
+    width: 300px;
+    padding: 1rem;
+    background-color: #111;
+    border-radius: 4px;
+}
+
+.dropdown-menu .form-label {
+    /* Adjust the font size and color to match the cart */
+    font-size: 16px;
+    color: #fff;
+}
+
+.dropdown-menu .form-control:focus {
+    /* Adjust the border color to match the cart */
+    border-color: #f1ee1f;
+}
+
+.dropdown-menu .form-control::placeholder {
+    /* Adjust the placeholder color to match the cart */
+    color: #aaa;
+}
+
+.dropdown-menu .form-control {
+    /* Adjust the font size and border radius to match the cart */
+    font-size: 16px;
+    border-radius: 5px;
+    background-color: #111;
+    color: #fff;
+}
+
+form .form-check {
+    /* Adjust the font size and color to match the cart */
+    font-size: 16px;
+    color: #fff;
+}
+
+.dropdown-menu .btn-primary {
+    /* Adjust the background color and border radius to match the cart */
+    background-color: #b9a116;
+    border-radius: 5px;
+    color: #fff;
+    border-color: #b9a116;
+}
+
+.dropdown-menu .btn-secondary {
+    /* Adjust the background color and border radius to match the cart */
+    background-color: #b9a116;
+    border-radius: 5px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.custom-file-upload label {
+    cursor: pointer;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    font-size: 14px;
+    text-align: center;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+.custom-file-upload label:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+    .nav-menu {
+        display: none;
+    }
+
+    .footer-content {
+        flex-direction: column;
+    }
+
+    .footer-section {
+        margin-bottom: 2rem;
+    }
+}
+
+#error{
+    z-index: 2000;
+    position: fixed;
+    top: 101px;
+}
+
+.factura {
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.factura-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.factura-header p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.btn-detalles {
+    background-color: #333; /* Botón oscuro */
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-detalles:hover {
+    background-color: #555; /* Fondo más claro al pasar el cursor */
+}
+
+.toggle-detalles {
+    display: none; /* Ocultar el checkbox */
+}
+
+.factura-detalles {
+    display: block;
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Mostrar detalles cuando el checkbox está marcado */
+.toggle-detalles:checked + .btn-detalles + .factura-detalles {
+    display: block;
+}
+
+.factura-detalles table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.factura-detalles th, .factura-detalles td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.factura-detalles img {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+

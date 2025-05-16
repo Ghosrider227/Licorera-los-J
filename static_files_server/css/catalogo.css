@@ -1,0 +1,251 @@
+.hero-products {
+    position: relative;
+    height: 60vh;
+    margin-top: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.hero-products img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5);
+}
+
+.hero-products h1 {
+    position: relative;
+    z-index: 1;
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.products-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 2rem;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background-color: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease;
+    scale: auto;
+    height: 700px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+
+.product-card img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border: #fff solid 2px;
+    border-radius: 8px;
+}
+
+.product-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+    min-height: 2.4em;
+}
+
+.product-card .price {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 1rem 0;
+}
+
+.product-card:hover{
+    transition: 0.3s ease;
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 4px 8px rgb(255, 255, 255);
+}
+
+.product-card:hover .nombre{
+    transition: 0.6s ease;
+    text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
+}
+
+#agotado {
+    color: #ff0000;
+}
+
+.add-to-cart {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+}
+
+.add-to-cart:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+.discount-tag {
+    position: absolute;
+    top: 1rem;
+    right: -2rem;
+    background-color: #ff0000;
+    color: #fff;
+    padding: 0.5rem 2rem;
+    transform: rotate(45deg);
+}
+
+/* Estilo base del menú */
+.nav {
+    display: flex;
+    justify-content: space-evenly; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    background-color: #000; /* Fondo negro */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Sombra para un efecto elegante */
+    margin-bottom: 20px; /* Espaciado inferior */
+}
+
+.nav-item {
+    margin: 0 15px; /* Espaciado entre los elementos */
+    list-style: none;
+    position: relative; /* Necesario para el efecto lavalamp */
+}
+
+.nav-link {
+    text-decoration: none;
+    color: #fff; /* Blanco para el texto */
+    font-size: 1.2rem;
+    font-weight: bold;
+    padding: 10px 20px;
+    position: relative;
+    transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+.nav-link:hover {
+    color: #b8860b; /* Dorado oscuro al pasar el mouse */
+}
+
+/* Efecto lavalamp */
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background-color: #b8860b; /* Dorado oscuro */
+    transition: width 0.3s ease-in-out; /* Transición suave */
+}
+
+.nav-link:hover::after {
+    width: 100%; /* Subrayado completo al pasar el mouse */
+}
+
+/* Buscador */
+.buscador {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.search-bar input {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #b8860b; /* Borde dorado oscuro */
+    border-radius: 4px;
+    margin-right: 10px;
+    background-color: #000;
+    color: #fff;
+}
+
+.search-bar input::placeholder {
+    color: #aaa;
+}
+
+.search-bar select {
+    width: 300px;
+    padding: 10px;
+    border: 2px solid #b8860b; /* Borde dorado oscuro */
+    border-radius: 4px;
+    background-color: #000;
+    color: #fff;
+}
+
+.search-bar select:focus {
+    outline: none;
+    border-color: #fff; /* Borde blanco al enfocar */
+}
+
+.search-bar button {
+    padding: 10px 20px;
+    background-color: #b8860b; /* Fondo dorado oscuro */
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-bar button:hover {
+    background-color: #fff; /* Fondo blanco al pasar el mouse */
+    color: #000; /* Texto negro */
+}
+
+#formulario-busqueda{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.sugerencia-card {
+    margin: 10px; /* Ajusta el margen entre las tarjetas */
+    text-align: center;
+}
+
+.sugerencia-imagen {
+    width: 100%; /* Asegura que la imagen ocupe el ancho del contenedor */
+    height: auto;
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
+}
+
+@media (max-width: 768px) {
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        padding: 1rem;
+    }
+
+    .hero-products h1 {
+        font-size: 2rem;
+    }
+}

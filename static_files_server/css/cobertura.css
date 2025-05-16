@@ -1,0 +1,94 @@
+/* Add to your existing CSS */
+
+.hero-coverage {
+    position: relative;
+    min-height: calc(100vh - 60px);
+    margin-top: 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.mapouter {
+    position: relative;
+    align-items:start;
+    height: 560px;
+    width: 820px;
+}
+
+.gmap_canvas {
+    overflow: hidden;
+    background: none !important;
+    height: 560px;
+    width: 820px;
+    position: absolute;
+    object-fit: cover;
+    filter: brightness(0.3);
+    transition: 1s;
+}
+
+.gmap_canvas:hover {
+    filter: none;
+    transition: 1s;
+}
+
+.coverage-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 600px;
+}
+
+.coverage-content h1 {
+    font-size: 3rem;
+    margin-bottom: 2rem;
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.coverage-info {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 8px;
+}
+
+.coverage-info h2 {
+    margin-bottom: 1rem;
+}
+
+.coverage-info ul {
+    list-style: none;
+    margin-bottom: 1.5rem;
+}
+
+.coverage-info li {
+    margin: 0.5rem 0;
+}
+
+.check-coverage {
+    background-color: transparent;
+    border: 2px solid #fff;
+    color: #fff;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1rem;
+}
+
+.check-coverage:hover {
+    background-color: #fff;
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .coverage-content h1 {
+        font-size: 2rem;
+    }
+
+    .coverage-info {
+        padding: 1rem;
+    }
+}

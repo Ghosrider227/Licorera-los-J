@@ -875,6 +875,19 @@ def editar_perfil(request):
         u.email = request.POST.get('email')
         u.direccion = request.POST.get('ciudad')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        
+        if not re.match(r'^[A-Za-z\s]+$', u.nombre):
+            messages.warning(request, 'El nombre solo debe contener letras')
+            return redirect('register')
+
+        if not re.match(r'^[A-Za-z\s]+$', u.apellido):
+            messages.warning(request, 'El apellido solo debe contener letras')
+            return redirect('register')
+        
+        if not u.telefono.isdigit() or len(u.telefono) != 10:
+            messages.warning(
+                request, 'El telefono debe contener solo numeros y tener 10 digitos')
+            return redirect('editar_perfil')
 
         # Validar mayoría de edad
         if fecha_nacimiento:
