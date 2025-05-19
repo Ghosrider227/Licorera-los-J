@@ -127,25 +127,6 @@
                     {% endfor %}
                 </div>
             </div>
-        </section>
-        <section class="newsletter-section py-16 bg-gradient-to-r from-gray-900 to-color-dark">
-            <div class="container mx-auto px-4">
-                <div class="max-w-lg mx-auto text-center">
-                    <h2 class="text-3xl font-bold mb-4">Suscríbete a Nuestro Newsletter</h2>
-                    <p class="text-gray-300 mb-8">
-                        Recibe ofertas exclusivas, novedades y consejos sobre el mundo de los licores premium.
-                    </p>
-                    <form method="POST" action="{% url 'enviar_correo' %}" class="newsletter-form flex flex-col sm:flex-row gap-4">
-                        {% csrf_token %}
-                        <input type="email" name="email" placeholder="Tu correo electrónico" class="form-control flex-grow" required>
-                        <button type="submit" class="btn-primary px-6 py-3 rounded-lg whitespace-nowrap">
-                            Suscribirme
-                        </button>
-                    </form>
-                    <p class="text-xs text-gray-500 mt-4">
-                        Al suscribirte, aceptas nuestra política de privacidad y recibirás comunicaciones por email.
-                    </p>
-                </div>
             </div>
         </section>
     {% endif %}

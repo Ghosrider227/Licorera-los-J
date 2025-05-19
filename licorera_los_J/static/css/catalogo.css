@@ -81,6 +81,10 @@
     text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
 }
 
+#agotado {
+    color: #ff0000;
+}
+
 .add-to-cart {
     width: 100%;
     padding: 0.75rem;
@@ -111,7 +115,7 @@
 /* Estilo base del menú */
 .nav {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
+    justify-content: space-evenly; /* Centra horizontalmente */
     align-items: center; /* Centra verticalmente */
     background-color: #000; /* Fondo negro */
     padding: 20px;
@@ -160,7 +164,7 @@
 .buscador {
     display: flex;
     flex-direction: row;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     gap: 10px;
     margin-top: 20px;
@@ -221,6 +225,18 @@
     display: flex;
     flex-direction: row;
     gap: 10px;
+}
+
+.sugerencia-card {
+    margin: 10px; /* Ajusta el margen entre las tarjetas */
+    text-align: center;
+}
+
+.sugerencia-imagen {
+    width: 100%; /* Asegura que la imagen ocupe el ancho del contenedor */
+    height: auto;
+    border-radius: 8px; /* Opcional: bordes redondeados */
+    margin-bottom: 10px; /* Espacio entre la imagen y el texto */
 }
 
 @media (max-width: 768px) {

@@ -6,7 +6,6 @@
 {% block titulo %}
     Canasta de compra
 {% endblock %}
-    
 
 {% block cuerpo %}
 <head>
@@ -17,6 +16,7 @@
     <div class="carrito-icono">
         <i class="fas fa-shopping-cart" style="font-size: 48px; color: #333;"></i>
     </div>
+
     {% if request.session.sesion %}
         <h1 class="carrito-titulo">
             TU BOLSA
@@ -39,23 +39,19 @@
                         {% for item in productos_carrito %}
                         <tr>
                             <td>
-                                <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
-                                {{ item.producto.nombre_producto }}
+                                <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}" class="producto-imagen">
+                                <span class="producto-nombre">{{ item.producto.nombre_producto }}</span>
                             </td>
                             <td>${{ item.producto.precio|intcomma }}</td>
                             <td>
-                                <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1">
+                                <input type="number" name="cantidad_{{ item.producto.id }}" value="{{ item.cantidad }}" min="1" class="form-control cantidad-input">
                             </td>
                             <td>${{ item.subtotal|intcomma }}</td>
                             <td>
-                                <!-- Botón de Actualizar -->
-                                <button type="submit" name="action" value="update_{{ item.producto.id }}" class="carrito-boton carrito-boton-actualizar">
-                                    Actualizar
-                                </button>
-                                <!-- Botón de Eliminar -->
-                                <a href="{% url 'eliminar_producto' item.producto.id %}" class="carrito-boton carrito-boton-eliminar">
-                                    Eliminar
-                                </a>
+                                <div class="acciones-botones">
+                                    <button type="submit" name="action" value="update_{{ item.producto.id }}" class="btn btn-success">Actualizar</button>
+                                    <a href="{% url 'eliminar_producto' item.producto.id %}" class="btn btn-danger">Eliminar</a>
+                                </div>
                             </td>
                         </tr>
                         {% endfor %}
@@ -69,9 +65,7 @@
                     <a href="{% url 'vaciar_bolsa' %}" class="carrito-boton carrito-boton-secundario">
                         Vaciar Bolsa
                     </a>
-                    <button type="submit" name="action" value="checkout" class="carrito-boton carrito-boton-secundario">
-                        PROCEDER A PAGAR
-                    </button>
+                    <button type="submit" name="action" value="checkout" class="btn btn-primary">Proceder al Pago</button>
                 </div>
             </form>
         </div>
@@ -91,22 +85,19 @@
             </a>
         </div>
     {% endif %}
-    
+
     <div class="sugerencias-container">
         <h2 class="sugerencias-titulo">Sugerencias para ti</h2>
         <div class="sugerencias-grid">
             {% for producto in productos_sugeridos %}
             <div class="sugerencia-card">
-                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre }}" class="sugerencia-imagen">
-                <h3 class="sugerencia-nombre">{{ producto.nombre|intcomma }}</h3>
+                <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}" class="sugerencia-imagen">
+                <h3 class="sugerencia-nombre">{{ producto.nombre_producto }}</h3>
                 <p class="sugerencia-precio">${{ producto.precio|intcomma }}</p>
-                <a href="{% url 'detalle_producto' producto.id %}" class="sugerencia-boton">Ver más</a>
+                <a href="{% url 'catalogo'  %}" class="sugerencia-boton">Ver más</a>
             </div>
             {% endfor %}
         </div>
     </div>
 </div>
-
-
-
 {% endblock %}

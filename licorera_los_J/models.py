@@ -84,6 +84,9 @@ class DetallesFacturas(models.Model):
     class Meta:
         verbose_name = 'Detalle Factura'
         verbose_name_plural = 'Detalles Facturas'
+    
+    def __str__(self):
+        return f"{self.producto.nombre_producto} x {self.cantidad} (${self.subtotal})"
 
 
 class Productos(models.Model):

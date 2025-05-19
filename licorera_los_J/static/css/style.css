@@ -472,154 +472,6 @@ h2.text-3xl {
     }
 }
 
-/* Sección de Newsletter */
-.newsletter-section {
-    background: linear-gradient(to right, #0a0a0a, #141414); /* Fondo degradado */
-    padding: 4rem 1rem; /* Espaciado interno */
-    color: #fff; /* Texto blanco */
-    text-align: center;
-    border-top: 2px solid #ffcc0028; /* Línea decorativa superior */
-    border-bottom: 2px solid #ffcc0021; /* Línea decorativa inferior */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra ligera */
-    animation: fadeIn 1.5s ease-in-out; /* Animación de entrada */
-}
-
-/* Título de la Sección */
-.newsletter-section h2 {
-    font-size: 2.5rem; /* Tamaño del título */
-    font-weight: bold;
-    color: #ffcc00; /* Color dorado */
-    margin-bottom: 1rem; /* Espaciado inferior */
-    text-transform: uppercase; /* Texto en mayúsculas */
-    letter-spacing: 1px; /* Espaciado entre letras */
-    animation: slideInDown 1.5s ease-in-out; /* Animación de entrada */
-}
-
-/* Descripción */
-.newsletter-section p {
-    font-size: 1rem; /* Tamaño del texto */
-    color: #ccc; /* Texto gris claro */
-    margin-bottom: 1.5rem; /* Espaciado inferior */
-    line-height: 1.6; /* Altura de línea */
-    animation: fadeIn 2s ease-in-out; /* Animación de entrada */
-}
-
-/* Formulario */
-.newsletter-form {
-    display: flex;
-    flex-wrap: wrap; /* Ajusta los elementos en pantallas pequeñas */
-    gap: 1rem; /* Espaciado entre los elementos */
-    max-width: 600px; /* Ancho máximo del formulario */
-    margin: 0 auto; /* Centra el formulario */
-    justify-content: center; /* Centra los elementos */
-    animation: fadeInUp 2s ease-in-out; /* Animación de entrada */
-}
-
-/* Campo de Entrada */
-.newsletter-form .form-control {
-    flex-grow: 1;
-    padding: 0.75rem 1rem; /* Espaciado interno */
-    border: 2px solid #ffcc0054; /* Borde dorado */
-    border-radius: 5px; /* Bordes redondeados */
-    background-color: #222; /* Fondo oscuro */
-    color: #fff; /* Texto blanco */
-    font-size: 1rem; /* Tamaño del texto */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
-}
-
-.newsletter-form .form-control:focus {
-    border-color: #e6b800; /* Borde dorado más oscuro al enfocar */
-    box-shadow: 0 0 8px rgba(255, 204, 0, 0.5); /* Sombra dorada */
-    outline: none; /* Elimina el borde predeterminado */
-}
-
-/* Botón de Suscripción */
-.newsletter-form .btn-primary {
-    background-color: #ffcc00; /* Fondo dorado */
-    color: #111; /* Texto oscuro */
-    font-weight: bold;
-    border: none;
-    padding: 0.75rem 1.5rem; /* Espaciado interno */
-    border-radius: 5px; /* Bordes redondeados */
-    font-size: 1rem; /* Tamaño del texto */
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
-    cursor: pointer;
-    animation: pulse 2s infinite; /* Animación de pulso */
-}
-
-.newsletter-form .btn-primary:hover {
-    background-color: #e6b800; /* Fondo dorado más oscuro */
-    transform: scale(1.05); /* Efecto de aumento */
-}
-
-/* Texto de Política */
-.newsletter-section p.text-xs {
-    font-size: 0.75rem; /* Tamaño del texto reducido */
-    color: #888; /* Texto gris claro */
-    margin-top: 1rem; /* Espaciado superior */
-    line-height: 1.4; /* Altura de línea */
-    animation: fadeIn 2.5s ease-in-out; /* Animación de entrada */
-}
-
-/* Animaciones */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
-
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideInDown {
-    from {
-        opacity: 0;
-        transform: translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes pulse {
-    0%, 100% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-}
-
-/* Responsividad */
-@media (max-width: 768px) {
-    .newsletter-section h2 {
-        font-size: 2rem; /* Tamaño del título reducido */
-    }
-
-    .newsletter-form {
-        flex-direction: column; /* Elementos en columna */
-    }
-
-    .newsletter-form .form-control {
-        width: 100%; /* Ocupa todo el ancho disponible */
-    }
-
-    .newsletter-form .btn-primary {
-        width: 100%; /* Ocupa todo el ancho disponible */
-    }
-}
 
 footer {
     background-color: #111;
@@ -779,6 +631,79 @@ form .form-check {
     z-index: 2000;
     position: fixed;
     top: 101px;
+}
+
+.factura {
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.factura-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.factura-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.factura-header p {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.btn-detalles {
+    background-color: #333; /* Botón oscuro */
+    color: #fff;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-align: center;
+    display: inline-block;
+}
+
+.btn-detalles:hover {
+    background-color: #555; /* Fondo más claro al pasar el cursor */
+}
+
+.toggle-detalles {
+    display: none; /* Ocultar el checkbox */
+}
+
+.factura-detalles {
+    display: block;
+    margin-top: 20px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Mostrar detalles cuando el checkbox está marcado */
+.toggle-detalles:checked + .btn-detalles + .factura-detalles {
+    display: block;
+}
+
+.factura-detalles table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.factura-detalles th, .factura-detalles td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #333;
+}
+
+.factura-detalles img {
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 

@@ -242,7 +242,15 @@ def compra(request):
         messages.error(request, "Debes iniciar sesión para acceder al carrito.")
         return redirect('login')
 
-    carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
+    carrito = sesion.get("carrito", [])
+    if verificar_productos_carrito(carrito):
+        # Si se detectaron productos eliminados, redirigir al index
+        sesion["carrito"] = carrito
+        request.session["sesion"] = sesion
+        request.session.modified = True
+        messages.warning(request, "Uno o más productos en tu carrito ya no están disponibles. Por favor, revisa el catálogo.")
+        return redirect('index')
+
     print("Carrito cargado desde la sesión:", carrito)  # Depuración
 
     productos_carrito = []
@@ -304,9 +312,9 @@ def compra(request):
                 return redirect('pago')  # Redirigir a la página de pago
 
     # Cargar los productos del carrito desde la base de datos
-    for item in carrito:
+    for item in carrito[:]:  # Usamos una copia del carrito para modificarlo mientras iteramos
         try:
-            producto = get_object_or_404(Productos, id=item['id_producto'])
+            producto = Productos.objects.get(id=item['id_producto'])
             cantidad = item['cantidad']
             subtotal_producto = producto.precio * cantidad
             productos_carrito.append({
@@ -316,11 +324,12 @@ def compra(request):
             })
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
-            # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
+            # Si el producto no existe, eliminarlo del carrito
+            carrito.remove(item)
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
+            messages.warning(request, f"El producto con ID {item['id_producto']} ya no está disponible y fue eliminado del carrito.")
 
     print("Productos cargados para la vista de compra:", productos_carrito)  # Depuración
 
@@ -333,8 +342,6 @@ def compra(request):
         'total': subtotal,  # Si hay impuestos o descuentos, ajusta aquí
         'productos_sugeridos': productos_sugeridos
     })
-
-
 def vaciar_bolsa(request):
     sesion = request.session.get("sesion", None)
     if not sesion:
@@ -389,20 +396,25 @@ def obtener_carrito(request):
 
 
 def catalogo(request):
-    # Obtiene el valor seleccionado en el <select>
-    # Por defecto, vacío si no se selecciona nada
     tipo_producto = request.GET.get('tipo_producto', '')
+    filtro_precio = request.GET.get('filtro_precio', '')
 
-    # Filtra los productos según el tipo seleccionado
+    # Filtrar por tipo de producto
     if tipo_producto:
         productos = Productos.objects.filter(tipo_producto=tipo_producto)
     else:
-        # Si no se selecciona nada, muestra todos los productos
         productos = Productos.objects.all()
+
+    # Filtrar por precio
+    if filtro_precio == 'baratos':
+        productos = productos.filter(precio__lte=200000)
+    elif filtro_precio == 'caros':
+        productos = productos.filter(precio__gt=200000)
 
     contexto = {
         'productos': productos,
-        'tipo_producto': tipo_producto,  # Pasamos el valor seleccionado al template
+        'tipo_producto': tipo_producto,
+        'filtro_precio': filtro_precio,  # Pasamos el filtro al template
     }
     return render(request, 'catalogo.html', contexto)
 
@@ -432,14 +444,28 @@ def eliminar_productos(request, id_producto):
     try:
         q = Productos.objects.get(pk=id_producto)
         q.delete()
-        messages.success(request, "Productos eliminado exitosamente!")
+
+        # Eliminar el producto de las bolsas de los usuarios
+        sesiones = Session.objects.all()
+        for sesion in sesiones:
+            try:
+                data = sesion.get_decoded()
+                carrito = data.get("sesion", {}).get("carrito", [])
+                carrito_actualizado = [item for item in carrito if int(item['id_producto']) != int(id_producto)]
+                if len(carrito) != len(carrito_actualizado):  # Si hubo cambios
+                    data["sesion"]["carrito"] = carrito_actualizado
+                    sesion.session_data = Session.objects.encode(data)
+                    sesion.save()
+            except Exception as e:
+                print(f"Error al actualizar el carrito en la sesión: {e}")
+
+        messages.success(request, "Producto eliminado exitosamente y eliminado de las bolsas de los usuarios!")
 
     except IntegrityError:
         messages.error(
             request, "Error: No se puede eliminar el producto porque está en uso.")
     except Exception as e:
         messages.error(request, f"Error: {e}")
-
         print(f"Error: {e}")
 
     return redirect("productos")
@@ -451,10 +477,26 @@ def agregar_productos(request):
         nombre_producto = request.POST.get("nombre_producto")
         tipo_producto = request.POST.get("tipo_producto")
         medidas = request.POST.get("medidas")
-        precio = request.POST.get("precio")
+        precio_str = request.POST.get("precio")
         descripcion = request.POST.get("descripcion")
-        cantidad = request.POST.get("cantidad")
+        cantidad_str = request.POST.get("cantidad")
         foto = request.FILES.get("foto")
+        
+        # Validar precio
+        if not precio_str or not precio_str.isdigit() or int(precio_str) <= 0:
+            messages.warning(request, "El precio debe ser un número positivo mayor a cero.")
+            return redirect("agregar_productos")
+        # Validar cantidad
+        if not cantidad_str or not cantidad_str.isdigit() or int(cantidad_str) <= 0:
+            messages.warning(request, "La cantidad debe ser un número positivo mayor a cero.")
+            return redirect("agregar_productos")
+
+        precio = int(precio_str)
+        cantidad = int(cantidad_str)
+        if foto.content_type not in ['image/jpeg', 'image/png']:
+                messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
+                return redirect("agregar_productos")
+        
         try:
             q = Productos(
                 nombre_producto=nombre_producto,
@@ -516,7 +558,12 @@ def editar_productos(request, id_productos):
 
 @validar_administrador
 def usuarios(request):
-    u = Usuarios.objects.filter(cuenta="2")
+    sesion = request.session.get("sesion", None)
+    if sesion and sesion.get("id") == 10:
+        u = Usuarios.objects.exclude(pk="10")  # Excluir usuarios con cuenta 10
+    else:
+        u = Usuarios.objects.filter(cuenta="2")  # Filtrar usuarios con cuenta "2"
+    
     contexto = {
         "dato": u
     }
@@ -525,11 +572,34 @@ def usuarios(request):
 
 @validar_administrador
 def editar_usuario(request, id_usuario):
+    # Obtener la sesión
+    sesion = request.session.get("sesion", None)
+
+    # Verificar si el administrador ya está editando un usuario
+    id_en_edicion = sesion.get("id_en_edicion", None)
+    if id_en_edicion and id_en_edicion != id_usuario:
+        messages.error(request, "No puedes cambiar el usuario que estás editando.")
+        return redirect("editar_usuario", id_usuario=id_en_edicion)  # Redirigir al usuario en edición actual
+
+    # Verificar si el usuario existe
+    usuario_a_editar = get_object_or_404(Usuarios, pk=id_usuario)
+
+    # Almacenar el ID del usuario en edición en la sesión
+    sesion["id_en_edicion"] = id_usuario
+    request.session["sesion"] = sesion
+    request.session.modified = True
+
+    # Continuar con la lógica de edición
     if request.method == "POST":
         try:
-            q = Usuarios.objects.get(pk=id_usuario)
-            q.cuenta = request.POST.get("cuenta")
-            q.save()
+            usuario_a_editar.cuenta = request.POST.get("cuenta")
+            usuario_a_editar.save()
+
+            # Limpiar el ID en edición después de guardar
+            sesion.pop("id_en_edicion", None)
+            request.session["sesion"] = sesion
+            request.session.modified = True
+
             messages.success(request, "Usuario actualizado correctamente!")
             return redirect("usuarios")
         except Exception as e:
@@ -537,23 +607,25 @@ def editar_usuario(request, id_usuario):
             messages.error(request, f"Error: {e}")
             return redirect("editar_usuario", id_usuario=id_usuario)
     else:
-        q = Usuarios.objects.get(pk=id_usuario)
-        contexto = {"usuarios": q}
-        print(q)
-
-        print(q.contrasena)
+        contexto = {"usuarios": usuario_a_editar}
         return render(request, "administrador/formulario_usuario.html", contexto)
-
-
 # PAGOS Y CARRITO
+
 def pago(request):
     sesion = request.session.get("sesion", None)
+    u = Usuarios.objects.get(pk=sesion["id"])
     if not sesion:
         messages.error(request, "Debes iniciar sesión para proceder al pago.")
         return redirect('login')
 
-    carrito = sesion.get("carrito", [])  # Obtén el carrito desde la sesión
-    print("Carrito cargado desde la sesión en pago:", carrito)  # Depuración
+    carrito = sesion.get("carrito", [])
+    if verificar_productos_carrito(carrito):
+        # Si se detectaron productos eliminados, redirigir al index
+        sesion["carrito"] = carrito
+        request.session["sesion"] = sesion
+        request.session.modified = True
+        messages.warning(request, "Uno o más productos en tu carrito ya no están disponibles. Por favor, revisa el catálogo.")
+        return redirect('index')
 
     if not carrito:
         messages.error(request, "Tu carrito está vacío.")
@@ -563,7 +635,7 @@ def pago(request):
     subtotal = 0
 
     # Cargar los productos del carrito desde la base de datos
-    for item in carrito:
+    for item in carrito[:]:  # Usamos una copia del carrito para modificarlo mientras iteramos
         try:
             producto = get_object_or_404(Productos, id=item['id_producto'])
             cantidad = item['cantidad']
@@ -575,19 +647,21 @@ def pago(request):
             })
             subtotal += subtotal_producto
         except Productos.DoesNotExist:
-            # Si el producto no existe, lo eliminamos del carrito
-            carrito = [i for i in carrito if i['id_producto'] != item['id_producto']]
+            # Si el producto no existe, eliminarlo del carrito
+            carrito.remove(item)
             sesion["carrito"] = carrito
             request.session["sesion"] = sesion
             request.session.modified = True
+            messages.warning(request, f"El producto con ID {item['id_producto']} ya no está disponible y fue eliminado del carrito.")
+            return redirect('index')  # Redirigir al index si un producto fue eliminado
 
     print("Productos cargados para la vista de pago:", productos_carrito)  # Depuración
 
     return render(request, 'pago.html', {
         'productos_carrito': productos_carrito,
-        'total': subtotal
+        'total': subtotal,
+        'usuario': u
     })
-
 
 @validar_administrador
 def facturas(request):
@@ -775,7 +849,7 @@ def procesar_pago(request):
                 cantidad=item['cantidad'],
                 subtotal=producto.precio * item['cantidad']
             )
-
+        detalles = DetallesFacturas.objects.filter(factura=factura)
         # Limpiar el carrito
         sesion["carrito"] = []
         request.session["sesion"] = sesion
@@ -784,7 +858,7 @@ def procesar_pago(request):
         # Redirigir al template de factura
         return render(request, 'factura.html', {
             'factura': factura,
-            'detalles': DetallesFacturas.objects.filter(factura=factura)
+            'detalles': detalles
         })
 
     else:
@@ -856,3 +930,36 @@ def enviar_correo(request):
         else:
             messages.error(request, 'Por favor, ingresa un correo válido.')
     return render(request, 'index.html')
+
+#FACTURAS DE USUARIO
+def mis_facturas(request):
+    sesion = request.session.get("sesion", None)
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para ver tus facturas.")
+        return redirect('login')
+
+    usuario = get_object_or_404(Usuarios, id=sesion['id'])
+    # Ordenar las facturas por ID en orden descendente
+    facturas = Facturas.objects.filter(cliente=usuario).order_by('-id')
+
+    return render(request, 'mis_facturas.html', {'facturas': facturas})
+
+def detalle_factura(request, factura_id):
+    factura = get_object_or_404(Facturas, id=factura_id)
+    return render(request, 'detalle_factura.html', {'factura': factura})
+
+
+
+
+
+def verificar_productos_carrito(carrito):
+    """
+    Verifica si los productos en el carrito aún existen en la base de datos.
+    Si algún producto no existe, lo elimina del carrito y devuelve True.
+    """
+    productos_eliminados = False
+    for item in carrito[:]:  # Usamos una copia del carrito para modificarlo mientras iteramos
+        if not Productos.objects.filter(id=item['id_producto']).exists():
+            carrito.remove(item)
+            productos_eliminados = True
+    return productos_eliminados

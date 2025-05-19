@@ -23,24 +23,15 @@
     <div class="buscador">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">MAS POPULARES</a>
+                <a class="nav-link" href="?filtro_precio=baratos">BARATOS</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">PROMOCIONES</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">BARATOS</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">CAROS</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">RECOMENDADOS</a>
+                <a class="nav-link" href="?filtro_precio=caros">CAROS</a>
             </li>
         </ul>
         <div class="search-bar">
-            {% csrf_token %}
             <form method="GET" action="{% url 'catalogo' %}" id="formulario-busqueda">
+                {% csrf_token %}
                 <select name="tipo_producto" class="form-control">
                     <option value="">Todos los productos</option>
                     <option value="1" {% if tipo_producto == "Vino" %}selected{% endif %}>Vino</option>
@@ -64,16 +55,17 @@
         <form method="post" action="{% url 'agregar_carrito' %}">
             {% csrf_token %}
             <input type="hidden" name="id_producto" value="{{ producto.id }}">
-            <input type="hidden" name="foto" value="{{ producto.foto.url }}">
-            <input type="hidden" name="nombre_producto" value="{{ producto.nombre_producto }}">
-            <input type="hidden" name="precio" value="{{ producto.precio }}">
             <input type="hidden" name="cantidad" value="1" min="1">
             <div class="product-card">
                 <img src="{{ producto.foto.url }}" alt="{{ producto.nombre_producto }}">
                     <h3 class="nombre">{{ producto.nombre_producto }}</h3>
                     <p class="price">${{ producto.precio|intcomma }}</p>
                     <p class="descripcion">{{ producto.descripcion }}</p>
+                    {% if producto.cantidad == 0 %}
+                    <h3 id="agotado">AGOTADO</h3>
+                    {% else %}
                     <button type="submit" class="add-to-cart">AGREGAR AL CARRITO</button>
+                    {% endif %}
             </div>
         </form>
         {% endfor %}
