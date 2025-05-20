@@ -58,14 +58,21 @@
             </div>
             
             <div class="form-group">
-                <label for="codigo_postal">Código Postal:</label>
-                <input type="text" id="codigo_postal" name="codigo_postal" class="form-control" placeholder="Ingresa tu código postal" required>
+                <label for="ubicacion">Ubicacion: </label>
+                <select class="form-select form-select-sm" name="ubicacion" id="ubicacion" required>
+                    <option selected>Selecciona una ubicación</option>
+                    <option value="1">Medellin</option>
+                    <option value="2">Envigado</option>
+                    <option value="3">Sabaneta</option>
+                    <option value="4">Bello</option>
+                    <option value="5">Itagui</option>
+                </select>
             </div>
             
-            <div class="form-group">
+            {% comment %} <div class="form-group">
                 <label for="pais">Ubicación:</label>
                 <input type="text" id="pais" name="pais" class="form-control" placeholder="Colombia" required defaultValue="Colombia" disabled>
-            </div>
+            </div> {% endcomment %}
         </div>
         
         <h2 class="pago-subtitulo">Método de Pago</h2>

@@ -72,12 +72,10 @@ def logout(request):
             u = Usuarios.objects.get(pk=sesion["id"])
             # Obtén el carrito de la sesión
             carrito = sesion.get("carrito", [])
-            print("Carrito obtenido de la sesión:", carrito)  # Depuración
             if isinstance(carrito, list):  # Verifica que sea una lista
                 # Serializa el carrito y guárdalo en el modelo
                 u.carrito = carrito
                 u.save()
-                print("Carrito guardado en el modelo:", u.carrito)  # Depuración
             else:
                 messages.warning(
                     request, "El carrito no tiene un formato válido.")
@@ -88,31 +86,35 @@ def logout(request):
         messages.error(request, "El usuario no existe.")
         return redirect("index")
     except Exception as e:
-        print(f"Error al guardar el carrito: {e}")  # Depuración
         messages.error(request, f"Error inesperado: {e}")
         return redirect("index")
 
 
 def cambiar_clave(request):
-    if request.method == "POST":
-        clave_actual = request.POST.get("clave_actual")
-        nueva = request.POST.get("nueva")
-        repite_nueva = request.POST.get("repite_nueva")
-        logueado = request.session.get("auth", False)
-
-        q = Usuarios.objects.get(pk=logueado["id"])
-        if verify_password(clave_actual, q.password):
-            if nueva == repite_nueva:
-                q.password = hash_password(nueva)       # utils.py
-                q.save()
-                messages.success(request, "Contraseña cambiada con éxito!!")
-            else:
-                messages.info(request, "Contraseñas nuevas no coinciden...")
-        else:
-            messages.warning(request, "Contraseña no concuerda...")
-        return redirect("cambiar_clave")
+    sesion = request.session.get("sesion", None)
+    if not sesion:
+        messages.error(request, "Debes iniciar sesión para cambiar la contraseña.")
+        return redirect('index')
     else:
-        return render(request, "cambiar_clave.html")
+        if request.method == "POST":
+            clave_actual = request.POST.get("clave_actual")
+            nueva = request.POST.get("nueva")
+            repite_nueva = request.POST.get("repite_nueva")
+            logueado = request.session.get("sesion", False)
+
+            q = Usuarios.objects.get(id=logueado["id"])
+            if verify_password(clave_actual, q.contrasena):
+                if nueva == repite_nueva:
+                    q.contrasena = hash_password(nueva)       # utils.py
+                    q.save()
+                    messages.success(request, "Contraseña cambiada con éxito!!")
+                else:
+                    messages.warning(request, "Contraseña nueva no coincide")
+            else:
+                messages.warning(request, "Contraseña actual incorrecta")
+            return redirect("editar_perfil")
+        else:
+            return render(request, "cambiar_clave.html")
 
 
 def register(request):
@@ -192,7 +194,6 @@ def agregar_carrito(request):
 
         # Obtener el carrito de la sesión
         carrito = sesion.get("carrito", [])
-        print("Carrito antes de agregar:", carrito)  # Depuración
 
         # Verificar si el producto ya está en el carrito
         producto_existente = next(
@@ -215,7 +216,6 @@ def agregar_carrito(request):
         sesion["agregado_desde_catalogo"] = True  # Establecer la bandera
         request.session["sesion"] = sesion
         request.session.modified = True  # Asegurar que la sesión se actualice
-        print("Carrito después de agregar:", carrito)  # Depuración
 
         messages.success(request, "Producto agregado al carrito.")
         return redirect("catalogo")
@@ -237,8 +237,6 @@ def compra(request):
         request.session.modified = True
         messages.warning(request, "Uno o más productos en tu carrito ya no están disponibles. Por favor, revisa el catálogo.")
         return redirect('index')
-
-    print("Carrito cargado desde la sesión:", carrito)  # Depuración
 
     productos_carrito = []
     subtotal = 0
@@ -324,8 +322,6 @@ def compra(request):
             request.session.modified = True
             messages.warning(request, f"El producto con ID {item['id_producto']} ya no está disponible y fue eliminado del carrito.")
 
-    print("Productos cargados para la vista de compra:", productos_carrito)  # Depuración
-
     # Productos sugeridos
     productos_sugeridos = Productos.objects.all()[:4]
 
@@ -346,8 +342,6 @@ def vaciar_bolsa(request):
     sesion["carrito"] = []
     request.session["sesion"] = sesion
     request.session.modified = True  # Asegurar que la sesión se actualice
-
-    print("Carrito después de vaciar:", sesion["carrito"])  # Depuración
     messages.success(
         request, "Todos los productos han sido eliminados de la bolsa.")
     return redirect('compra')  # Redirigir a la bolsa
@@ -361,7 +355,6 @@ def eliminar_producto(request, producto_id):
         return redirect('login')
 
     carrito = sesion.get("carrito", [])
-    print("Carrito antes de eliminar:", carrito)  # Depuración
 
     # Filtrar el carrito para eliminar el producto con el ID especificado
     carrito = [item for item in carrito if int(
@@ -372,7 +365,6 @@ def eliminar_producto(request, producto_id):
     request.session["sesion"] = sesion
     request.session.modified = True  # Asegurar que la sesión se actualice
 
-    print("Carrito después de eliminar:", carrito)  # Depuración
     messages.success(request, "Producto eliminado del carrito.")
     return redirect('compra')  # Redirigir al carrito
 
@@ -422,9 +414,7 @@ def cobertura(request):
 def productos(request):
     # all() -> todos      filter() -> algunos      get() -> 1 único
     q = Productos.objects.all()
-    for producto in q:
-        print (producto.medidas)
-        
+    
     contexto = {
         "data": q
     }
@@ -450,16 +440,17 @@ def eliminar_productos(request, id_producto):
                     sesion.session_data = Session.objects.encode(data)
                     sesion.save()
             except Exception as e:
-                print(f"Error al actualizar el carrito en la sesión: {e}")
+                messages.error(request, f"Error al actualizar el carrito en la sesión")
 
-        messages.success(request, "Producto eliminado exitosamente y eliminado de las bolsas de los usuarios!")
+        messages.success(request, "El producto fue eliminado correctamente y se ha retirado de los carritos de los usuarios.")
 
     except IntegrityError:
         messages.error(
-            request, "Error: No se puede eliminar el producto porque está en uso.")
+            request, "No se puede eliminar este producto porque está asociado a otras operaciones o registros.")
+    except Productos.DoesNotExist:
+        messages.error(request, "El producto que intentas eliminar no existe.")
     except Exception as e:
-        messages.error(request, f"Error: {e}")
-        print(f"Error: {e}")
+        messages.error(request, f"Ocurrió un error inesperado al eliminar el producto.")
 
     return redirect("productos")
 
@@ -475,10 +466,27 @@ def agregar_productos(request):
         cantidad_str = request.POST.get("cantidad")
         foto = request.FILES.get("foto")
         
+        if not re.match(r'^[A-Za-z\s]+$', nombre_producto):
+            messages.error(request, "El campo solo debe contener letras y espacios.")
+            return redirect('ruta_deseada')
+        
+        if not re.match(r'^[1-8]$', tipo_producto):
+            messages.error(request, "El tipo de producto no es válido.")
+            return redirect('agregar_productos')
+        
+        if not re.match(r'^[A-Za-z\s]+$', q.descripcion):
+            messages.error(request, "El campo solo debe contener letras y espacios.")
+            return redirect('ruta_deseada')
+            
+        if not re.match(r'^[A-Za-z0-9\s]+$', q.medidas):
+            messages.error(request, "El campo solo debe contener letras, números y espacios.")
+            return redirect('ruta_deseada')
+        
         # Validar precio
         if not precio_str or not precio_str.isdigit() or int(precio_str) <= 0:
             messages.warning(request, "El precio debe ser un número positivo mayor a cero.")
             return redirect("agregar_productos")
+        
         # Validar cantidad
         if not cantidad_str or not cantidad_str.isdigit() or int(cantidad_str) <= 0:
             messages.warning(request, "La cantidad debe ser un número positivo mayor a cero.")
@@ -486,6 +494,11 @@ def agregar_productos(request):
 
         precio = int(precio_str)
         cantidad = int(cantidad_str)
+        
+        if not foto:
+            messages.error(request, "Debes subir una imagen del producto.")
+            return redirect("agregar_productos")
+        
         if foto.content_type not in ['image/jpeg', 'image/png']:
                 messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
                 return redirect("agregar_productos")
@@ -518,10 +531,39 @@ def editar_productos(request, id_productos):
 
             q.nombre_producto = request.POST.get("nombre_producto")
             q.tipo_producto = request.POST.get("tipo_producto")
-            q.precio = float(request.POST.get("precio"))
+            q.precio = request.POST.get("precio")
             q.descripcion = request.POST.get("descripcion")
             q.cantidad = request.POST.get("cantidad")
             q.medidas = request.POST.get("medidas")
+            
+            if not re.match(r'^[A-Za-z\s]+$', q.nombre_producto):
+                messages.error(request, "El campo solo debe contener letras y espacios.")
+                return redirect('ruta_deseada')
+            
+            if not re.match(r'^[1-8]$', q.tipo_producto):
+                messages.error(request, "El tipo de producto no es válido.")
+                return redirect("editar_producto", id_productos=id_productos)
+            
+            if not re.match(r'^[A-Za-z\s]+$', q.descripcion):
+                messages.error(request, "El campo solo debe contener letras y espacios.")
+                return redirect('ruta_deseada')
+            
+            if not re.match(r'^[A-Za-z0-9\s]+$', q.medidas):
+                messages.error(request, "El campo solo debe contener letras, números y espacios.")
+                return redirect('ruta_deseada')
+            
+            # Validar precio
+            if not q.precio or not q.precio.isdigit() or int(q.precio) <= 0:
+                messages.warning(request, "El precio debe ser un número positivo mayor a cero.")
+                return redirect("editar_producto", id_productos=id_productos)
+            
+            # Validar cantidad
+            if not q.cantidad or not q.cantidad.isdigit() or int(q.cantidad) <= 0:
+                messages.warning(request, "La cantidad debe ser un número positivo mayor a cero.")
+                return redirect("editar_producto", id_productos=id_productos)
+            
+            q.precio = int(q.precio)
+            q.cantidad = int(q.cantidad)
             
             if 'foto' in request.FILES:
                 foto = request.FILES['foto']
@@ -535,15 +577,11 @@ def editar_productos(request, id_productos):
             messages.success(request, "Producto actualizado correctamente!")
             return redirect("productos")
         except Exception as e:
-            print(f"Error: {e}")
             messages.error(request, f"Error: {e}")
             return redirect("editar_producto", id_productos=id_productos)
     else:
         q = Productos.objects.get(pk=id_productos)
         contexto = {"datos": q}
-        print(q)
-
-        print(q.precio)
         return render(request, "administrador/formulario_productos.html", contexto)
 
 
@@ -596,8 +634,7 @@ def editar_usuario(request, id_usuario):
             messages.success(request, "Usuario actualizado correctamente!")
             return redirect("usuarios")
         except Exception as e:
-            print(f"Error: {e}")
-            messages.error(request, f"Error: {e}")
+            messages.error(request, f"Error inesperado")
             return redirect("editar_usuario", id_usuario=id_usuario)
     else:
         contexto = {"usuarios": usuario_a_editar}
@@ -648,8 +685,6 @@ def pago(request):
             messages.warning(request, f"El producto con ID {item['id_producto']} ya no está disponible y fue eliminado del carrito.")
             return redirect('index')  # Redirigir al index si un producto fue eliminado
 
-    print("Productos cargados para la vista de pago:", productos_carrito)  # Depuración
-
     return render(request, 'pago.html', {
         'productos_carrito': productos_carrito,
         'total': subtotal,
@@ -691,7 +726,7 @@ def procesar_pago(request):
         telefono = request.POST.get("telefono")
         ciudad = request.POST.get("ciudad")
         estado = request.POST.get("estado")
-        codigo_postal = request.POST.get("codigo_postal")
+        codigo_postal = request.POST.get("ubicacion")
         
         # Validar que los campos no estén vacíos
         if not calle:
@@ -715,8 +750,8 @@ def procesar_pago(request):
             return redirect('pago')
         
         # Validar formato de teléfono (solo números y longitud adecuada)
-        if not telefono.isdigit() or len(telefono) < 7 or len(telefono) > 10:
-            messages.error(request, "El teléfono debe contener solo números y tener entre 7 y 10 dígitos.")
+        if not telefono.isdigit() or len(telefono) != 10:
+            messages.warning(request, 'El telefono debe contener solo numeros y tener 10 digitos')
             return redirect('pago')
             
         # Validar que la ciudad solo contenga letras y espacios
@@ -725,8 +760,8 @@ def procesar_pago(request):
             return redirect('pago')
             
         # Validar código postal (formato numérico para Colombia)
-        if not re.match(r'^\d{6}$', codigo_postal):
-            messages.error(request, "El código postal debe ser un número de 6 dígitos.")
+        if not re.match(r'^[1-5]$', codigo_postal):
+            messages.error(request, "Ubicacion fuera del area de cobertura.")
             return redirect('pago')
 
         # Validar método de pago
@@ -875,6 +910,30 @@ def editar_perfil(request):
         u.email = request.POST.get('email')
         u.direccion = request.POST.get('ciudad')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
+        
+        try:
+            validate_email(u.email)
+        except ValidationError:
+            messages.warning(request, 'El correo no es valido')
+            return render(request, 'editar_perfil.html', {'user': u})
+
+        if not re.match(r'^[A-Za-z\s]+$', u.nombre):
+            messages.warning(request, 'El nombre solo debe contener letras')
+            return render(request, 'editar_perfil.html', {'user': u})
+
+        if not re.match(r'^[A-Za-z\s]+$', u.apellido):
+            messages.warning(request, 'El apellido solo debe contener letras')
+            return render(request, 'editar_perfil.html', {'user': u})
+
+        if not u.telefono.isdigit() or len(u.telefono) != 10:
+            messages.warning(
+                request, 'El telefono debe contener solo numeros y tener 10 digitos')
+            return render(request, 'editar_perfil.html', {'user': u})
+
+        varios = Usuarios.objects.filter(email=u.email).exclude(id=u.id).exists()
+        if varios:
+            messages.warning(request, 'El correo ya está registrado por otro usuario')
+            return render(request, 'editar_perfil.html', {'user': u})
 
         # Validar mayoría de edad
         if fecha_nacimiento:
