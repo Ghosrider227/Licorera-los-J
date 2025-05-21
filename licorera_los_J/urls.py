@@ -39,11 +39,11 @@ urlpatterns = [
     
     
     path('editar_perfil/', views.editar_perfil, name='editar_perfil'),
+    path('cambiar_clave/', views.cambiar_clave, name='cambiar_clave'),
     
     
     #Facturas
-     
     path('procesar_pago/', views.procesar_pago, name='procesar_pago'),
     path('mis_facturas/', views.mis_facturas, name='mis_facturas'),
-     path('detalle_factura/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
+    path('detalle_factura/<int:factura_id>/', views.detalle_factura, name='detalle_factura'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
