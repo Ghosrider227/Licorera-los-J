@@ -10,15 +10,14 @@ from django.http import JsonResponse
 import json
 from datetime import date
 from django.core.serializers.json import DjangoJSONEncoder
+import random
+
 
 
 def index(request):
-    # Traigo la informacion de la BD y se la mando al index con el contexto
-    p = Productos.objects.all()
-    contexto = {
-        'data': p,
-    }
-    return render(request, 'index.html', contexto)
+    productos = list(Productos.objects.all())
+    productos_aleatorios = random.sample(productos, min(4, len(productos)))
+    return render(request, 'index.html', {'data': productos_aleatorios})
 
 
 def login(request):
@@ -468,19 +467,19 @@ def agregar_productos(request):
         
         if not re.match(r'^[A-Za-z\s]+$', nombre_producto):
             messages.error(request, "El campo solo debe contener letras y espacios.")
-            return redirect('ruta_deseada')
+            return redirect('agregar_productos')
         
         if not re.match(r'^[1-8]$', tipo_producto):
             messages.error(request, "El tipo de producto no es válido.")
             return redirect('agregar_productos')
         
-        if not re.match(r'^[A-Za-z\s]+$', q.descripcion):
+        if not re.match(r'^[A-Za-z\s]+$', descripcion):
             messages.error(request, "El campo solo debe contener letras y espacios.")
-            return redirect('ruta_deseada')
+            return redirect('agregar_productos')
             
-        if not re.match(r'^[A-Za-z0-9\s]+$', q.medidas):
+        if not re.match(r'^[A-Za-z0-9\s]+$', medidas):
             messages.error(request, "El campo solo debe contener letras, números y espacios.")
-            return redirect('ruta_deseada')
+            return redirect('agregar_productos')
         
         # Validar precio
         if not precio_str or not precio_str.isdigit() or int(precio_str) <= 0:
@@ -500,8 +499,8 @@ def agregar_productos(request):
             return redirect("agregar_productos")
         
         if foto.content_type not in ['image/jpeg', 'image/png']:
-                messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
-                return redirect("agregar_productos")
+            messages.error(request, "El archivo debe ser una imagen en formato .jpg, .jpeg o .png.")
+            return redirect("agregar_productos")
         
         try:
             q = Productos(
@@ -511,7 +510,7 @@ def agregar_productos(request):
                 precio=precio,
                 descripcion=descripcion,
                 cantidad=cantidad,
-                foto = foto
+                foto=foto
             )
             q.save()
             messages.success(request, "Producto agregado exitosamente!")
@@ -538,27 +537,27 @@ def editar_productos(request, id_productos):
             
             if not re.match(r'^[A-Za-z\s]+$', q.nombre_producto):
                 messages.error(request, "El campo solo debe contener letras y espacios.")
-                return redirect('ruta_deseada')
+                return redirect('editar_producto', id_productos=id_productos)
             
             if not re.match(r'^[1-8]$', q.tipo_producto):
                 messages.error(request, "El tipo de producto no es válido.")
                 return redirect("editar_producto", id_productos=id_productos)
             
-            if not re.match(r'^[A-Za-z\s]+$', q.descripcion):
-                messages.error(request, "El campo solo debe contener letras y espacios.")
-                return redirect('ruta_deseada')
+            if not re.match(r'^[\w\s.,;:¡!¿?()"\-áéíóúÁÉÍÓÚñÑ]+$', q.descripcion):
+                messages.error(request, "La descripción contiene caracteres no permitidos.")
+                return redirect('agregar_productos')
             
             if not re.match(r'^[A-Za-z0-9\s]+$', q.medidas):
                 messages.error(request, "El campo solo debe contener letras, números y espacios.")
-                return redirect('ruta_deseada')
+                return redirect('editar_producto', id_productos=id_productos)
             
             # Validar precio
-            if not q.precio or not q.precio.isdigit() or int(q.precio) <= 0:
+            if not q.precio or not str(q.precio).isdigit() or int(q.precio) <= 0:
                 messages.warning(request, "El precio debe ser un número positivo mayor a cero.")
                 return redirect("editar_producto", id_productos=id_productos)
             
             # Validar cantidad
-            if not q.cantidad or not q.cantidad.isdigit() or int(q.cantidad) <= 0:
+            if not q.cantidad or not str(q.cantidad).isdigit() or int(q.cantidad) <= 0:
                 messages.warning(request, "La cantidad debe ser un número positivo mayor a cero.")
                 return redirect("editar_producto", id_productos=id_productos)
             
@@ -583,7 +582,6 @@ def editar_productos(request, id_productos):
         q = Productos.objects.get(pk=id_productos)
         contexto = {"datos": q}
         return render(request, "administrador/formulario_productos.html", contexto)
-
 
 # ADMINISTRADOR/USUARIOS
 
@@ -724,7 +722,7 @@ def procesar_pago(request):
         # Validar información de envío
         calle = request.POST.get("calle")
         telefono = request.POST.get("telefono")
-        ciudad = request.POST.get("ciudad")
+        calle = request.POST.get("calle")
         estado = request.POST.get("estado")
         codigo_postal = request.POST.get("ubicacion")
         
@@ -754,9 +752,9 @@ def procesar_pago(request):
             messages.warning(request, 'El telefono debe contener solo numeros y tener 10 digitos')
             return redirect('pago')
             
-        # Validar que la ciudad solo contenga letras y espacios
-        if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', ciudad):
-            messages.error(request, "La ciudad solo debe contener letras y espacios.")
+        # Validar que la calle solo contenga letras y espacios
+        if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', calle):
+            messages.error(request, "La calle solo debe contener letras y espacios.")
             return redirect('pago')
             
         # Validar código postal (formato numérico para Colombia)
@@ -908,7 +906,7 @@ def editar_perfil(request):
         u.apellido = request.POST.get('apellidos')
         u.telefono = request.POST.get('telefono')
         u.email = request.POST.get('email')
-        u.direccion = request.POST.get('ciudad')
+        u.direccion = request.POST.get('calle')
         fecha_nacimiento = request.POST.get('fecha_nacimiento')
         
         try:

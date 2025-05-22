@@ -2,7 +2,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: serif;
 }
 
 /* Contenedor principal del contenido */
@@ -20,8 +20,92 @@ body {
     min-height: 100vh; /* Altura mínima igual a la altura de la ventana */
     margin: 0; /* Elimina márgenes predeterminados */
 }
+html {
+    scroll-behavior: smooth;
+}
+.alert {
+    animation: fadeOut 5s ease forwards;
+}
 
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        display: none;
+    }
+}
+/* Mensaje centrado en la pantalla */
+.alert-centered {
+    position: fixed; /* Fija el mensaje en la pantalla */
+    top: 50%; /* Centra verticalmente */
+    left: 50%; /* Centra horizontalmente */
+    transform: translate(-50%, -50%); /* Ajusta el punto de referencia al centro */
+    z-index: 2000; /* Asegura que esté por encima de otros elementos */
+    max-width: 90%; /* Limita el ancho en pantallas pequeñas */
+    padding: 1rem 2rem; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra para darle profundidad */
+    animation: fadeInOut 5s ease-in-out; /* Animación de entrada y salida */
+}
+
+/* Animación de entrada y salida */
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -40%);
+    }
+}
+/* Contenedor de Mensajes */
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem; /* Espaciado entre las tarjetas */
+}
+
+/* Animación de Entrada y Salida */
+.card {
+    animation: fadeInOut 5s ease-in-out;
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+@keyframes fadeInOut {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    10%, 90% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+/* Imagen de Confirmación */
+.card img {
+    border-radius: 50%; /* Imagen redondeada */
+    background-color: #d4edda; /* Fondo verde claro */
+    padding: 0.5rem;
+}
 nav {
+    position: fixed;
+    z-index: 1000;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -38,6 +122,8 @@ nav {
     display:inline-flex;
     flex-direction: row;
     align-items: center;
+    color: #ffcc00;
+    font-family: serif;
 }
 
 .nav-logo img {
@@ -59,7 +145,19 @@ nav {
 .nav-menu a {
     color: #fff;
     text-decoration: none;
+    font-size: 1rem;
+    padding: 0.5rem 2em;
+    border-radius: 5px;
+    transition: color 0.3s ease;
 }
+.nav-menu a:hover {
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
+}
+
 
 .nav-icons {
     display: flex;
@@ -77,40 +175,156 @@ nav {
     height: 24px;
 }
 
-/* Deshabilitar interacción con el slider */
-.nav-icons .dropdown:hover ~ .slider {
-    pointer-events: none; /* Desactiva clics en el slider */
+/* Estilo para el contenedor del mensaje de bienvenida */
+.welcome-message {
+    background: linear-gradient(to right, #000000, #000000); /* Fondo degradado dorado */
+    color: #111; /* Texto oscuro */
+    text-align: center; /* Centra el texto */
+    padding: 1rem 1rem; /* Espaciado interno reducido */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+    margin: 1rem auto; /* Centra el contenedor horizontalmente */
+    max-width: 400px; /* Ancho máximo reducido */
+    font-family: 'Arial', sans-serif; /* Fuente personalizada */
+    animation: fadeIn 1s ease-in-out; /* Animación de entrada */
+    border: 1px solid #000000; /* Borde dorado */
 }
 
-.carousel-item {
-    /* position: absolute; */
-    height: 60vh;
-    overflow: hidden;
-    margin-top: 60px;
-    opacity: 0; /*Ocultar por defecto*/  
-    z-index: 0; /*Asegura que las imágenes no activas estén detrás*/ 
-    transition: opacity 1s ease-in-out; /*Transición suave*/ 
-    width: 100%;  /*Asegura que ocupe todo el ancho*/ 
+/* Estilo para el texto del mensaje */
+.welcome-message h1 {
+    font-size: 0.8rem; /* Tamaño del texto reducido */
+    font-weight: bold; /* Negrita */
+    margin: 0; /* Sin márgenes */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    color: #ffffff; /* Texto oscuro */
 }
 
-.carousel-item.active {
-    opacity: 1;  /*Mostrar la imagen activa*/ 
-    
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-@keyframes slide {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-100%); }
+/* Estilo para el botón del carrito */
+.icon-cart {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    font-size: 1rem; /* Tamaño del texto */
+    padding: 0.5rem 2em; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: color 0.3s ease, text-decoration 0.3s ease; /* Transición suave */
+    display: inline-flex; /* Alinea el ícono y el texto */
+    align-items: center; /* Centra verticalmente el contenido */
+    gap: 0.5rem; /* Espaciado entre el ícono y el texto */
 }
 
-.slider-controls {
+/* Efecto hover para el botón del carrito */
+.icon-cart:hover {
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+    text-decoration: none; /* Subrayado decorativo */
+    text-decoration-color: #ffcc00; /* Color del subrayado */
+    text-underline-offset: 12px; /* Espaciado del subrayado */
+    transition: 1s; /* Transición suave */
+}
+
+/* Efecto hover para el botón del carrito */
+.icon-cart:hover span{
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+    text-decoration: underline 2px; /* Subrayado decorativo */
+    text-decoration-color: #ffcc00; /* Color del subrayado */
+    text-underline-offset: 12px; /* Espaciado del subrayado */
+    transition: 1s; /* Transición suave */
+}
+
+/* Estilo para el ícono dentro del botón del carrito */
+.icon-cart i {
+    font-size: 1rem; /* Tamaño del ícono */
+    transition: color 0.3s ease, transform 0.3s ease; /* Transición suave */
+}
+
+/* Efecto hover para el ícono del carrito */
+.icon-cart:hover i {
+    color: #ffcc00; /* Cambia el color del ícono a dorado */
+    transform: scale(1.1); /* Efecto de aumento */
+}
+
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    height: 80vh; /* Ocupa toda la altura de la ventana */
+    background-size: cover; /* Asegura que la imagen de fondo cubra toda la sección */
+    background-position: center; /* Centra la imagen de fondo */
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    color: #fff; /* Texto blanco */
+}
+
+.hero-overlay {
     position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro con opacidad */
+    z-index: 1; /* Asegura que el overlay esté detrás del contenido */
+}
+
+.hero-section .container {
+    position: relative;
+    z-index: 2; /* Asegura que el contenido esté encima del overlay */
+    text-align: center; /* Centra el texto */
+}
+
+.hero-section h1 {
+    font-size: 3rem; /* Tamaño del título */
+    font-weight: bold;
+    margin-bottom: 1rem; /* Espaciado inferior */
+}
+
+.hero-section p {
+    font-size: 1.2rem; /* Tamaño del texto */
+    margin-bottom: 2rem; /* Espaciado inferior */
+    color: #ccc; /* Texto gris claro */
+}
+
+.hero-section .btn-primary {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    border: none;
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-primary:hover {
+    background-color: #e6b800; /* Fondo dorado más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
+.hero-section .btn-outline {
+    background-color: transparent;
+    color: #ffcc00; /* Texto dorado */
+    border: 2px solid #ffcc00; /* Borde dorado */
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: all 0.3s ease; /* Transición suave */
+    text-decoration: none; /* Elimina el subrayado */
+}
+
+.hero-section .btn-outline:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
 }
 
 .offers {
@@ -122,68 +336,178 @@ nav {
     margin-bottom: 2rem;
     font-size: 2rem;
 }
-
-.products {
-    display: flex;
-    justify-content: center;
-    gap: 2rem;
-    flex-wrap: wrap;
+/* Estilo para los títulos h2 */
+h2.text-3xl {
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+    font-size: 2.5rem; /* Tamaño del texto */
+    font-weight: bold; /* Negrita */
+    margin-top: 6rem; /* Espaciado inferior */
+}
+/* Contenedor de Categorías */
+.categories-container {
+    display: grid; /* Usa CSS Grid para organizar las tarjetas */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Columnas responsivas */
+    gap: 1.5rem; /* Espaciado entre las tarjetas */
+    justify-items: center; /* Centra las tarjetas horizontalmente */
 }
 
-.product-card {
+/* Tarjetas de Categorías */
+.category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 10px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición suave */
+    background-color: #111; /* Fondo oscuro */
+    width: 100%; /* Asegura que las tarjetas ocupen el ancho disponible */
+    max-width: 250px; /* Ancho máximo para mantener simetría */
+}
+
+.category-card img {
+    width: 100%;
+    height: 150px; /* Altura fija para las imágenes */
+    object-fit: cover; /* Ajusta la imagen al contenedor */
+    transition: transform 0.5s ease; /* Efecto de zoom */
+    border-radius: 10px 10px 0 0; /* Bordes superiores redondeados */
+}
+
+.category-card:hover img {
+    transform: scale(1.1); /* Zoom al pasar el cursor */
+}
+
+.category-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 30%, rgba(0, 0, 0, 0)); /* Fondo degradado */
+    padding: 1rem;
+    text-align: center;
+    transition: background 0.3s ease; /* Transición suave */
+}
+
+.category-card:hover .category-overlay {
+    background: linear-gradient(to top, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0)); /* Fondo más oscuro al pasar el cursor */
+}
+
+.category-overlay h3 {
+    font-size: 1.2rem; /* Tamaño del título */
+    font-weight: bold;
+    margin-bottom: 0.5rem; /* Espaciado inferior */
+    color: #ffcc00; /* Color dorado */
+}
+
+.category-overlay a {
+    font-size: 0.9rem; /* Tamaño del texto */
+    color: #ffcc00; /* Texto dorado */
+    text-decoration: none; /* Sin subrayado */
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem; /* Espaciado entre texto e ícono */
+    transition: color 0.3s ease; /* Transición suave */
+}
+
+.category-overlay a:hover {
+    color: #e6b800; /* Color dorado más oscuro al pasar el cursor */
+}
+
+.category-overlay i {
+    font-size: 1rem; /* Tamaño del ícono */
+}
+
+/* Sección de Productos en Oferta */
+.offers {
+    background-color: #000; /* Fondo oscuro */
+    padding: 1rem 1rem; /* Espaciado interno */
+    color: #fff; /* Texto blanco */
+}
+
+.offers h2 {
+    font-size: 2.5rem; /* Tamaño del título */
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem; /* Espaciado inferior */
+    color: #ffcc00; /* Color dorado */
+}
+
+.offers p {
+    font-size: 1.2rem; /* Tamaño del texto */
+    text-align: center;
+    margin-bottom: 2rem; /* Espaciado inferior */
+    color: #ccc; /* Texto gris claro */
+}
+
+/* Contenedor de Productos */
+.offers-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten automáticamente */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    gap: 20px; /* Espaciado entre las tarjetas */
+    padding: 2rem;
+}
+
+/* Tarjetas de Productos */
+.offer-card {
     background-color: #000;
+    border: 2px solid #fff;
     border-radius: 8px;
     overflow: hidden;
     position: relative;
-    transition: transform 0.3s ease;
-    scale: auto;
-    height: 550px;
-    width: 350px;
+    width: 270px;         /* Aumenta el ancho */
+    height: 520px;        /* Aumenta la altura */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     text-align: center;
+    box-shadow: none;
+    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.product-card img {
+/* Imagen del Producto */
+.offer-image {
     width: 100%;
-    height: 350px;
-    object-fit: cover;
-    border: #fff solid 2px;
-    border-radius: 8px;
+    height: 200px; /* Altura reducida para las imágenes */
+    object-fit: cover; /* Ajusta la imagen al contenedor */
+    border: #fff solid 2px; /* Borde blanco */
+    border-radius: 8px 8px 0 0; /* Bordes superiores redondeados */
+    transition: transform 0.5s ease; /* Transición suave para el zoom */
 }
 
-.product-card h3 {
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-    min-height: 2.4em;
+.offer-card:hover .offer-image {
+    transform: scale(1.1); /* Zoom al pasar el cursor */
 }
 
-.product-card .price {
-    color: #fff;
-    font-size: 1.5rem;
+/* Contenido de la Tarjeta */
+.offer-overlay {
+    padding: 0.5rem; /* Reduce el espaciado interno */
+    text-align: center;
+}
+
+.offer-overlay h3 {
+    font-size: 1.2rem; /* Tamaño del título reducido */
     font-weight: bold;
-    margin: 1rem 0;
+    margin-bottom: 0.3rem;
+    color: #fff; /* Texto blanco */
 }
 
-.product-card:hover{
-    transition: 0.3s ease;
-    transform: translateY(-5px) scale(1.02);
-    box-shadow: 0 4px 8px rgb(255, 255, 255);
+.offer-overlay p {
+    font-size: 0.9rem; /* Tamaño del texto reducido */
+    color: #ccc; /* Texto gris claro */
+    margin-bottom: 0.5rem;
 }
 
-.product-card:hover .nombre{
-    transition: 0.6s ease;
-    text-shadow: 0 0 5px #ffcc00, 0 0 10px #ffcc00, 0 0 15px #ffcc00, 0 0 20px #ffcc00;
+/* Precio del Producto */
+.offer-price {
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
 }
 
-#agotado {
-    color: #ff0000;
-}
-
-.add-to-cart {
+/* Botón de Ver Detalles */
+.offer-overlay a {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.5rem; /* Reduce el tamaño del botón */
     background-color: transparent;
     border: 2px solid #fff;
     color: #fff;
@@ -191,11 +515,187 @@ nav {
     cursor: pointer;
     transition: all 0.3s ease;
     border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 0.9rem; /* Tamaño del texto reducido */
 }
 
-.add-to-cart:hover {
-    background-color: #fff;
-    color: #000;
+.offer-overlay a:hover {
+    background-color: #fff; /* Fondo blanco */
+    color: #000; /* Texto negro */
+}
+
+/* Contenedor de Productos */
+.offers-grid {
+    display: flex;
+    flex-wrap: wrap; /* Permite que las tarjetas se ajusten automáticamente */
+    justify-content: center; /* Centra las tarjetas horizontalmente */
+    gap: 15px; /* Reduce el espaciado entre las tarjetas */
+    padding: 1rem; /* Reduce el espaciado interno */
+}
+
+/* Responsividad */
+@media (max-width: 1024px) {
+    .offer-card {
+        width: 200px; /* Ajusta el ancho en pantallas medianas */
+        height: 400px; /* Ajusta la altura en pantallas medianas */
+    }
+}
+
+@media (max-width: 768px) {
+    .offer-card {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        height: auto; /* Ajusta la altura automáticamente */
+    }
+}
+
+/* Sección de Newsletter */
+.newsletter-section {
+    background: linear-gradient(to right, #0a0a0a, #141414); /* Fondo degradado */
+    padding: 4rem 1rem; /* Espaciado interno */
+    color: #fff; /* Texto blanco */
+    text-align: center;
+    border-top: 2px solid #ffcc0028; /* Línea decorativa superior */
+    border-bottom: 2px solid #ffcc0021; /* Línea decorativa inferior */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra ligera */
+    animation: fadeIn 1.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Título de la Sección */
+.newsletter-section h2 {
+    font-size: 2.5rem; /* Tamaño del título */
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem; /* Espaciado inferior */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    animation: slideInDown 1.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Descripción */
+.newsletter-section p {
+    font-size: 1rem; /* Tamaño del texto */
+    color: #ccc; /* Texto gris claro */
+    margin-bottom: 1.5rem; /* Espaciado inferior */
+    line-height: 1.6; /* Altura de línea */
+    animation: fadeIn 2s ease-in-out; /* Animación de entrada */
+}
+
+/* Formulario */
+.newsletter-form {
+    display: flex;
+    flex-wrap: wrap; /* Ajusta los elementos en pantallas pequeñas */
+    gap: 1rem; /* Espaciado entre los elementos */
+    max-width: 600px; /* Ancho máximo del formulario */
+    margin: 0 auto; /* Centra el formulario */
+    justify-content: center; /* Centra los elementos */
+    animation: fadeInUp 2s ease-in-out; /* Animación de entrada */
+}
+
+/* Campo de Entrada */
+.newsletter-form .form-control {
+    flex-grow: 1;
+    padding: 0.75rem 1rem; /* Espaciado interno */
+    border: 2px solid #ffcc0054; /* Borde dorado */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: #222; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    font-size: 1rem; /* Tamaño del texto */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+.newsletter-form .form-control:focus {
+    border-color: #e6b800; /* Borde dorado más oscuro al enfocar */
+    box-shadow: 0 0 8px rgba(255, 204, 0, 0.5); /* Sombra dorada */
+    outline: none; /* Elimina el borde predeterminado */
+}
+
+/* Botón de Suscripción */
+.newsletter-form .btn-primary {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    font-weight: bold;
+    border: none;
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    font-size: 1rem; /* Tamaño del texto */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transiciones suaves */
+    cursor: pointer;
+    animation: pulse 2s infinite; /* Animación de pulso */
+}
+
+.newsletter-form .btn-primary:hover {
+    background-color: #e6b800; /* Fondo dorado más oscuro */
+    transform: scale(1.05); /* Efecto de aumento */
+}
+
+/* Texto de Política */
+.newsletter-section p.text-xs {
+    font-size: 0.75rem; /* Tamaño del texto reducido */
+    color: #888; /* Texto gris claro */
+    margin-top: 1rem; /* Espaciado superior */
+    line-height: 1.4; /* Altura de línea */
+    animation: fadeIn 2.5s ease-in-out; /* Animación de entrada */
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .newsletter-section h2 {
+        font-size: 2rem; /* Tamaño del título reducido */
+    }
+
+    .newsletter-form {
+        flex-direction: column; /* Elementos en columna */
+    }
+
+    .newsletter-form .form-control {
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
+
+    .newsletter-form .btn-primary {
+        width: 100%; /* Ocupa todo el ancho disponible */
+    }
 }
 
 footer {
@@ -240,60 +740,41 @@ footer {
 }
 
 a:hover {
-    text-decoration: underline double;
+    text-decoration: underline;
 }
 
 #p:hover {
-    text-decoration: underline double;
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
 }
 
 .dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdown-button {
-    background-color: transparent;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.dropdown-content {
-    display: none; /* Ocultar por defecto */
-    position: absolute;
-    background-color: #111; /* Fondo oscuro */
-    min-width: 150px;
-    z-index: 1050;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.5);
-    padding: 10px 0;
-    border-radius: 5px;
-    border: 1px solid #333;
-}
-
-.dropdown-content a {
-    display: block;
-    padding: 8px 16px;
-    text-decoration: none;
-    color: #fff;
-}
-
-.dropdown-content a:hover {
-    background-color: #333;
-}
-
-/* Mostrar el menú cuando el botón está enfocado o el mouse está sobre el contenedor */
-.dropdown:focus-within .dropdown-content,
-.dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.dropdown {
-    /* Add some padding to match the cart */
     padding: auto;
     color: #fff;
+    text-decoration: none;
+
 }
+
+.dropdown .dropdown-item {
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 2em;
+    border-radius: 5px;
+    transition: color 0.3s ease;
+    background-color: #000;
+}
+.dropdown .dropdown-item:hover {
+    color: #ffcc00;
+    text-decoration: underline 2px;
+    text-decoration-color: #ffcc00;
+    text-underline-offset: 12px;
+    transition: 1s;
+}
+
+
 
 .dropdown-toggle {
     /* Adjust the font size and color to match the cart */
@@ -333,6 +814,74 @@ a:hover {
     background-color: #111;
     color: #fff;
 }
+/* Estilo para el botón del dropdown */
+.dropdown-button {
+    background-color: #000000; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    border: none; /* Sin bordes */
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    font-size: 16px; /* Tamaño del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+}
+
+/* Estilo para el contenedor del dropdown */
+.dropdown {
+    position: relative; /* Posiciona el contenido relativo al botón */
+    display: inline-block; /* Asegura que el dropdown esté en línea */
+}
+
+/* Estilo para el contenido del dropdown */
+.dropdown-content {
+    position: absolute; /* Posiciona el contenido relativo al botón */
+    top: 100%; /* Asegura que aparezca justo debajo del botón */
+    left: 0; /* Alinea el contenido al lado izquierdo del dropdown */
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    min-width: 200px; /* Ancho mínimo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    padding: 1rem; /* Espaciado interno */
+    display: none; /* Oculto por defecto */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transición suave */
+    opacity: 0; /* Transparente por defecto */
+    transform: translateY(-10px); /* Posición inicial para la animación */
+}
+
+/* Mostrar el contenido del dropdown al hacer hover en el botón */
+.dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido */
+    opacity: 1; /* Hace el contenido visible */
+    transform: translateY(0); /* Anima la posición hacia abajo */
+}
+
+/* Estilo para los elementos dentro del dropdown */
+.dropdown-content a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Cada enlace ocupa toda la fila */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 1s ease, color 1s ease; /* Transición suave */
+}
+
+/* Efecto hover para los enlaces */
+.dropdown-content a:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    transition: 1s;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 100%; /* Ocupa todo el ancho disponible */
+        left: 0; /* Asegura que esté alineado al contenedor */
+    }
+}
 
 form .form-check {
     /* Adjust the font size and color to match the cart */
@@ -356,21 +905,6 @@ form .form-check {
     text-decoration: none;
 }
 
-.custom-file-upload label {
-    cursor: pointer;
-    padding: 10px 20px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    font-size: 14px;
-    text-align: center;
-    display: inline-block;
-    transition: background-color 0.3s ease;
-}
-
-.custom-file-upload label:hover {
-    background-color: #0056b3;
-}
 
 @media (max-width: 768px) {
     .nav-menu {
@@ -385,6 +919,54 @@ form .form-check {
         margin-bottom: 2rem;
     }
 }
+/* Estilo para el contenedor del contenido del dropdown */
+.dropdown-content {
+    position: absolute; /* Posiciona el contenido relativo al dropdown */
+    top: 100%; /* Asegura que aparezca justo debajo del botón */
+    left: 0; /* Alinea el contenido al lado izquierdo del dropdown */
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    min-width: 200px; /* Ancho mínimo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    padding: 1rem; /* Espaciado interno */
+    display: none; /* Oculto por defecto */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transición suave */
+    opacity: 0; /* Transparente por defecto */
+    transform: translateY(-10px); /* Posición inicial para la animación */
+}
+
+/* Mostrar el contenido del dropdown al pasar el cursor */
+.dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido */
+    opacity: 1; /* Hace el contenido visible */
+    transform: translateY(0); /* Anima la posición hacia abajo */
+}
+
+/* Estilo para los elementos dentro del dropdown */
+.dropdown-content a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Cada enlace ocupa toda la fila */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+/* Efecto hover para los enlaces */
+.dropdown-content a:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 100%; /* Ocupa todo el ancho disponible */
+        left: 0; /* Asegura que esté alineado al contenedor */
+    }
+}
 
 #error{
     z-index: 2000;
@@ -392,77 +974,44 @@ form .form-check {
     top: 101px;
 }
 
-.factura {
-    background-color: #111; /* Fondo oscuro */
-    color: #fff; /* Texto blanco */
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-}
-
-.factura-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.factura-header h2 {
-    margin: 0;
-    font-size: 1.5rem;
-}
-
-.factura-header p {
-    margin: 0;
-    font-size: 1rem;
-}
-
-.btn-detalles {
-    background-color: #333; /* Botón oscuro */
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+/* Puedes agregar esto a tu archivo CSS global o en la cabecera del HTML */
+.offer-card h3 {
     text-align: center;
-    display: inline-block;
+    min-height: 4.5rem;   /* Aumenta la altura mínima */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;   /* Tamaño de fuente ligeramente mayor */
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #fff; /* O el color que prefieras */
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.btn-detalles:hover {
-    background-color: #555; /* Fondo más claro al pasar el cursor */
-}
+/* Botón agregar al carrito estilo catálogo */
 
-.toggle-detalles {
-    display: none; /* Ocultar el checkbox */
-}
-
-.factura-detalles {
-    display: block;
-    margin-top: 20px;
-    transition: all 0.3s ease-in-out;
-}
-
-/* Mostrar detalles cuando el checkbox está marcado */
-.toggle-detalles:checked + .btn-detalles + .factura-detalles {
-    display: block;
-}
-
-.factura-detalles table {
+.add-to-cart {
     width: 100%;
-    border-collapse: collapse;
+    padding: 1rem;        /* Aumenta el padding para mejor visibilidad */
+    background-color: #000000; 
+    border: 2px solid #000;
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.1rem;    /* Aumenta el tamaño del texto */
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border-radius: 8px;
+    text-transform: uppercase; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+    margin-top: auto; 
 }
 
-.factura-detalles th, .factura-detalles td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #333;
+.add-to-cart:hover {
+    background-color: #000; /* Fondo negro al pasar el mouse */
+    color: #fae100; /* Texto amarillo */
+    border-color: #fae100; /* Borde amarillo */
+    transform: scale(1.05); /* Ampliar ligeramente */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3); /* Sombra más intensa */
 }
-
-.factura-detalles img {
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-}
-
-

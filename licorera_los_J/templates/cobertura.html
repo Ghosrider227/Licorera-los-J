@@ -10,17 +10,17 @@
 <head>
     <link rel="stylesheet" href="{% static 'css/cobertura.css' %}">
 </head>
-    <div class="hero-coverage">
+<div class="hero-coverage">
+    <div class="coverage-container">
+        <!-- Mapa en el lado izquierdo -->
         <div class="mapouter">
             <div class="gmap_canvas">
-                <iframe width="820" height="560" id="gmap_canvas"
+                <iframe width="100%" height="100%" id="gmap_canvas"
                     src="https://maps.google.com/maps?q=sena+complejo+sur+terranova&t=&z=13&ie=UTF8&iwloc=&output=embed"
                     frameborder="0" scrolling="no" marginheight="0" marginwidth="0"></iframe>
-                    <a href="https://textcaseconvert.com/"></a> <br>
-                    <a href="https://www.calculadora.lat"></a> <br>
-                <a href="https://www.embedmaps.co" target="_blank">google map for my website</a>
             </div>
         </div>
+        <!-- Área de cobertura en el lado derecho -->
         <div class="coverage-content">
             <h1>ÁREA DE COBERTURA</h1>
             <div class="coverage-info">
@@ -33,8 +33,9 @@
                     <li>Itagüí</li>
                 </ul>
                 <p>Tiempo estimado de entrega: 30-45 minutos</p>
-                <button class="check-coverage">VERIFICAR COBERTURA</button>
+                
             </div>
         </div>
     </div>
+</div>
 {% endblock  %}

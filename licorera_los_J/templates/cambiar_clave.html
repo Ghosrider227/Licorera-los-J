@@ -3,15 +3,22 @@
 {% block titulo %}Cambiar contraseña{% endblock %}
 
 {% block cuerpo %}
-    <form action="" method="post" class="card m-auto mt-8 col-3 p-3">
+    <style>
+        ::placeholder {
+            color: #fff !important;
+            opacity: 1;
+        }
+    </style>
+    <form action="" method="post" class="card m-auto mt-8 col-3 p-3 bg-dark text-white shadow">
         {% csrf_token %}
-        <h4>Cambia la contraseña</h4>
-        <input name="clave_actual" type="password" placeholder="Contraseña actual" class="form-control mb-4"><br>
+        <h4 class="mb-4">Cambia la contraseña</h4>
+        <input name="clave_actual" type="password" placeholder="Contraseña actual" class="form-control mb-4 bg-secondary text-white border-0"><br>
 
-        <input name="nueva" type="password" placeholder="Contraseña nueva" class="form-control mb-1"><br>
-        <input name="repite_nueva" type="password" placeholder="Repita contraseña" class="form-control mb-1"><br>
+        <input name="nueva" type="password" placeholder="Contraseña nueva" class="form-control mb-1 bg-secondary text-white border-0"><br>
+        <input name="repite_nueva" type="password" placeholder="Repita contraseña" class="form-control mb-1 bg-secondary text-white border-0"><br>
 
-        <button type="submit" class="btn btn-info">Guardar</button>
+        <button type="submit" class="btn btn-success mb-2">Guardar</button>
+        <a href="{% url 'editar_perfil' %}" class="btn btn-danger">Cancelar</a>
     </form>
 {% endblock %}
 

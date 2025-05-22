@@ -47,10 +47,7 @@
                 value="{{ usuario.telefono }}" {% else %} placeholder="Número telefónico" {% endif %} required>
             </div>
             
-            <div class="form-group">
-                <label for="ciudad">Ciudad:</label>
-                <input type="text" id="ciudad" name="ciudad" class="form-control" placeholder="Ingresa tu ciudad" required>
-            </div>
+         
             
             <div class="form-group">
                 <label for="estado">Referencias:</label>
@@ -132,7 +129,7 @@
                 <input type="text" id="titular_cuenta" name="titular_cuenta" class="form-control" placeholder="Nombre completo">
             </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-pagar">Pagar</button>
+        <button type="submit" class="btn-pagar">Pagar</button>
         <a href="{% url 'compra' %}" class="btn btn-secondary btn-cancelar">Cancelar</a>
     </form>
     <div id="mensaje-error" style="color: red; display: none; margin-top: 10px;">Debes actualizar tu perfil</div>

@@ -89,7 +89,7 @@
 .pago-formulario button {
     width: 100%;
     padding: 10px;
-    background-color: #b9a116; /* Color amarillo para el botón */
+    background-color: #198754; /* Color amarillo para el botón */
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -98,7 +98,7 @@
 }
 
 .pago-formulario button:hover {
-    background-color: #d1b01d; /* Color amarillo más claro al pasar el cursor */
+    background-color: #19c273; /* Color amarillo más claro al pasar el cursor */
 }
 .form-grid {
     display: grid;
@@ -210,21 +210,21 @@
 
 /* Botón Pagar */
 .btn-pagar {
-    background-color: #ffc107; /* Amarillo dorado */
+    background-color: #198754; /* Amarillo dorado */
     color: #000; /* Texto negro */
 }
 
 .btn-pagar:hover {
-    background-color: #e0a800; /* Amarillo más oscuro */
+    background-color: #198754; /* Amarillo más oscuro */
     color: #fff; /* Texto blanco */
 }
 
 /* Botón Cancelar */
 .btn-cancelar {
-    background-color: #6c757d; /* Gris */
+    background-color: #dc3545; /* Gris */
     color: #fff; /* Texto blanco */
 }
 
 .btn-cancelar:hover {
-    background-color: #5a6268; /* Gris más oscuro */
+    background-color: #fa0019; /* Gris más oscuro */
 }
