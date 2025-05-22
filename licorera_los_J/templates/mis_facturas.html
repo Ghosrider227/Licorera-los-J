@@ -6,43 +6,49 @@
 <h1>Mis Facturas</h1>
 {% if facturas %}
     {% for factura in facturas %}
-        <div class="factura">
-            <div class="factura-header">
-                <h2>Factura #{{ factura.id }}</h2>
-                <p>Fecha: {{ factura.fecha_factura }} - Hora: {{ factura.hora_factura }}</p>
-                <p>Total: ${{ factura.valor_total }}</p>
+        <div class="factura mb-4 p-3 rounded" style="background-color: #23272b; color: #fff;">
+            <div class="factura-header d-flex justify-content-between align-items-center">
+                <div>
+                    <h2>Factura #{{ factura.id }}</h2>
+                    <p>Fecha: {{ factura.fecha_factura }} - Hora: {{ factura.hora_factura }}</p>
+                    <p>Total: ${{ factura.valor_total }}</p>
+                </div>
                 <!-- Botón para mostrar/ocultar detalles -->
-                <button class="btn-detalles" data-id="detalles-{{ factura.id }}">Detalles</button>
+                <button class="btn btn-success btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#detalles-{{ factura.id }}">
+                    Detalles
+                </button>
             </div>
-            <div id="detalles-{{ factura.id }}" class="factura-detalles" style="display: none;">
+            <div id="detalles-{{ factura.id }}" class="collapse factura-detalles mt-3">
                 <h3>Productos:</h3>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Imagen</th>
-                            <th>Producto</th>
-                            <th>Precio</th>
-                            <th>Cantidad</th>
-                            <th>Subtotal</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for detalle in factura.detallesfacturas_set.all %}
+                <div class="table-responsive">
+                    <table class="table table-dark table-bordered table-hover align-middle text-center">
+                        <thead>
                             <tr>
-                                <td>
-                                    <img src="{{ detalle.producto.foto.url }}" alt="{{ detalle.producto.nombre_producto }}" style="width: 100px; height: auto;">
-                                </td>
-                                <td>{{ detalle.producto.nombre_producto }}</td>
-                                <td>${{ detalle.producto.precio }}</td>
-                                <td>{{ detalle.cantidad }}</td>
-                                <td>${{ detalle.subtotal }}</td>
+                                <th>Imagen</th>
+                                <th>Producto</th>
+                                <th>Precio</th>
+                                <th>Cantidad</th>
+                                <th>Subtotal</th>
                             </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {% for detalle in factura.detallesfacturas_set.all %}
+                                <tr>
+                                    <td>
+                                        <img src="{{ detalle.producto.foto.url }}" alt="{{ detalle.producto.nombre_producto }}" style="width: 100px; height: auto;">
+                                    </td>
+                                    <td>{{ detalle.producto.nombre_producto }}</td>
+                                    <td>${{ detalle.producto.precio }}</td>
+                                    <td>{{ detalle.cantidad }}</td>
+                                    <td>${{ detalle.subtotal }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <hr>
+        <hr class="bg-secondary">
     {% endfor %}
 {% else %}
     <p>No tienes facturas registradas.</p>

@@ -8,7 +8,7 @@ from .utils import *
 from django.db.utils import IntegrityError
 from django.http import JsonResponse
 import json
-from datetime import date
+from datetime import date, datetime
 from django.core.serializers.json import DjangoJSONEncoder
 import random
 
@@ -699,6 +699,31 @@ def facturas(request):
     }
     return render(request, "administrador/listar_facturas.html", contexto)
 
+@validar_administrador
+def facturas_producto(request, producto_id):
+    producto = get_object_or_404(Productos, id=producto_id)
+    detalles = DetallesFacturas.objects.filter(producto=producto)
+    facturas_ids = detalles.values_list('factura_id', flat=True)
+    facturas = Facturas.objects.filter(id__in=facturas_ids).order_by('-id')
+    contexto = {
+        "facturas": facturas,
+        "detalles_facturas": detalles,
+        "producto": producto,  # Opcional, por si quieres mostrar el nombre arriba
+    }
+    return render(request, "administrador/listar_facturas.html", contexto)
+
+@validar_administrador
+def facturas_usuario(request, usuario_id):
+    usuario = get_object_or_404(Usuarios, id=usuario_id)
+    facturas = Facturas.objects.filter(cliente=usuario).order_by('-id')
+    detalles = DetallesFacturas.objects.filter(factura__in=facturas)
+    contexto = {
+        "facturas": facturas,
+        "detalles_facturas": detalles,
+        "usuario": usuario,  # Opcional, por si quieres mostrar el nombre arriba
+    }
+    return render(request, "administrador/listar_facturas.html", contexto)
+
 
 def procesar_pago(request):
     if request.method == "POST":
@@ -722,7 +747,6 @@ def procesar_pago(request):
         # Validar información de envío
         calle = request.POST.get("calle")
         telefono = request.POST.get("telefono")
-        calle = request.POST.get("calle")
         estado = request.POST.get("estado")
         codigo_postal = request.POST.get("ubicacion")
         
@@ -730,19 +754,12 @@ def procesar_pago(request):
         if not calle:
             messages.error(request, "El campo Calle es obligatorio.")
             return redirect('pago')
-            
         if not telefono:
             messages.error(request, "El campo Teléfono es obligatorio.")
             return redirect('pago')
-            
-        if not ciudad:
-            messages.error(request, "El campo Ciudad es obligatorio.")
-            return redirect('pago')
-            
         if not estado:
             messages.error(request, "El campo Referencias es obligatorio.")
             return redirect('pago')
-            
         if not codigo_postal:
             messages.error(request, "El campo Código Postal es obligatorio.")
             return redirect('pago')
@@ -753,10 +770,9 @@ def procesar_pago(request):
             return redirect('pago')
             
         # Validar que la calle solo contenga letras y espacios
-        if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', calle):
-            messages.error(request, "La calle solo debe contener letras y espacios.")
+        if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ0-9\s\-.#]+$', calle):
+            messages.error(request, "La calle solo debe contener letras, números y caracteres comunes.")
             return redirect('pago')
-            
         # Validar código postal (formato numérico para Colombia)
         if not re.match(r'^[1-5]$', codigo_postal):
             messages.error(request, "Ubicacion fuera del area de cobertura.")
@@ -778,62 +794,42 @@ def procesar_pago(request):
             if not numero_tarjeta or not nombre_tarjeta or not fecha_expiracion or not cvv:
                 messages.error(request, "Todos los campos de la tarjeta son obligatorios.")
                 return redirect('pago')
-                
-            # Validar número de tarjeta (solo números, sin espacios, longitud entre 13-19 dígitos)
             numero_tarjeta = numero_tarjeta.replace(" ", "")
             if not numero_tarjeta.isdigit() or len(numero_tarjeta) < 13 or len(numero_tarjeta) > 19:
                 messages.error(request, "El número de tarjeta debe contener entre 13 y 19 dígitos.")
                 return redirect('pago')
-                
-            # Validar nombre en la tarjeta (solo letras y espacios)
             if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', nombre_tarjeta):
                 messages.error(request, "El nombre en la tarjeta solo debe contener letras y espacios.")
                 return redirect('pago')
-                
-            # Validar fecha de expiración (formato MM/AA o MM/AAAA)
             if not re.match(r'^(0[1-9]|1[0-2])\/([0-9]{2}|[0-9]{4})$', fecha_expiracion):
                 messages.error(request, "La fecha de expiración debe tener el formato MM/AA o MM/AAAA.")
                 return redirect('pago')
-                
-            # Validar CVV (3 o 4 dígitos)
             if not cvv.isdigit() or len(cvv) < 3 or len(cvv) > 4:
                 messages.error(request, "El CVV debe ser un número de 3 o 4 dígitos.")
                 return redirect('pago')
-                
         elif metodo_pago == "paypal":
             correo_paypal = request.POST.get("correo_paypal")
-            
             if not correo_paypal:
                 messages.error(request, "El correo electrónico de PayPal es obligatorio.")
                 return redirect('pago')
-                
-            # Validar formato de correo electrónico
             try:
                 validate_email(correo_paypal)
             except ValidationError:
                 messages.error(request, "El correo electrónico de PayPal no es válido.")
                 return redirect('pago')
-                
         elif metodo_pago == "transferencia":
             banco = request.POST.get("banco")
             numero_cuenta = request.POST.get("numero_cuenta")
             titular_cuenta = request.POST.get("titular_cuenta")
-            
             if not banco or not numero_cuenta or not titular_cuenta:
                 messages.error(request, "Todos los campos de la transferencia bancaria son obligatorios.")
                 return redirect('pago')
-                
-            # Validar que el banco solo contenga letras y espacios
             if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', banco):
                 messages.error(request, "El nombre del banco solo debe contener letras y espacios.")
                 return redirect('pago')
-                
-            # Validar número de cuenta (solo números)
             if not numero_cuenta.isdigit():
                 messages.error(request, "El número de cuenta debe contener solo números.")
                 return redirect('pago')
-                
-            # Validar titular de la cuenta (solo letras y espacios)
             if not re.match(r'^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$', titular_cuenta):
                 messages.error(request, "El titular de la cuenta solo debe contener letras y espacios.")
                 return redirect('pago')
@@ -860,7 +856,7 @@ def procesar_pago(request):
             valor_pedido=total_pagado,
             valor_total=total_pagado,
             fecha_factura=date.today(),
-            hora_factura=date.today().strftime("%H:%M:%S")
+            hora_factura=datetime.now().time()
         )
 
         # Crear los detalles de la factura y descontar el stock
@@ -873,8 +869,10 @@ def procesar_pago(request):
                 producto=producto,
                 factura=factura,
                 cantidad=item['cantidad'],
-                subtotal=producto.precio * item['cantidad']
+                subtotal=producto.precio * item['cantidad'],
+                hora_compra=datetime.now().time()
             )
+
         detalles = DetallesFacturas.objects.filter(factura=factura)
         # Limpiar el carrito
         sesion["carrito"] = []
@@ -890,7 +888,6 @@ def procesar_pago(request):
     else:
         messages.error(request, "Método no permitido.")
         return redirect('pago')
-
 
 def editar_perfil(request):
     user = request.session.get('sesion', False)
@@ -996,3 +993,4 @@ def verificar_productos_carrito(carrito):
             carrito.remove(item)
             productos_eliminados = True
     return productos_eliminados
+

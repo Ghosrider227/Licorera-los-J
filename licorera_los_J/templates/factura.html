@@ -27,7 +27,7 @@
                 <tr>
                     <td>{{ detalle.producto.nombre_producto }}</td>
                     <td>
-                        <button class="btn btn-secondary" onclick="toggleDetalles('detalle-{{ forloop.counter }}')">Detalles</button>
+                        <button class="btn btn-success" onclick="toggleDetalles('detalle-{{ forloop.counter }}')">Detalles</button>
                         <div id="detalle-{{ forloop.counter }}" class="detalle-info" style="display: none;">
                             <p><strong>Cantidad:</strong> {{ detalle.cantidad }}</p>
                             <p><strong>Subtotal:</strong> ${{ detalle.subtotal|intcomma }}</p>

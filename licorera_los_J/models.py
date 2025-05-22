@@ -78,8 +78,9 @@ class Facturas(models.Model):
 class DetallesFacturas(models.Model):
     producto = models.ForeignKey('Productos', on_delete=models.DO_NOTHING)
     factura = models.ForeignKey('Facturas', on_delete=models.DO_NOTHING)
-    cantidad = models.IntegerField(default=0)  # Nueva columna
-    subtotal = models.IntegerField()  # Nueva columna
+    cantidad = models.IntegerField(default=0)
+    subtotal = models.IntegerField()
+    hora_compra = models.TimeField(help_text='HH:MM', null=True, blank=True)  # Nuevo campo
 
     class Meta:
         verbose_name = 'Detalle Factura'

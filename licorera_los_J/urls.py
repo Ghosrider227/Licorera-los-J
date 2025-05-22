@@ -31,7 +31,8 @@ urlpatterns = [
 
     #ADMINISTRADOR/Facturas
     path('facturas/', views.facturas, name='facturas'),  # Vista para listar facturas
-
+    path('facturas/producto/<int:producto_id>/', views.facturas_producto, name='facturas_producto'),
+path('facturas/usuario/<int:usuario_id>/', views.facturas_usuario, name='facturas_usuario'),
 
     #COMPRAS
     path('vaciar_bolsa/', views.vaciar_bolsa, name='vaciar_bolsa'),
