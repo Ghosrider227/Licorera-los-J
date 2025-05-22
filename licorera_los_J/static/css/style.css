@@ -175,6 +175,71 @@ nav {
     height: 24px;
 }
 
+/* Estilo para el contenedor del mensaje de bienvenida */
+.welcome-message {
+    background: linear-gradient(to right, #000000, #000000); /* Fondo degradado dorado */
+    color: #111; /* Texto oscuro */
+    text-align: center; /* Centra el texto */
+    padding: 1rem 1rem; /* Espaciado interno reducido */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2); /* Sombra más sutil */
+    margin: 1rem auto; /* Centra el contenedor horizontalmente */
+    max-width: 400px; /* Ancho máximo reducido */
+    font-family: 'Arial', sans-serif; /* Fuente personalizada */
+    animation: fadeIn 1s ease-in-out; /* Animación de entrada */
+    border: 1px solid #000000; /* Borde dorado */
+}
+
+/* Estilo para el texto del mensaje */
+.welcome-message h1 {
+    font-size: 0.8rem; /* Tamaño del texto reducido */
+    font-weight: bold; /* Negrita */
+    margin: 0; /* Sin márgenes */
+    text-transform: uppercase; /* Texto en mayúsculas */
+    letter-spacing: 1px; /* Espaciado entre letras */
+    color: #ffffff; /* Texto oscuro */
+}
+
+/* Animación de entrada */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilo para el botón del carrito */
+.icon-cart {
+    background-color: transparent; /* Fondo transparente */
+    color: #fff; /* Texto blanco */
+    border: none; /* Sin bordes */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    font-size: 1rem; /* Tamaño del texto */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    display: inline-flex; /* Alinea el ícono y el texto */
+    align-items: center; /* Centra verticalmente el contenido */
+    gap: 0.5rem; /* Espaciado entre el ícono y el texto */
+    position: relative; /* Necesario para la línea decorativa */
+    text-decoration: none; /* Sin subrayado predeterminado */
+    transition: color 0.3s ease; /* Transición suave para el color */
+}
+
+
+
+/* Efecto hover para el botón del carrito */
+.icon-cart:hover {
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+}
+
+.icon-cart:hover::after {
+    width: 100%; /* Expande la línea al ancho completo */
+}
+
 /* Hero Section */
 .hero-section {
     position: relative;
@@ -737,6 +802,74 @@ a:hover {
     background-color: #111;
     color: #fff;
 }
+/* Estilo para el botón del dropdown */
+.dropdown-button {
+    background-color: #000000; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    border: none; /* Sin bordes */
+    padding: 0.75rem 1.5rem; /* Espaciado interno */
+    font-size: 16px; /* Tamaño del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+}
+
+/* Estilo para el contenedor del dropdown */
+.dropdown {
+    position: relative; /* Posiciona el contenido relativo al botón */
+    display: inline-block; /* Asegura que el dropdown esté en línea */
+}
+
+/* Estilo para el contenido del dropdown */
+.dropdown-content {
+    position: absolute; /* Posiciona el contenido relativo al botón */
+    top: 100%; /* Asegura que aparezca justo debajo del botón */
+    left: 0; /* Alinea el contenido al lado izquierdo del dropdown */
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    min-width: 200px; /* Ancho mínimo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    padding: 1rem; /* Espaciado interno */
+    display: none; /* Oculto por defecto */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transición suave */
+    opacity: 0; /* Transparente por defecto */
+    transform: translateY(-10px); /* Posición inicial para la animación */
+}
+
+/* Mostrar el contenido del dropdown al hacer hover en el botón */
+.dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido */
+    opacity: 1; /* Hace el contenido visible */
+    transform: translateY(0); /* Anima la posición hacia abajo */
+}
+
+/* Estilo para los elementos dentro del dropdown */
+.dropdown-content a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Cada enlace ocupa toda la fila */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 1s ease, color 1s ease; /* Transición suave */
+}
+
+/* Efecto hover para los enlaces */
+.dropdown-content a:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+    transition: 1s;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 100%; /* Ocupa todo el ancho disponible */
+        left: 0; /* Asegura que esté alineado al contenedor */
+    }
+}
 
 form .form-check {
     /* Adjust the font size and color to match the cart */
@@ -772,6 +905,54 @@ form .form-check {
 
     .footer-section {
         margin-bottom: 2rem;
+    }
+}
+/* Estilo para el contenedor del contenido del dropdown */
+.dropdown-content {
+    position: absolute; /* Posiciona el contenido relativo al dropdown */
+    top: 100%; /* Asegura que aparezca justo debajo del botón */
+    left: 0; /* Alinea el contenido al lado izquierdo del dropdown */
+    background-color: #111; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    min-width: 200px; /* Ancho mínimo */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra para darle profundidad */
+    padding: 1rem; /* Espaciado interno */
+    display: none; /* Oculto por defecto */
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+    transition: opacity 0.3s ease, transform 0.3s ease; /* Transición suave */
+    opacity: 0; /* Transparente por defecto */
+    transform: translateY(-10px); /* Posición inicial para la animación */
+}
+
+/* Mostrar el contenido del dropdown al pasar el cursor */
+.dropdown:hover .dropdown-content {
+    display: block; /* Muestra el contenido */
+    opacity: 1; /* Hace el contenido visible */
+    transform: translateY(0); /* Anima la posición hacia abajo */
+}
+
+/* Estilo para los elementos dentro del dropdown */
+.dropdown-content a {
+    color: #fff; /* Texto blanco */
+    text-decoration: none; /* Sin subrayado */
+    display: block; /* Cada enlace ocupa toda la fila */
+    padding: 0.5rem 1rem; /* Espaciado interno */
+    border-radius: 5px; /* Bordes redondeados */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Transición suave */
+}
+
+/* Efecto hover para los enlaces */
+.dropdown-content a:hover {
+    background-color: #ffcc00; /* Fondo dorado */
+    color: #111; /* Texto oscuro */
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 768px) {
+    .dropdown-content {
+        min-width: 100%; /* Ocupa todo el ancho disponible */
+        left: 0; /* Asegura que esté alineado al contenedor */
     }
 }
 

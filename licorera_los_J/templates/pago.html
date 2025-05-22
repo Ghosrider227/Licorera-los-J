@@ -11,72 +11,126 @@
 <head>
     <link rel="stylesheet" href="{% static 'css/pago.css' %}">
 </head>
-<div class="pago-container">
-    <h1 class="pago-titulo">Proceso de Pago</h1>
-    
-    <div class="pago-productos">
-        <h2 class="pago-subtitulo">Tus productos</h2>
-        {% for item in productos_carrito %}
-        <div class="pago-producto">
-            <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}" class="pago-producto-imagen">
-            <div class="pago-producto-info">
-                <h3>{{ item.producto.nombre_producto }}</h3>
-                <p>Precio: ${{ item.producto.precio|intcomma }}</p>
-                <p>Cantidad: {{ item.cantidad }}</p>
-                <p>Subtotal: ${{ item.subtotal|intcomma }}</p>
-            </div>
-        </div>
-        {% endfor %}
-        <div class="pago-total">
-            <h3>Total a pagar: ${{ total|intcomma }}</h3>
-        </div>
-    </div>
-    <form method="POST" action="{% url 'procesar_pago' %}" class="pago-formulario" data-fecha-nacimiento="{{ user.profile.fecha_nacimiento }}">
-        {% csrf_token %}
-        <h2 class="pago-subtitulo">Información de Envío</h2>
-        <div class="form-grid">
-            <div class="form-group">
-                <label for="calle">Calle:</label>
-                <input type="text" id="calle" name="calle" class="form-control" placeholder="Ingresa tu calle" 
-                    value="{{ usuario.direccion }}" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="numero">Teléfono:</label>
-                <input type="text" id="telefono" name="telefono" class="form-control" placeholder="Número telefónico" 
-                    value="{{ usuario.telefono }}" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="ciudad">Ciudad:</label>
-                <input type="text" id="ciudad" name="ciudad" class="form-control" placeholder="Ingresa tu ciudad" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="estado">Referencias:</label>
-                <input type="text" id="estado" name="estado" class="form-control" placeholder="Apartamento, piso, unidad, etc" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="codigo_postal">Código Postal:</label>
-                <input type="text" id="codigo_postal" name="codigo_postal" class="form-control" placeholder="Ingresa tu código postal" required>
-            </div>
-            
-            <div class="form-group">
-                <label for="pais">Ubicación:</label>
-                <input type="text" id="pais" name="pais" class="form-control" placeholder="Colombia" required defaultValue="Colombia" disabled>
-            </div>
-        </div>
+        <div class="checkout-container">
+            <section class="py-12">
+                <div class="container mx-auto px-4">
+                    <h1 class="text-3xl font-bold mb-8 text-center">Finalizar Compra</h1>
         
-        <h2 class="pago-subtitulo">Método de Pago</h2>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                        <div class="progress-bar">
+                            <!-- Paso 1 -->
+                            <div class="step">
+                                <div class="step-circle active">1</div>
+                                <span class="step-label">Envío</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <!-- Paso 2 -->
+                            <div class="step">
+                                <div class="step-circle">2</div>
+                                <span class="step-label">Pago</span>
+                            </div>
+                            <div class="step-line"></div>
+                            <!-- Paso 3 -->
+                            <div class="step">
+                                <div class="step-circle">3</div>
+                                <span class="step-label">Confirmación</span>
+                            </div>
+                        </div>
+                    </div>
+        
+                            <!-- Formulario de Envío -->
+                            <div id="shippingStep" class="form-section">
+                                <h2 class="form-title">Información de Envío</h2>
+                                <form id="shippingForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Campo de Nombre Completo -->
+                                    <div class="md:col-span-2">
+                                        <label class="form-label">Nombre Completo</label>
+                                        <input type="text" class="form-control" placeholder="Ingrese su nombre completo">
+                                    </div>
+                                    <!-- Campo de Correo Electrónico -->
+                                    <div>
+                                        <label class="form-label">Correo Electrónico</label>
+                                        <input type="email" class="form-control" placeholder="correo@ejemplo.com">
+                                    </div>
+                                    <!-- Campo de Teléfono -->
+                                    <div>
+                                        <label class="form-label">Teléfono</label>
+                                        <input type="tel" class="form-control" placeholder="(123) 456-7890">
+                                    </div>
+                                    <!-- Campo de Dirección -->
+                                    <div class="md:col-span-2">
+                                        <label class="form-label">Dirección</label>
+                                        <input type="text" class="form-control" placeholder="Calle, número, apartamento">
+                                    </div>
+                                    <!-- Campo de Ciudad -->
+                                    <div>
+                                        <label class="form-label">Ciudad</label>
+                                        <select class="form-control">
+                                            <option value="">Seleccione su ciudad</option>
+                                            <option value="MX">Medellín</option>
+                                            <option value="ES">Envigado</option>
+                                            <option value="CO">Sabaneta</option>
+                                            <option value="AR">Bello</option>
+                                            <option value="CL">Itagui</option>
+                                        </select>
+                                    </div>
+                                    <!-- Campo de País -->
+                                    <div>
+                                        <label class="form-label">País</label>
+                                        <input type="text" class="form-control" value="Colombia" readonly>
+                                        <input type="hidden" name="pais" value="CO"> <!-- Campo oculto para enviar el valor -->
+                                    </div> 
+                                    <!-- Checkbox para guardar información -->
+                                    <div class="md:col-span-2">
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="mr-2">
+                                            <span>Guardar esta información para futuras compras</span>
+                                        </label>
+                                    </div>
+                                    <!-- Botón para continuar -->
+                                    <div class="md:col-span-2 text-right">
+                                        <button type="button" id="continueToPayment" class="btn-primary">
+                                            Continuar a Pago <i class="fas fa-chevron-right ml-2"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+        
+                        <!-- Resumen del Pedido -->
+                        <div class="bg-dark p-6 rounded-lg">
+                            <h2 class="text-xl font-bold mb-4">Resumen del Pedido</h2>
+                            <div class="pago-resumen">
+                                <p>Subtotal ({{ productos_carrito|length }} artículos): <span>${{ subtotal|intcomma }}</span></p>
+                                <p>Descuento: <span>-${{ descuento|intcomma }}</span></p>
+                                <p>Envío: <span>${{ envio|intcomma }}</span></p>
+                                <p>Impuestos: <span>${{ impuestos|intcomma }}</span></p>
+                                <hr>
+                                <h3>Total: <span>${{ total|intcomma }}</span></h3>
+                            </div>
+                            <div class="pago-carrito mt-4">
+                                <h4>Artículos en tu Carrito</h4>
+                                {% for item in productos_carrito %}
+                                <div class="pago-producto">
+                                    <p>{{ item.producto.nombre_producto }} (x{{ item.cantidad }})</p>
+                                    <span>${{ item.subtotal|intcomma }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        {% comment %} <h2 class="pago-subtitulo">Método de Pago</h2>
         <label for="metodo_pago">Selecciona un método de pago:</label>
         <select id="metodo_pago" name="metodo_pago" class="form-select" required>
             <option value="">Selecciona un método</option>
             <option value="tarjeta">Tarjeta de Crédito/Débito</option>
             <option value="paypal">PayPal</option>
             <option value="transferencia">Transferencia Bancaria</option>
-        </select>
-        
+            </select>
+            
         <!-- Formulario para Tarjeta de Crédito/Débito -->
         <div id="form-tarjeta" class="metodo-pago-form" style="display: none;">
             <h3>Detalles de Tarjeta</h3>
@@ -84,15 +138,15 @@
                 <label for="numero_tarjeta">Número de Tarjeta:</label>
                 <input type="text" id="numero_tarjeta" name="numero_tarjeta" class="form-control"
                     placeholder="1234 5678 9012 3456">
-            </div>
+                    </div>
             <div class="form-group">
                 <label for="nombre_tarjeta">Nombre en la Tarjeta:</label>
                 <input type="text" id="nombre_tarjeta" name="nombre_tarjeta" class="form-control" placeholder="Nombre completo">
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label for="fecha_expiracion">Fecha de Expiración:</label>
                 <input type="text" id="fecha_expiracion" name="fecha_expiracion" class="form-control" placeholder="MM/AA">
-            </div>
+                </div>
             <div class="form-group">
                 <label for="cvv">CVV:</label>
                 <input type="text" id="cvv" name="cvv" class="form-control" placeholder="123">
@@ -105,9 +159,9 @@
             <div class="form-group">
                 <label for="correo_paypal">Correo Electrónico:</label>
                 <input type="email" id="correo_paypal" name="correo_paypal" class="form-control"
-                    placeholder="correo@ejemplo.com">
+                placeholder="correo@ejemplo.com">
             </div>
-        </div>
+            </div>
         
         <!-- Formulario para Transferencia Bancaria -->
         <div id="form-transferencia" class="metodo-pago-form" style="display: none;">
@@ -119,17 +173,17 @@
             <div class="form-group">
                 <label for="numero_cuenta">Número de Cuenta:</label>
                 <input type="text" id="numero_cuenta" name="numero_cuenta" class="form-control" placeholder="123456789">
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label for="titular_cuenta">Titular de la Cuenta:</label>
                 <input type="text" id="titular_cuenta" name="titular_cuenta" class="form-control" placeholder="Nombre completo">
-            </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-pagar">Pagar</button>
+                </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-pagar">Pagar</button>
         <a href="{% url 'compra' %}" class="btn btn-secondary btn-cancelar">Cancelar</a>
     </form>
     <div id="mensaje-error" style="color: red; display: none; margin-top: 10px;">Debes actualizar tu perfil</div>
-</div>
+</div> {% endcomment %}
 <script src="{% static 'js/metodo_pago.js' %}"></script>
 
 {% endblock %}

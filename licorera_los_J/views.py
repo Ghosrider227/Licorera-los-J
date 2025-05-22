@@ -19,8 +19,7 @@ def verificacion(request):
         if opcion == 'si':
             return redirect('index')  # Redirige al index si es mayor de edad
         elif opcion == 'no':
-            messages.error(request, "No puedes ingresar porque no cumples con la edad mínima.")
-            return redirect('verificacion')  # Redirige de nuevo a la página de verificación
+            return redirect('https://www.google.com')  # Redirige de nuevo a la página de verificación
     return render(request, 'verificacion.html')
 
 def index(request):
