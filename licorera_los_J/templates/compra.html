@@ -37,27 +37,27 @@
                     </thead>
                     <tbody>
                         {% for item in productos_carrito %}
-                        <tr>
-                            <td>
-                                <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
-                                {{ item.producto.nombre_producto }}
-                            </td>
-                            <td>${{ item.producto.precio|intcomma }}</td>
-                            <td>
-                                <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1">
-                            </td>
-                            <td>${{ item.subtotal|intcomma }}</td>
-                            <td>
-                                <!-- Botón de Actualizar -->
-                                <button type="submit" name="action" value="update_{{ item.producto.id }}" class="carrito-boton carrito-boton-actualizar">
-                                    Actualizar
-                                </button>
-                                <!-- Botón de Eliminar -->
-                                <a href="{% url 'eliminar_producto' item.producto.id %}" class="carrito-boton carrito-boton-eliminar">
-                                    Eliminar
-                                </a>
-                            </td>
-                        </tr>
+                            <tr>
+                                <td>
+                                    <img src="{{ item.producto.foto.url }}" alt="{{ item.producto.nombre_producto }}">
+                                    {{ item.producto.nombre_producto }}
+                                </td>
+                                <td>${{ item.producto.precio|intcomma }}</td>
+                                <td>
+                                    <input type="number" name="cantidad_{{ item.producto.id }}" class="producto-cantidad" value="{{ item.cantidad }}" min="1">
+                                </td>
+                                <td>${{ item.subtotal|intcomma }}</td>
+                                <td>
+                                    <!-- Botón de Actualizar -->
+                                    <button type="submit" name="action" value="update_{{ item.producto.id }}" class="carrito-boton carrito-boton-actualizar">
+                                        Actualizar
+                                    </button>
+                                    <!-- Botón de Eliminar -->
+                                    <a href="{% url 'eliminar_producto' item.producto.id %}" class="carrito-boton carrito-boton-eliminar">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>

@@ -214,31 +214,47 @@ nav {
 
 /* Estilo para el botón del carrito */
 .icon-cart {
-    background-color: transparent; /* Fondo transparente */
     color: #fff; /* Texto blanco */
-    border: none; /* Sin bordes */
-    padding: 0.5rem 1rem; /* Espaciado interno */
+    text-decoration: none; /* Sin subrayado */
     font-size: 1rem; /* Tamaño del texto */
+    padding: 0.5rem 2em; /* Espaciado interno */
     border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+    transition: color 0.3s ease, text-decoration 0.3s ease; /* Transición suave */
     display: inline-flex; /* Alinea el ícono y el texto */
     align-items: center; /* Centra verticalmente el contenido */
     gap: 0.5rem; /* Espaciado entre el ícono y el texto */
-    position: relative; /* Necesario para la línea decorativa */
-    text-decoration: none; /* Sin subrayado predeterminado */
-    transition: color 0.3s ease; /* Transición suave para el color */
 }
-
-
 
 /* Efecto hover para el botón del carrito */
 .icon-cart:hover {
     color: #ffcc00; /* Cambia el color del texto a dorado */
+    text-decoration: none; /* Subrayado decorativo */
+    text-decoration-color: #ffcc00; /* Color del subrayado */
+    text-underline-offset: 12px; /* Espaciado del subrayado */
+    transition: 1s; /* Transición suave */
 }
 
-.icon-cart:hover::after {
-    width: 100%; /* Expande la línea al ancho completo */
+/* Efecto hover para el botón del carrito */
+.icon-cart:hover span{
+    color: #ffcc00; /* Cambia el color del texto a dorado */
+    text-decoration: underline 2px; /* Subrayado decorativo */
+    text-decoration-color: #ffcc00; /* Color del subrayado */
+    text-underline-offset: 12px; /* Espaciado del subrayado */
+    transition: 1s; /* Transición suave */
 }
+
+/* Estilo para el ícono dentro del botón del carrito */
+.icon-cart i {
+    font-size: 1rem; /* Tamaño del ícono */
+    transition: color 0.3s ease, transform 0.3s ease; /* Transición suave */
+}
+
+/* Efecto hover para el ícono del carrito */
+.icon-cart:hover i {
+    color: #ffcc00; /* Cambia el color del ícono a dorado */
+    transform: scale(1.1); /* Efecto de aumento */
+}
+
 
 /* Hero Section */
 .hero-section {

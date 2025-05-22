@@ -144,13 +144,166 @@
         grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
     }
 }
+/* Contenedor de Método de Pago */
+.metodo-pago-container {
+    margin-top: 2rem;
+    padding: 2rem;
+    background-color: #111; /* Fondo oscuro similar al formulario de envío */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    color: #fff; /* Texto blanco */
+}
 
+/* Título de Método de Pago */
+.metodo-pago-container h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem;
+}
+
+/* Selector de Método de Pago */
+.metodo-pago-container .form-select {
+    width: 50%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #444; /* Bordes oscuros */
+    border-radius: 5px;
+    background-color: #333; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s ease;
+}
+
+.metodo-pago-container .form-select:focus {
+    border-color: #ffcc00; /* Color de enfoque */
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+/* Formularios Dinámicos */
+.metodo-pago-form {
+    display: none; /* Ocultos por defecto */
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background-color: #222; /* Fondo oscuro */
+    border: 1px solid #444; /* Bordes oscuros */
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+    color: #fff; /* Texto blanco */
+}
+
+.metodo-pago-form h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem;
+}
+
+/* Campos de Entrada */
+.metodo-pago-form .form-group {
+    margin-bottom: 1rem;
+}
+
+.metodo-pago-form .form-group label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #f5eeee; /* Texto claro */
+    margin-bottom: 0.5rem;
+}
+
+.metodo-pago-form .form-control {
+    width: 100%;
+    padding: 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #444; /* Bordes oscuros */
+    border-radius: 5px;
+    background-color: #333; /* Fondo oscuro */
+    color: #fff; /* Texto blanco */
+    transition: border-color 0.3s ease;
+}
+
+.metodo-pago-form .form-control:focus {
+    border-color: #ffcc00; /* Color de enfoque */
+    outline: none;
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+/* Botones */
+.metodo-pago-container .btn-primary {
+    background-color: #ffcc00;
+    color: #111;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.metodo-pago-container .btn-primary:hover {
+    background-color: #e6b800;
+    transform: scale(1.05);
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+    .metodo-pago-container {
+        padding: 1.5rem;
+    }
+
+    .metodo-pago-container .form-select, 
+    .metodo-pago-form .form-control {
+        font-size: 0.9rem;
+    }
+
+    .metodo-pago-container .btn-primary {
+        font-size: 0.9rem;
+        padding: 0.7rem 1.2rem;
+    }
+}
+.btn-primary {
+    background-color: #ffcc00;
+    color: #111;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-primary:hover {
+    background-color: #e6b800;
+    transform: scale(1.05);
+}
 /* Resumen del Pedido */
 .bg-dark {
     background-color: #111; /* Fondo oscuro */
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    height: fit-content; /* Ajusta la altura al contenido */
+    color: #fff; /* Texto blanco */
+    font-family: 'Arial', sans-serif;
+    top: 2rem; /* Espaciado desde la parte superior */
+}
+
+/* Título del Resumen */
+.bg-dark h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+/* Detalles del Resumen */
+.pago-resumen {
+    margin-bottom: 1.5rem;
 }
 
 .pago-resumen p {
@@ -158,7 +311,7 @@
     justify-content: space-between;
     margin: 0.5rem 0;
     font-size: 0.9rem;
-    color: #ccc;
+    color: #ccc; /* Texto gris claro */
 }
 
 .pago-resumen h3 {
@@ -167,11 +320,20 @@
     font-size: 1.2rem;
     font-weight: bold;
     margin-top: 1rem;
-    color: #fff;
+    color: #fff; /* Texto blanco */
 }
 
+/* Lista de Productos */
 .pago-carrito {
     margin-top: 1rem;
+}
+
+.pago-carrito h4 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #ffcc00; /* Color dorado */
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 .pago-producto {
@@ -179,7 +341,33 @@
     justify-content: space-between;
     margin: 0.5rem 0;
     font-size: 0.9rem;
-    color: #ccc;
+    color: #ccc; /* Texto gris claro */
+}
+
+/* Responsividad */
+@media (max-width: 1024px) {
+    .checkout-container {
+        grid-template-columns: 1fr; /* Una sola columna en pantallas pequeñas */
+    }
+
+    .bg-dark {
+        position: static; /* Desactiva el sticky en pantallas pequeñas */
+        margin-top: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .bg-dark {
+        padding: 1.5rem;
+    }
+
+    .pago-resumen p, .pago-resumen h3, .pago-producto {
+        font-size: 0.8rem; /* Reduce el tamaño del texto */
+    }
+
+    .pago-carrito h4 {
+        font-size: 1rem; /* Reduce el tamaño del título */
+    }
 }
 
 .pago-codigo {
